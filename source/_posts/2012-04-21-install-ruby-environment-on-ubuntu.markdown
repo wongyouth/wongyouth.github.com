@@ -4,7 +4,7 @@ title: "Ubuntu下安装ruby开发环境"
 date: 2012-04-21 14:41
 comments: true
 categories: [ruby, ubuntu]
-published: false
+published: true
 ---
 
 开始的时候我也是用Windows作为Rails项目开发的。
