@@ -25,12 +25,12 @@ published: true
 #### 预安装一些编译时用到的库文件和工具
 
 ```sh
-sudo apt-get -y install git-core curl \
-build-essential openssl libreadline6 libreadline6-dev libmysqlclient-dev \
-zlib1g zlib1g-dev libssl-dev libyaml-dev \
-libsqlite3-0 libsqlite3-dev sqlite3 \
-libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake \
-libtool bison subversion libxslt1-dev
+    sudo apt-get -y install git-core curl \
+    build-essential openssl libreadline6 libreadline6-dev \
+    libmysqlclient-dev zlib1g zlib1g-dev libssl-dev libyaml-dev \
+    libsqlite3-0 libsqlite3-dev sqlite3 \
+    libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake \
+    libtool bison subversion libxslt1-dev
 ```
 
 如果使用jruby的话，安装一个jdk环境
@@ -44,7 +44,7 @@ libtool bison subversion libxslt1-dev
 [rbenv]: https://github.com/sstephenson/rbenv
 
 ```sh
-curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash
+    curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash
 ```
 
 ## 安装`ruby`
@@ -52,26 +52,27 @@ curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-instal
 假设你使用ruby-1.9.3
 
 ```sh
-rbenv install 1.9.3-p125
-rbenv global 1.9.3-p125
+    rbenv install 1.9.3-p125
+    rbenv global 1.9.3-p125
 ```
 
 常用rbenv命令
 
 ```sh
-  rbenv versions                   # 查看可以安装的ruby版本列表
-  rbenv version                    # 查看当前的ruby版本
-  rbenv rehash                     # 更新rbenv里的链接指向gems的可执行文件的映射,安装了新gem包时使用
-  rbenv global jruby-1.6.5         # 切换到jruby-1.6.5，下次登录系统后仍有效
-  export RBENV_VERSION=jruby-1.6.5 # 切换到jruby-1.6.5环境，只适用于这一次使用
+    rbenv versions # 查看可以安装的ruby版本列表
+    rbenv version  # 查看当前的ruby版本
+    rbenv rehash   # 更新rbenv里的链接指向gems的可执行文件的映射,安装了新gem包时使用
+
+    rbenv global jruby-1.6.5         # 切换到jruby-1.6.5，下次登录系统后仍有效
+    export RBENV_VERSION=jruby-1.6.5 # 切换到jruby-1.6.5环境，只适用于这一次使用
 ```
 
 
 ## 创建第一个`Rails`项目
 
 ```sh
-  gem update --system       # 更新gem到最新版本
-  gem install bundler rails # 安装bundler和rails
-  rbenv rehash              # 刷新rbenv记录的可执行文件，这样rails命令就可以直接使用了
-  rails new blog
+    gem update --system       # 更新gem到最新版本
+    gem install bundler rails # 安装bundler和rails
+    rbenv rehash              # 刷新rbenv记录的可执行文件，这样rails命令就可以直接使用了
+    rails new blog
 ```
