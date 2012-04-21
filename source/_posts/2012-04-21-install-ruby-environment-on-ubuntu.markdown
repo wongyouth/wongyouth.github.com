@@ -17,10 +17,10 @@ published: true
 
 1. 预安装库文件
 2. 安装`rbenv`
-3. 下载并编译`ruby`
+3. 安装`ruby`
 4. 创建第一个`Rails`项目
 
-## 安装`rbenv-installer`
+## 预安装库文件
 
 #### 预安装一些编译时用到的库文件和工具
 
@@ -47,7 +47,7 @@ libtool bison subversion libxslt1-dev
 curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash
 ```
 
-## 下载并编译`ruby`
+## 安装`ruby`
 
 假设你使用ruby-1.9.3
 
@@ -56,29 +56,22 @@ rbenv install 1.9.3-p125
 rbenv global 1.9.3-p125
 ```
 
-查看可以安装的ruby版本列表
+常用rbenv命令
 
 ```sh
-  rbenv versions
+  rbenv versions                   # 查看可以安装的ruby版本列表
+  rbenv version                    # 查看当前的ruby版本
+  rbenv rehash                     # 更新rbenv里的链接指向gems的可执行文件的映射,安装了新gem包时使用
+  rbenv global jruby-1.6.5         # 切换到jruby-1.6.5，下次登录系统后仍有效
+  export RBENV_VERSION=jruby-1.6.5 # 切换到jruby-1.6.5环境，只适用于这一次使用
 ```
 
-查看当前的ruby版本
-
-```sh
-  rbenv version
-```
-
-更新rbenv里的链接指向gems的可执行文件的映射,安装了新的gem包时记得刷新。
-
-```sh
-  rbenv rehash
-```
 
 ## 创建第一个`Rails`项目
 
 ```sh
-  gem update --system
-  gem install bundler rails
-  rbenv rehash
+  gem update --system       # 更新gem到最新版本
+  gem install bundler rails # 安装bundler和rails
+  rbenv rehash              # 刷新rbenv记录的可执行文件，这样rails命令就可以直接使用了
   rails new blog
 ```
