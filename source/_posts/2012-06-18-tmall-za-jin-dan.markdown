@@ -18,9 +18,9 @@ categories: ruby
 运行环境 ruby
 
     gem install capybara # install capybara
-    ruby zha.rb # zha.rb脚本
+    ruby za.rb # za.rb脚本
 
-``` ruby zha.rb
+``` ruby za.rb
 # encoding: utf-8
 #
 # 淘宝砸金蛋脚本
@@ -69,7 +69,7 @@ def setup_jquery
   sleep 2
 end
 
-def zha
+def za
   visit('/')
   10000.downto(1).each do
     find('#J_Vol_Brick_Btn').click
@@ -81,6 +81,6 @@ rescue
 end
 
 login
-zha
+za
 ```
 
