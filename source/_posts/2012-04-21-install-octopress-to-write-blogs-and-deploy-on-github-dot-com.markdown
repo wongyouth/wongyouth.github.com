@@ -3,7 +3,7 @@ layout: post
 title: "用octopress来写博客并发布到Github上"
 date: 2012-04-21 20:54
 comments: true
-categories: [blog, github]
+categories: [octopress, github]
 ---
 
 用过不少博客，MSN spaces，blogger.com，myspace, wordpress，搜狐，总是觉得少了点自由发挥的空间。直到现有有了[octopress][]，就像我这个博客一样，这才是咱程序猿该有的！
