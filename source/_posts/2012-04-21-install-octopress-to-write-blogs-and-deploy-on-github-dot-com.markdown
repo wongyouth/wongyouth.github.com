@@ -8,6 +8,8 @@ categories: [blog, github]
 
 用过不少博客，MSN spaces，blogger.com，myspace, wordpress，搜狐，总是觉得少了点自由发挥的空间。直到现有有了[octopress][]，就像我这个博客一样，这才是咱程序猿该有的！
 
+<!-- more -->
+
 1. 安装
 2. 配置
 3. 发布

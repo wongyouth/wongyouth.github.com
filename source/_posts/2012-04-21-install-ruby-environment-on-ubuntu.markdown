@@ -7,6 +7,11 @@ categories: [ruby, ubuntu]
 published: true
 ---
 
+要使用rails开发Web应用服务时，在Windows环境下会遇到各种各样的问题，有些Gem也会工作不正常。
+有些人会用MacOS作为开发环境，这当然好，但是我们在也可用免费的Ubuntu来开发，这里就介绍下安装步骤。
+
+<!-- more -->
+
 开始的时候我也是用Windows作为Rails项目开发的。
 但是在Windows下会碰到各种各样的问题，最常见的就是Gem包可能只工作在类Unix的环境下。
 有的时候按照官方说明一步一步做仍然有各种各样的不成功。痛定思痛用Ubuntu做为开发环境。

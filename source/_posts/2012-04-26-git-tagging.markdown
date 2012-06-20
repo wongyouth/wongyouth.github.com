@@ -6,6 +6,10 @@ comments: true
 categories: [git]
 ---
 
+在这里我列举了一些日常Git操作时用到的`tag`标签命令。
+
+<!-- more -->
+
 ## 显示所有标签
 
     git tag
