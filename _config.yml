@@ -95,7 +95,7 @@ disqus_short_name: wongyouth
 disqus_show_comment_count: yes
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: UA-30466888-1
 
 # Facebook Like
 facebook_like: false
