@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "use postgresql with rails"
+title: "Ubuntu环境下在Rails项目中使用postgresql时的初始配置"
 date: 2012-06-25 14:28
 comments: true
-categories: [postgresql, rails ]
+categories: [Postgresql, Rails, Ubuntu]
 ---
 
-在我们的rails服务器配置中经常用的是 mysql，
-今天使用开源社区的另一款数据库软件 postgresql 来做一个实验
+在我们的rails服务器配置中经常用的是 MySQL，
+今天使用开源社区的另一款数据库软件 postgresql 来做一个实验。
 
 测试环境： ubuntu 12.04
 
@@ -25,7 +25,7 @@ categories: [postgresql, rails ]
     # 重启 postgresql
     sudo /etc/init.d/postgresql restart
 
-生成rails里面使用的postgrelsql的帐号密码，这里我们用mysql的帐号root。
+生成rails里面使用的postgrelsql的帐号密码，这里我们用MySQL的帐号root。
     # 创建root帐号
     # -d 可以创建数据库
     # -R 不可以创建角色
