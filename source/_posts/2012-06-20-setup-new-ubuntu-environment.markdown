@@ -15,7 +15,15 @@ categories: ubuntu
     sudo apt-get update
 
 ## 安装系统包
-    sudo apt-get -y install git-core curl zsh exuberant-ctags vim
+    sudo apt-get -y install git-core curl zsh exuberant-ctags vim autoconf automake openssl \
+      build-essential libc6-dev libreadline6 libreadline6-dev zlib1g zlib1g-dev libssl-dev libyaml-dev \
+      mysql-server libmysqlclient-dev libsqlite3-0 libsqlite3-dev sqlite3 \
+      ncurses-dev libtool bison libxslt1-dev libxml2-dev libqt4-dev
+
+nokogiri.gem        need libxml2 libxml2-dev libxslt1-dev
+mysql2.gem          need libmysqlclient-dev
+capybara-webkit.gem need libqt4-dev
+
 
 ## 安装`oh-my-zsh`，如果你使用`bash`可以跳过此步骤
     curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | bash
