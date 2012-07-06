@@ -26,7 +26,7 @@ categories: [rails, vim]
 * delimitMate 自动补全右括号
 * zencoding HTML垒码利器 `<c-y>,`
 * tabular 代码美化。 按 `=` 等对齐 `\a=`， 按 `=>` 对齐 `\a>`
-* taglist 标签列表 `F8`
+* ~~taglist 标签列表~~ tagbar 标签列表 `F8`
 * ctrlp 文件查找 `<c-p>`
 * bufExplorer 缓冲列表 `<c-b>`
 * preview markdown文件编译结果查看 `\P`
@@ -39,7 +39,7 @@ categories: [rails, vim]
   * 说不完...
 * snippets
 * 语法支持
-  * less
+  * less, haml
   * markdown
   * sass, scss
   * coffee-script
