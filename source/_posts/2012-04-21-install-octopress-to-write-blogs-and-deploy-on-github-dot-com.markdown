@@ -90,8 +90,9 @@ categories: [octopress, github]
     git clone git@github.com:wongyouth/wongyouth.github.com.git
     cd wongyouth.github.com
     git checkout source
-    git clone git@github.com:wongyouth/wongyouth.github.com.git
+    git clone git@github.com:wongyouth/wongyouth.github.com.git _deploy
 
+`_deploy`目录是用来与远程代码库同步的目录，所以我们要把它checkout出来预先做好关联
 make a new post and something else ...
 
     rake generate
