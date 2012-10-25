@@ -28,7 +28,7 @@ categories: [rails, vim]
 * tabular 代码美化。 按 `=` 等对齐 `\a=`， 按 `=>` 对齐 `\a>`
 * ~~taglist 标签列表~~ tagbar 标签列表 `F8`
 * ctrlp 文件查找 `<c-p>`
-* bufExplorer 缓冲列表 `<c-b>`
+* bufExplorer 缓冲列表 `<c-k>`
 * preview markdown文件编译结果查看 `\P`
 * fugitive 超强大GIT代码仓库查询工具
   * 查状态 `:Gstatus`
