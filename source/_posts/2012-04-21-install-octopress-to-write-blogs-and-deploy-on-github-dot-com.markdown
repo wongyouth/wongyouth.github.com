@@ -85,6 +85,17 @@ categories: [octopress, github]
 
 \_config.yml中有关联其他一些社区的配置，比如github.com帐号，facebook帐号等。我认为比较有用的是[disqus][]的评论帐号。到disqus注册一下，然后设置好`disqus_short_name`这样你的博客就有了评论功能了，而不是你一个人在唱独角戏了。
 
+## 在其他电脑里面同步时的操作
+
+    git clone git@github.com:wongyouth/wongyouth.github.com.git
+    cd wongyouth.github.com
+    git checkout source
+    git clone git@github.com:wongyouth/wongyouth.github.com.git
+
+make a new post and something else ...
+
+    rake generate
+    rake deploy
 
 [octopress]: http://octopress.org/
 [github pages]: http://pages.github.com/
