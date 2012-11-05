@@ -17,9 +17,10 @@ categories: [git, redmine]
 
     sudo sh make-mirror.sh <REPO-NAME> # REPO-NAME 中不带.git后缀
 
-如果不需要特别强大的项目管理功能，可以用[gitlabhq][]，这是一个类似[github][]的代码管理应用，支持fork，pull request功能，也是非常实用。
+如果不需要特别强大的项目管理功能，可以用[gitlabhq][]，这是一个类似[github][]的代码管理应用，支持fork，pull request功能，非常实用，选择哪个用来管理也就见仁见智了。
 
 [git]: http://git-scm.com
+[redmine]: http://redmine.org
 [github]: https://github.com
 [gitolite]: https://github.com/sitaramc/gitolite
 [gitlabhq]: https://github.com/gitlabhq/gitlabhq
