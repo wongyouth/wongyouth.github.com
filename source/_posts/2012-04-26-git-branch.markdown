@@ -9,7 +9,7 @@ categories: git
 在这里我列举了一些日常Git操作时用到的`branch`分支命令。
 <!-- more -->
 
-## 生存一个分支，名字为issue1
+## 生成一个分支，名字为issue1
 
     git branch issue1
 
@@ -17,7 +17,7 @@ categories: git
 
     git checkout issue1
 
-## 生存一个本地分支并切换到它
+## 生成一个本地分支并切换到它
 
     git checkout -b issue1
 
