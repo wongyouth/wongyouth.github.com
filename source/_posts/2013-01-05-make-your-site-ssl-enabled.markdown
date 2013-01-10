@@ -58,6 +58,10 @@ startssl.com支持class1级别的ssl服务，如果你的网站没有多个子�
       SSLCertificateChainFile /usr/local/apache/conf/sub.class1.server.ca.pem
       SSLCACertificateFile /usr/local/apache/conf/ca.pem
       RewriteEngine On
+
+      # assets files should not be redirected.
+      RewriteRule \.(css|js|gif|jpe?g|png)(\?[0-9]*)?$ - [NC,L]
+
       RewriteCond %{HTTP:X-Forwarded-Proto} !=http
       RewriteCond %{REQUEST_URI} !^/login
       RewriteRule (.*) http://%{HTTP_HOST}%{REQUEST_URI} [L]
