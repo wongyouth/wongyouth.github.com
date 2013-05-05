@@ -3,7 +3,8 @@ layout: post
 title: "在rails中使用mongoid"
 date: 2012-06-30 12:54
 comments: true
-categories: [rails, mongodb]
+categories: [rails, database]
+tags: [rails, mongodb, nosql, ubuntu]
 ---
 
 在我看来noSQL解决方案有一个最大的优点就是可以方便的scale out, Oracle等大型数据库也可以支持Grid，支持集群但是就是配置起来的繁琐而已，可以写一本厚厚的书啦。而今天要使用的mongodb只是简单的一个配置文件就能搞定，简单易用容易让人理解，只就是生产力的极大提升啊。

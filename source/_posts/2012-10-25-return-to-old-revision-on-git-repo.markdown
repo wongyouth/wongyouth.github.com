@@ -4,6 +4,7 @@ title: "Git中如何退回到旧版本"
 date: 2012-10-25 09:34
 comments: true
 categories: git
+tags: [git]
 ---
 
 使用Git用来管理版本时，有时候会有不小心递交了错误的代码，想回退到旧的版本中的场景。让我们看看在Git中应该如何正确操作。

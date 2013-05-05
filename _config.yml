@@ -3,12 +3,12 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://wongyouth.github.com
-title: Wongyouth's Blog
+url: http://wongyouth.com
+title: Wongyouth's Blog / 自由鱼的技术博客
 subtitle: Do things the stupid way.
-author: Wongyouth
+author: Wongyouth / 自由鱼
 simple_search: http://google.com/search
-description:
+description: 建站 前后端
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
@@ -66,12 +66,8 @@ github_show_profile_link: true
 github_skip_forks: true
 
 # Twitter
-twitter_user:
-twitter_tweet_count: 4
-twitter_show_replies: false
-twitter_follow_button: false
-twitter_show_follower_count: false
-twitter_tweet_button: false
+twitter_user: wongyouth
+twitter_tweet_button: true
 
 # Google +1
 google_plus_one: false

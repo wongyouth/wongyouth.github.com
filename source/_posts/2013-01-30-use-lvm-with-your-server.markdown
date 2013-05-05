@@ -3,7 +3,8 @@ layout: post
 title: "use lvm with your server"
 date: 2013-01-30 11:22
 comments: true
-categories: [ubuntu, lvm]
+categories: [server]
+tags: [ubuntu, lvm]
 ---
 
 based on:

@@ -3,7 +3,8 @@ layout: post
 title: "Ubuntu下安装ruby开发环境"
 date: 2012-04-21 14:41
 comments: true
-categories: [ruby, ubuntu]
+categories: [programming language]
+tags: [ruby, rails, ubuntu]
 published: true
 ---
 

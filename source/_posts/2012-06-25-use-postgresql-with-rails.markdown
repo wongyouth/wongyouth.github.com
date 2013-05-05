@@ -3,7 +3,8 @@ layout: post
 title: "Ubuntu环境下在Rails项目中使用postgresql时的初始配置"
 date: 2012-06-25 14:28
 comments: true
-categories: [postgresql, rails, ubuntu]
+categories: [database, rails, server]
+tags: [postgresql, ubuntu]
 ---
 
 在我们的rails服务器配置中经常用的是 MySQL，

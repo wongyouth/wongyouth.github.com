@@ -3,7 +3,8 @@ layout: post
 title: "tmall砸金蛋活动脚本"
 date: 2012-06-18 19:32
 comments: true
-categories: ruby
+categories: [programming language]
+tags: [ruby, taobao]
 ---
 
 今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。

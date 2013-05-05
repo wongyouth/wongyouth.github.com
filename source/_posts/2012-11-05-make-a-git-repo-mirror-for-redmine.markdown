@@ -3,7 +3,8 @@ layout: post
 title: "redmine用Git repo镜像脚本"
 date: 2012-11-05 14:11
 comments: true
-categories: [git, redmine]
+categories: [git, server]
+tags: [redmine, gitolite, git]
 ---
 
 一般我用[git][]来管理代码，后台用[gitolite][]，[redmine][]来管理项目，redmine中可以结合git来参看git提交信息时，非常有用。
