@@ -55,4 +55,4 @@ Step 2. 做文件映射
 
 最后要说的是现在的配置是没有做安全设置的，还需要用防火墙做ip过滤，这个设置方法本片就略过了。
 
-该片博文参考： <https://help.ubuntu.com/community/SettingUpNFSHowTo>
+该篇博文参考： <https://help.ubuntu.com/community/SettingUpNFSHowTo>
