@@ -9,11 +9,18 @@ categories: [ruby, rails]
 ## background
 
 Some days ago I wanted to learn some css stuff from a site, I changed some css style to see what it turns to.
-After 10 minutes after I got tired when I have to change the source again and again in the broswer.
-So I googled it find what kind of tools can be used to download files from a site, but I can't find anything setisfied.
-So After search github I found I can do it myself with little work.
+After 10 minutes after I got tired when I have to change the source again and again in the browser.
+So I googled to find what kind of tools can be used to download files from a site, but I can't find anything satisfied.
+So after searched github I found I can do it myself with little work.
 
 Here comes the [SpeedSpider][1], it's A simple and speedy web spider for site pages downloading.
+
+UPDATE:
+
+It turns out `wget` can do all the jobs I wanted except it doest not use threads. So wget way may be slower than SpeedSpider.
+You can download bootstrap page with code below.
+
+    wget -m -p -E -k -np http://twitter.github.io/bootstrap
 
 <!--more-->
 
