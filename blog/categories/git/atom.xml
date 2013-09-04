@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: git | 鱼哥的技术博客]]></title>
+  <link href="http://wongyouth.com/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://wongyouth.com/"/>
+  <updated>2013-09-04T10:18:28+08:00</updated>
+  <id>http://wongyouth.com/</id>
+  <author>
+    <name><![CDATA[Wongyouth / 自由鱼]]></name>
+    <email><![CDATA[wongyouth@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[git revisions]]></title>
+    <link href="http://wongyouth.com/blog/2013/07/03/git-revisions/"/>
+    <updated>2013-07-03T16:01:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/07/03/git-revisions</id>
+    <content type="html"><![CDATA[<p>这篇博文记录Git使用中比较中级的技巧，不太容易记住。</p>
+
+<p>先来看一段代码：</p>
+
+<pre><code># Dummy repository
+$ git log --oneline
+77bc990 Third commit
+25d4fc4 Second commit
+f0faab6 First commit
+$ git log --oneline HEAD^
+25d4fc4 Second commit
+f0faab6 First commit
+$ git log --oneline HEAD^
+25d4fc4 Second commit
+f0faab6 First commit
+$ git log --oneline HEAD^^
+f0faab6 First commit
+$ git log --oneline HEAD^2
+fatal: ambiguous argument 'HEAD^2': unknown revision or path not in the working tree.
+</code></pre>
+
+<p>从这里可以看出来<code>^</code> 与 <code>~</code> 是有区别的</p>
+
+<p><code>HEAD^2</code> 与 <code>HEAD~2</code> 的区别</p>
+
+<p><code>HEAD^2</code> 表示的是当前HEAD的第二个父节点
+<code>HEAD~2</code> 表示的是当前HEAD的第一个父节点的第一个父节点</p>
+
+<p>记住<code>~</code>永远在第一个父节点上回溯。</p>
+
+<p>那么如果要表示第二代父节点的第10代祖先的第2个父节点如何表示呢</p>
+
+<pre><code>HEAD^2~10^2
+</code></pre>
+
+<p>再来看第二段代码:</p>
+
+<pre><code>$ git checkout -b other f0faab6
+Switched to a new branch 'other'
+$ touch file
+$ git add file
+$ git commit -m "Adding file" file
+$ git log --oneline
+1762164 Adding file
+f0faab6 First commit
+$ git log --oneline other..master
+77bc990 Third commit
+25d4fc4 Second commit
+$ git log --oneline master..other
+1762164 Adding file
+</code></pre>
+
+<p>可以看出 <code>..</code> 前后分支对换，结果是不一样的
+这段代码的意思是找出在一个分支上有，但是在另一个分支上没有的递交。
+其原理是先回溯到两者的共同祖先，然后用这个祖先比较分支，这样就得出来只属于那个分支的递交履历。</p>
+
+<p>再看第三段代码：</p>
+
+<pre><code>$ git log master...other
+1762164 Adding file
+77bc990 Third commit
+25d4fc4 Second commit
+$ git log other...master
+1762164 Adding file
+77bc990 Third commit
+25d4fc4 Second commit
+</code></pre>
+
+<p>比较之前的代码，可以看出来结果与前后关系相同，两者的履历都会显示</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[redmine用Git repo镜像脚本]]></title>
+    <link href="http://wongyouth.com/blog/2012/11/05/make-a-git-repo-mirror-for-redmine/"/>
+    <updated>2012-11-05T14:11:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/11/05/make-a-git-repo-mirror-for-redmine</id>
+    <content type="html"><![CDATA[<p>一般我用<a href="http://git-scm.com">git</a>来管理代码，后台用<a href="https://github.com/sitaramc/gitolite">gitolite</a>，<a href="http://redmine.org">redmine</a>来管理项目，redmine中可以结合git来参看git提交信息时，非常有用。</p>
+
+<!-- more -->
+
+
+<p>以下代码参照了<a href="http://blog.buginception.com/blog/2012/04/02/redmine-use-git-code-review">http://blog.buginception.com/blog/2012/04/02/redmine-use-git-code-review</a>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (make-mirror.sh)</span> <a href='/downloads/code/make-mirror.sh'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">set</span> -x
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$1&quot;</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Usage: $0 [repo]&quot;</span>
+</span><span class='line'>  <span class="nb">exit </span>1
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">REPO</span><span class="o">=</span><span class="nv">$1</span>.git
+</span><span class='line'><span class="nv">GIT_BASE</span><span class="o">=</span>/home/git/repositories
+</span><span class='line'><span class="nv">MIRROR_PATH</span><span class="o">=</span>/home/jxb/git-mirrors
+</span><span class='line'><span class="nv">REPO_PATH</span><span class="o">=</span><span class="nv">$MIRROR_PATH</span>/<span class="nv">$REPO</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 我們要使用 git clone --mirror 建立一個原始 repo 的鏡像：</span>
+</span><span class='line'><span class="nb">cd</span> <span class="nv">$MIRROR_PATH</span> <span class="o">&amp;&amp;</span> git clone --mirror <span class="nv">$GIT_BASE</span>/<span class="nv">$REPO</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 接下來下一步，由於之後 git 使用者會透過 post-receive hook 來同步兩個 repository，</span>
+</span><span class='line'><span class="c"># 我們直接修改這個境像 repository 的 owner / group 為 git 來讓它有讀寫權限。</span>
+</span><span class='line'>chown -R git:git <span class="nv">$REPO_PATH</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 再來我們要設定原本 repo 的 hooks ：</span>
+</span><span class='line'><span class="nb">cd</span> <span class="nv">$GIT_BASE</span>/<span class="nv">$REPO</span>/hooks
+</span><span class='line'>
+</span><span class='line'>cat &gt; post-receive <span class="s">&lt;&lt;EOS</span>
+</span><span class='line'><span class="s">#!/bin/bash</span>
+</span><span class='line'><span class="s">/usr/bin/git push --mirror $REPO_PATH</span>
+</span><span class='line'><span class="s">EOS</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 建立完 post-receive 檔案後修改權限：</span>
+</span><span class='line'>chown git:git post-receive
+</span><span class='line'>chmod 700 post-receive
+</span><span class='line'>
+</span><span class='line'><span class="c"># 由於 Git 在做 mirror push 的時候，會保留原始的檔案與資料夾存取權限，</span>
+</span><span class='line'><span class="c"># 在 gitolite 控管下，只有 owner 有讀寫權限，所以一做 mirror push 這個鏡像的 repository 就沒辦法被其他 process 讀取到了，</span>
+</span><span class='line'><span class="c"># 所以我們一開始就要告訴這個 mirror repository 它是被分享的，並且設定它應該要有的存取權限：</span>
+</span><span class='line'>sudo -u git sh <span class="s">&lt;&lt;EOS</span>
+</span><span class='line'><span class="s">set -x</span>
+</span><span class='line'><span class="s">cd $REPO_PATH</span>
+</span><span class='line'><span class="s">chmod a+rX -R ./</span>
+</span><span class='line'><span class="s">git config --add core.sharedRepository 644</span>
+</span><span class='line'><span class="s">EOS</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>使用时需要用root权限</p>
+
+<pre><code>sudo sh make-mirror.sh &lt;REPO-NAME&gt; # REPO-NAME 中不带.git后缀
+</code></pre>
+
+<p>如果不需要特别强大的项目管理功能，可以用<a href="https://github.com/gitlabhq/gitlabhq">gitlabhq</a>，这是一个类似<a href="https://github.com">github</a>的代码管理应用，支持fork，pull request功能，非常实用，选择哪个用来管理也就见仁见智了。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git中如何退回到旧版本]]></title>
+    <link href="http://wongyouth.com/blog/2012/10/25/return-to-old-revision-on-git-repo/"/>
+    <updated>2012-10-25T09:34:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/10/25/return-to-old-revision-on-git-repo</id>
+    <content type="html"><![CDATA[<p>使用Git用来管理版本时，有时候会有不小心递交了错误的代码，想回退到旧的版本中的场景。让我们看看在Git中应该如何正确操作。</p>
+
+<!-- more -->
+
+
+<p>先来说一下如何保存当前工作区的修改。</p>
+
+<h2>保留当前修改</h2>
+
+<pre><code>git stash                 # 保留当前工作区的修改
+git stash pop             # 恢复保存的修改到工作区
+</code></pre>
+
+<h2>递交的代码没有push到远程的仓库时</h2>
+
+<pre><code>git reset --mixed REVISION # 返回到旧版本REVISION，版本间的差异会到工作区
+git reset --soft REVISION  # 返回到旧版本REVISION，版本间的差异会到index
+git reset --hard REVISION  # 返回到旧版本REVISION，包括当前工作区里的修改
+</code></pre>
+
+<h2>递交的代码已经push到远程的仓库，协同者未同步时</h2>
+
+<p>如果递交的代码已经push到了远程，我们不能用上面的方法，因为上面的方法只是让你的本地状态变成一个没有同步远程的协同者的状态相似。你下次pull远程时会把远程代码库的更新取回来。
+所以我们必须要把远程的代码也返回到旧版。</p>
+
+<pre><code>remote$ git config receive.denyCurrentBranch ignore # 登录到远程代码库，设置取消拒绝当前分支，否则以下的操作无法删除远程master分支
+
+local$ git push origin :master       # 删除远程master分支
+local$ git reset --hard REVISION     # return to old revision
+local$ git push origin master:master # 递交旧版到远程master分支
+</code></pre>
+
+<p>或者回到旧版再强制推到远程</p>
+
+<pre><code>local$ git reset --hard REVISION
+local$ git push --force
+</code></pre>
+
+<h2>递交的代码已经更新到协同者的代码库时</h2>
+
+<p>这个时候让每个协同者返回旧版不是一个好的选择项时，我们只有把旧代码取出，加到当前版之上，push到远程，再让协同者同步。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git分支常用操作]]></title>
+    <link href="http://wongyouth.com/blog/2012/04/26/git-branch/"/>
+    <updated>2012-04-26T10:55:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/04/26/git-branch</id>
+    <content type="html"><![CDATA[<p>在这里我列举了一些日常Git操作时用到的<code>branch</code>分支命令。</p>
+
+<!-- more -->
+
+
+<h2>生成一个分支，名字为issue1</h2>
+
+<pre><code>git branch issue1
+</code></pre>
+
+<h2>切换到一个分支issue1</h2>
+
+<pre><code>git checkout issue1
+</code></pre>
+
+<h2>生成一个本地分支并切换到它</h2>
+
+<pre><code>git checkout -b issue1
+</code></pre>
+
+<h2>修改后提交</h2>
+
+<pre><code>git commit -am 'fix issue1'
+</code></pre>
+
+<h2>切换到主分支</h2>
+
+<pre><code>git checkout master
+</code></pre>
+
+<h2>合并issue1到主分支</h2>
+
+<pre><code>git merge issue1
+</code></pre>
+
+<h2>递交到远程</h2>
+
+<pre><code>git push origin issue1
+</code></pre>
+
+<h2>复制远程分支到本地</h2>
+
+<pre><code>git checkout -b issue1 origin/issue1
+</code></pre>
+
+<h2>删除远程分支</h2>
+
+<pre><code>git push origin :issue1
+</code></pre>
+
+<h2>删除本地分支</h2>
+
+<pre><code>git branch -d issue1
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git标签常用操作]]></title>
+    <link href="http://wongyouth.com/blog/2012/04/26/git-tagging/"/>
+    <updated>2012-04-26T10:51:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/04/26/git-tagging</id>
+    <content type="html"><![CDATA[<p>在这里我列举了一些日常Git操作时用到的<code>tag</code>标签命令。</p>
+
+<!-- more -->
+
+
+<h2>显示所有标签</h2>
+
+<pre><code>git tag
+</code></pre>
+
+<h2>筛选标签</h2>
+
+<pre><code>$ git tag -l 'v1.4.2.*'
+v1.4.2.1
+v1.4.2.2
+v1.4.2.3
+v1.4.2.4
+</code></pre>
+
+<h2>代注释的标签</h2>
+
+<pre><code>$ git tag -a v1.4 -m 'my version 1.4'
+$ git tag
+v0.1
+v1.3
+v1.4
+
+$ git show v1.4
+tag v1.4
+Tagger: Scott Chacon &lt;schacon@gee-mail.com&gt;
+Date:   Mon Feb 9 14:45:11 2009 -0800
+
+my version 1.4
+commit 15027957951b64cf874c3557a0f3547bd83b3ff6
+Merge: 4a447f7... a6b4c97...
+Author: Scott Chacon &lt;schacon@gee-mail.com&gt;
+Date:   Sun Feb 8 19:02:46 2009 -0800
+
+    Merge branch 'experiment'
+</code></pre>
+
+<h2>轻量标签</h2>
+
+<pre><code>$ git tag v1.4-lw
+$ git tag
+v0.1
+v1.3
+v1.4
+v1.4-lw
+v1.5
+</code></pre>
+
+<h2>给过去递交标签</h2>
+
+<pre><code>$ git log --pretty=oneline
+15027957951b64cf874c3557a0f3547bd83b3ff6 Merge branch 'experiment'
+a6b4c97498bd301d84096da251c98a07c7723e65 beginning write support
+0d52aaab4479697da7686c15f77a3d64d9165190 one more thing
+6d52a271eda8725415634dd79daabbc4d9b6008e Merge branch 'experiment'
+0b7434d86859cc7b8c3d5e1dddfed66ff742fcbc added a commit function
+4682c3261057305bdd616e23b64b0857d832627b added a todo file
+166ae0c4d3f420721acbb115cc33848dfcc2121a started write support
+9fceb02d0ae598e95dc970b74767f19372d61af8 updated rakefile
+964f16d36dfccde844893cac5b347e7b3d44abbc commit the todo
+8a5cbc430f1a9c3d00faaeffd07798508422908a updated readme
+
+$ git tag -a v1.2 9fceb02
+</code></pre>
+
+<h2>分享标签</h2>
+
+<pre><code>$ git push origin v1.5
+Counting objects: 50, done.
+Compressing objects: 100% (38/38), done.
+Writing objects: 100% (44/44), 4.56 KiB, done.
+Total 44 (delta 18), reused 8 (delta 1)
+To git@github.com:schacon/simplegit.git
+* [new tag]         v1.5 -&gt; v1.5
+
+$ git push origin --tags
+Counting objects: 50, done.
+Compressing objects: 100% (38/38), done.
+Writing objects: 100% (44/44), 4.56 KiB, done.
+Total 44 (delta 18), reused 8 (delta 1)
+To git@github.com:schacon/simplegit.git
+ * [new tag]         v0.1 -&gt; v0.1
+ * [new tag]         v1.2 -&gt; v1.2
+ * [new tag]         v1.4 -&gt; v1.4
+ * [new tag]         v1.4-lw -&gt; v1.4-lw
+ * [new tag]         v1.5 -&gt; v1.5
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

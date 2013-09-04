@@ -1,0 +1,1516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[鱼哥的技术博客]]></title>
+  <link href="http://wongyouth.com/atom.xml" rel="self"/>
+  <link href="http://wongyouth.com/"/>
+  <updated>2013-09-04T10:18:28+08:00</updated>
+  <id>http://wongyouth.com/</id>
+  <author>
+    <name><![CDATA[Wongyouth / 自由鱼]]></name>
+    <email><![CDATA[wongyouth@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[git revisions]]></title>
+    <link href="http://wongyouth.com/blog/2013/07/03/git-revisions/"/>
+    <updated>2013-07-03T16:01:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/07/03/git-revisions</id>
+    <content type="html"><![CDATA[<p>这篇博文记录Git使用中比较中级的技巧，不太容易记住。</p>
+
+<p>先来看一段代码：</p>
+
+<pre><code># Dummy repository
+$ git log --oneline
+77bc990 Third commit
+25d4fc4 Second commit
+f0faab6 First commit
+$ git log --oneline HEAD^
+25d4fc4 Second commit
+f0faab6 First commit
+$ git log --oneline HEAD^
+25d4fc4 Second commit
+f0faab6 First commit
+$ git log --oneline HEAD^^
+f0faab6 First commit
+$ git log --oneline HEAD^2
+fatal: ambiguous argument 'HEAD^2': unknown revision or path not in the working tree.
+</code></pre>
+
+<p>从这里可以看出来<code>^</code> 与 <code>~</code> 是有区别的</p>
+
+<p><code>HEAD^2</code> 与 <code>HEAD~2</code> 的区别</p>
+
+<p><code>HEAD^2</code> 表示的是当前HEAD的第二个父节点
+<code>HEAD~2</code> 表示的是当前HEAD的第一个父节点的第一个父节点</p>
+
+<p>记住<code>~</code>永远在第一个父节点上回溯。</p>
+
+<p>那么如果要表示第二代父节点的第10代祖先的第2个父节点如何表示呢</p>
+
+<pre><code>HEAD^2~10^2
+</code></pre>
+
+<p>再来看第二段代码:</p>
+
+<pre><code>$ git checkout -b other f0faab6
+Switched to a new branch 'other'
+$ touch file
+$ git add file
+$ git commit -m "Adding file" file
+$ git log --oneline
+1762164 Adding file
+f0faab6 First commit
+$ git log --oneline other..master
+77bc990 Third commit
+25d4fc4 Second commit
+$ git log --oneline master..other
+1762164 Adding file
+</code></pre>
+
+<p>可以看出 <code>..</code> 前后分支对换，结果是不一样的
+这段代码的意思是找出在一个分支上有，但是在另一个分支上没有的递交。
+其原理是先回溯到两者的共同祖先，然后用这个祖先比较分支，这样就得出来只属于那个分支的递交履历。</p>
+
+<p>再看第三段代码：</p>
+
+<pre><code>$ git log master...other
+1762164 Adding file
+77bc990 Third commit
+25d4fc4 Second commit
+$ git log other...master
+1762164 Adding file
+77bc990 Third commit
+25d4fc4 Second commit
+</code></pre>
+
+<p>比较之前的代码，可以看出来结果与前后关系相同，两者的履历都会显示</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[speed spider for web crawling]]></title>
+    <link href="http://wongyouth.com/blog/2013/06/01/speed-spider-for-web-crawling/"/>
+    <updated>2013-06-01T22:30:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/06/01/speed-spider-for-web-crawling</id>
+    <content type="html"><![CDATA[<h2>background</h2>
+
+<p>Some days ago I wanted to learn some css stuff from a site, I changed some css style to see what it turns to.
+After 10 minutes after I got tired when I have to change the source again and again in the browser.
+So I googled to find what kind of tools can be used to download files from a site, but I can&#8217;t find anything satisfied.
+So after searched github I found I can do it myself with little work.</p>
+
+<p>Here comes the <a href="https://github.com/wongyouth/speed_spider">SpeedSpider</a>, it&#8217;s A simple and speedy web spider for site pages downloading.</p>
+
+<p>UPDATE:</p>
+
+<p>It turns out <code>wget</code> can do all the jobs I wanted except it doest not use threads. So wget way may be slower than SpeedSpider.
+You can download bootstrap page with code below.</p>
+
+<pre><code>wget -m -p -E -k -np http://twitter.github.io/bootstrap
+</code></pre>
+
+<!--more-->
+
+
+<p>SpeedSpider was made with below in mind</p>
+
+<ul>
+<li>download files from a site with a start url</li>
+<li>option for downloading part site obeying a base url, any page not starts with <code>base_url</code> will not be downloaded</li>
+<li>assets files like css, js, image and font should be downloaded besides html files, and not obey <code>base_url</code> rule</li>
+<li>image file include in css file should be download</li>
+<li>url from site other than the start url should not be downloaded</li>
+<li>download files should be save with the same structure with the origin site</li>
+</ul>
+
+
+<h2>Installation</h2>
+
+<p>install it with rubygem:</p>
+
+<pre><code>gem install 'speed_spider'
+</code></pre>
+
+<h3>Usage</h3>
+
+<pre><code>Usage: spider [options] start_url
+
+options:
+    -S, --slient                     slient output
+    -D, --dir String                 directory for download files to save to. "download" by default
+    -b, --base_url String            any url not starts with base_url will not be saved
+    -t, --threads Integer            threads to run for fetching pages, 4 by default
+    -u, --user_agent String          words for request header USER_AGENT
+    -d, --delay Integer              delay between requests
+    -o, --obey_robots_text           obey robots exclustion protocol
+    -l, --depth_limit                limit the depth of the crawl
+    -r, --redirect_limit Integer     number of times HTTP redirects will be followed
+    -a, --accept_cookies             accept cookies from the server and send them back?
+    -s, --skip_query_strings         skip any link with a query string? e.g. http://foo.com/?u=user
+    -H, --proxy_host String          proxy server hostname
+    -P, --proxy_port Integer         proxy server port number
+    -T, --read_timeout Integer       HTTP read timeout in seconds
+    -V, --version                    Show version
+</code></pre>
+
+<h2>Examples</h2>
+
+<pre><code>spider http://twitter.github.io/bootstrap/
+</code></pre>
+
+<p>It will download all files within the same domain as twitter.github.io, and save to download/twitter.github.io/.</p>
+
+<pre><code>spider -b http://ruby-doc.org/core-2.0/ http://ruby-doc.org/core-2.0/
+</code></pre>
+
+<p>It will only download urls start with http://ruby-doc.org/core-2.0/, notice assets files like image, css, js, font will not obey base_url rule.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[use nfs to share files]]></title>
+    <link href="http://wongyouth.com/blog/2013/04/23/use-nfs-to-share-files/"/>
+    <updated>2013-04-23T14:33:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/04/23/use-nfs-to-share-files</id>
+    <content type="html"><![CDATA[<p>当一个服务器不能负载的时候，就需要增加一个服务器来做负载均衡，这个时候就需要做文件共享。
+这一次我们来看看如何在ubuntu12.04上用nfs来做文件共享</p>
+
+<!-- more -->
+
+
+<h2>服务器端配置</h2>
+
+<p>Step 1. 安装nfs服务</p>
+
+<pre><code>sudo apt-get install nfs-kernel-server
+</code></pre>
+
+<p>Step 2. 设置共享文件夹</p>
+
+<pre><code>sudo mkdir -p /exports/files
+#sudo vi /etc/exports
+/exports/files *(rw,async,anonuid=1000,anongid=1000)
+</code></pre>
+
+<p>为什么要做一个映射，而不直接使用实际的文件夹，是因为不需要暴露太多的信息给客户端。
+这里我们把默认的权限设置为uid为1000的用户帐号，这样如果客户端新加一个文件的时候就能自动设置文件所有者属性</p>
+
+<p>Step 3. 映射共享文件夹到实际的文件夹</p>
+
+<pre><code># sudo vi /etc/fstab
+/path/to/files /exports/files none bind 0 0 # 这里的/path/to/files是实际你要共享的文件夹
+</code></pre>
+
+<p>Step 4. 启动服务</p>
+
+<pre><code>sudo exportfs  -ra
+sudo service nfs-kernel-server restart
+</code></pre>
+
+<h2>客户端配置</h2>
+
+<p>Step 1. 安装nfs客户端</p>
+
+<pre><code>sudo apt-get install nfs-common
+</code></pre>
+
+<p>Step 2. 做文件映射</p>
+
+<pre><code>sudo mkdir -p /data/files
+#sudo vi /etc/fstab
+server:/exports/files /data/files nfs proto=tcp,port=2049
+</code></pre>
+
+<p>在/etc/fstab写的好处是下次系统自启动后会自动加载该配置</p>
+
+<pre><code>sudo mount /data/files
+</code></pre>
+
+<p>最后要说的是现在的配置是没有做安全设置的，还需要用防火墙做ip过滤，这个设置方法本片就略过了。</p>
+
+<p>该篇博文参考： <a href="https://help.ubuntu.com/community/SettingUpNFSHowTo">https://help.ubuntu.com/community/SettingUpNFSHowTo</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[config dns server for development]]></title>
+    <link href="http://wongyouth.com/blog/2013/04/22/config-dns-server-for-development/"/>
+    <updated>2013-04-22T19:28:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/04/22/config-dns-server-for-development</id>
+    <content type="html"><![CDATA[<p>开发的时候我们很多时候需要配置一个与线上相同的环境来做测试。
+其中一项就是我们需要用线上相同的域名在做测试，这样就需要在开发环境里面配置域名映射。
+最为简单的情况就是使用/etc/hosts，但是如果是有一团队来做测试，需要所有的人有相同的配置，
+特别是有新成员来的时候，相同的工作要不厌其烦的重复做重复说明。</p>
+
+<p>还有一种办法就是找一台机器来做域名解析服务，其实配置起来也不是很麻烦，下面就让我来讲一个简单的例子。</p>
+
+<!-- more -->
+
+
+<p>Step 1. 安装bind9</p>
+
+<pre><code>sudo apt-get install bind9
+</code></pre>
+
+<p>Step 2. 配置bind</p>
+
+<pre><code>#sudo vi /etc/bind/named.conf.options
+
+# 本DNS不知道的域名会到8.8.8.8服务器问
+forwarders {
+  8.8.8.8;
+};
+
+# 允许递归访问
+recursion yes;
+
+# 允许外部访问
+allow-query {anry;};
+</code></pre>
+
+<p>step 3. 配置本地DNS</p>
+
+<p>假如我们要配置一个 taobao.com 的DNS</p>
+
+<pre><code>#sudo vi /etc/bind/named.conf.local
+
+zone "taobao.com" {
+  type master;
+  file "/etc/bind/db.taobao.com";
+};
+
+#sudo vi /etc/bind/db.taobao.com
+
+;
+;$TTL    604800
+$TTL    7d
+@       IN      SOA     taobao.com. admin.taobao.com. (           # admin.taobao.com 表示 admin@taobao.com 管理员email
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+        IN      NS      ns.taobao.com.                            # 设置域名DNSip 最后有个.结尾表示一个全的URL
+@       IN      A       192.168.0.100
+ns      IN      A       192.168.0.100
+mx      IN      MX      192.168.0.100
+www     IN      A       192.168.0.100
+m       IN      CNAME   www                                       # 设置别名
+*       IN      A       192.168.0.100                             # 没有设置过的子域名都转到这个IP
+</code></pre>
+
+<p>通过以上的配置，只要在系统里面把DNS设置好，在浏览器里面输入 <code>taobao.com</code> 就会解析到 192.168.0.100这个IP，而不是真正的淘宝网了。
+如果有路由器的配置权限，只要把路由器的DHCP地址设为这个DNS服务器的IP，这样系统里面设置DNS这一步也可以省略，真正即插即用。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[use lvm with your server]]></title>
+    <link href="http://wongyouth.com/blog/2013/01/30/use-lvm-with-your-server/"/>
+    <updated>2013-01-30T11:22:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/01/30/use-lvm-with-your-server</id>
+    <content type="html"><![CDATA[<p>based on:
+  * a disk /dev/xvdd more than 50G
+  * ubuntu 12.04 LTS</p>
+
+<pre><code># install lvm2
+sudo apt-get install lvm2
+
+# create a pysical volume
+sudo pvcreate /dev/xvdd
+
+# create a volume group with name `yun`
+sudo vgcreate yun /dev/xvdd
+
+# create a logical volume named `gp` from vg yun with 50 giga bytes
+sudo lvcreate -L 50G -n pg yun
+# use max size of vg to create a lv
+sudo lvcreate -l 100%FREE -n pg yun #
+
+# format the logical volume
+sudo mkfs.ext4 /dev/mapper/yun-pg
+
+# mount the lv
+sudo mount /dev/mapper/yun-pg /mnt
+
+# add new device
+sudo pvcreate /dev/xvde
+
+# extend vg
+sudo vgextend yun /dev/mapper/yun-pg
+
+# extend lv to 8G
+sudo lvextend -L8G yun-pg
+
+# extend lv with extra 8G
+sudo lvextend -L+8G /dev/mapper/yun-pg
+</code></pre>
+
+<p>how-to: <a href="http://www.howtogeek.com/howto/40702/how-to-manage-and-use-lvm-logical-volume-management-in-ubuntu/">http://www.howtogeek.com/howto/40702/how-to-manage-and-use-lvm-logical-volume-management-in-ubuntu/</a><br/>
+recipies: <a href="http://docstore.mik.ua/manuals/hp-ux/en/5992-4589/ch03s03.html">http://docstore.mik.ua/manuals/hp-ux/en/5992-4589/ch03s03.html</a><br/>
+pvreduce: <a href="http://www.cclove.me/Create_Extend_and_Reduce_LVM_on_Ubuntu1204.html">http://www.cclove.me/Create_Extend_and_Reduce_LVM_on_Ubuntu1204.html</a><br/></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[让你的网站支持SSL]]></title>
+    <link href="http://wongyouth.com/blog/2013/01/05/make-your-site-ssl-enabled/"/>
+    <updated>2013-01-05T20:46:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/01/05/make-your-site-ssl-enabled</id>
+    <content type="html"><![CDATA[<p>ssl是什么，ssl就是你在网址里面看到的https。区别于http，如果是ssl的，那么他所传输的数据是保密的，
+别人无法根据监听网络偷取你的信用卡数据，登录密码。现在国内的银行等大型网站基本上都支持ssl了。</p>
+
+<p>我们在用apache作为web服务器来配置一个网站的时候，往往自动忽略掉配置ssl，原因是ssl的CA一把都是收费的。
+而且费用也都不低。现在终于好了，startssl.com支持免费的单域名了。</p>
+
+<!-- more -->
+
+
+<p>startssl.com支持class1级别的ssl服务，如果你的网站没有多个子域名，那就完全可以使用了。
+如果的你的网站有多个子域名，那么就无法支持全站的ssl。</p>
+
+<p>当然有个折中的方案就是只让登录的处理支持ssl，别的页面不需要ssl，
+下面就是我这个折中方案的做法步骤。</p>
+
+<ul>
+<li>首先需要到startssl.com注册</li>
+<li>验证你的email，domain，30天有效，之后需要重新验证</li>
+<li><p>生成csr文件，当然你可以根据网站向导上的工具来生成</p>
+
+<pre><code>openssl genrsa -des3 -out domain.key 2048        # create key
+openssl req -new -key domain.key -out domain.csr # create certificate sign request
+cat domain.csr # 把输出整个复制到startssl.com生成ssl的输入框内
+</code></pre></li>
+<li><p>复制网站生成的crt内容，保存到文件 domain.crt</p></li>
+<li>下载 <a href="http://www.startssl.com/certs/sub.class1.server.ca.pem">chain</a>文件，root <a href="http://www.startssl.com/certs/ca.pem">CA</a> 文件</li>
+<li>设置apache
+
+<ul>
+<li>a2enmod ssl</li>
+<li>a2enmod rewrite</li>
+<li>修改virtual host配置，当login处理是跳转到ssl，当其他处理时从https跳回到普通的http</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;VirtualHost _default_:80&gt;
+</span><span class='line'>  ServerName example.com
+</span><span class='line'>  ServerAlias *.example.com
+</span><span class='line'>  DocumentRoot /home/httpd/private
+</span><span class='line'>
+</span><span class='line'>  ErrorLog /var/log/apache2/example_errors.log
+</span><span class='line'>  LogLevel warn
+</span><span class='line'>  CustomLog /var/log/apache2/example_ssl_access.log combined
+</span><span class='line'>
+</span><span class='line'>  RewriteEngine On
+</span><span class='line'>  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+</span><span class='line'>  RewriteCond %{REQUEST_URI} ^/login
+</span><span class='line'>  RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L]
+</span><span class='line'>&lt;/VirtualHost&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;VirtualHost _default_:443&gt;
+</span><span class='line'>  ServerName example.com
+</span><span class='line'>  ServerAlias *.example.com
+</span><span class='line'>  DocumentRoot /home/httpd/private
+</span><span class='line'>
+</span><span class='line'>  ErrorLog /var/log/apache2/example_errors.log
+</span><span class='line'>  LogLevel warn
+</span><span class='line'>  CustomLog /var/log/apache2/example_ssl_access.log combined
+</span><span class='line'>
+</span><span class='line'>  SSLEngine on
+</span><span class='line'>  SSLCertificateFile /usr/local/apache/conf/ssl.crt
+</span><span class='line'>  SSLCertificateKeyFile /usr/local/apache/conf/ssl.key
+</span><span class='line'>  SSLCertificateChainFile /usr/local/apache/conf/sub.class1.server.ca.pem
+</span><span class='line'>  SSLCACertificateFile /usr/local/apache/conf/ca.pem
+</span><span class='line'>  RewriteEngine On
+</span><span class='line'>
+</span><span class='line'>  # assets files should not be redirected.
+</span><span class='line'>  RewriteRule \.(css|js|gif|jpe?g|png)(\?[0-9]*)?$ - [NC,L]
+</span><span class='line'>
+</span><span class='line'>  RewriteCond %{HTTP:X-Forwarded-Proto} !=http
+</span><span class='line'>  RewriteCond %{REQUEST_URI} !^/login
+</span><span class='line'>  RewriteRule (.*) http://%{HTTP_HOST}%{REQUEST_URI} [L]
+</span><span class='line'>&lt;/VirtualHost&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[redmine用Git repo镜像脚本]]></title>
+    <link href="http://wongyouth.com/blog/2012/11/05/make-a-git-repo-mirror-for-redmine/"/>
+    <updated>2012-11-05T14:11:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/11/05/make-a-git-repo-mirror-for-redmine</id>
+    <content type="html"><![CDATA[<p>一般我用<a href="http://git-scm.com">git</a>来管理代码，后台用<a href="https://github.com/sitaramc/gitolite">gitolite</a>，<a href="http://redmine.org">redmine</a>来管理项目，redmine中可以结合git来参看git提交信息时，非常有用。</p>
+
+<!-- more -->
+
+
+<p>以下代码参照了<a href="http://blog.buginception.com/blog/2012/04/02/redmine-use-git-code-review">http://blog.buginception.com/blog/2012/04/02/redmine-use-git-code-review</a></p>
+
+<figure class='code'><figcaption><span> (make-mirror.sh)</span> <a href='http://wongyouth.com/downloads/code/make-mirror.sh'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">set</span> -x
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$1&quot;</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Usage: $0 [repo]&quot;</span>
+</span><span class='line'>  <span class="nb">exit </span>1
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">REPO</span><span class="o">=</span><span class="nv">$1</span>.git
+</span><span class='line'><span class="nv">GIT_BASE</span><span class="o">=</span>/home/git/repositories
+</span><span class='line'><span class="nv">MIRROR_PATH</span><span class="o">=</span>/home/jxb/git-mirrors
+</span><span class='line'><span class="nv">REPO_PATH</span><span class="o">=</span><span class="nv">$MIRROR_PATH</span>/<span class="nv">$REPO</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 我們要使用 git clone --mirror 建立一個原始 repo 的鏡像：</span>
+</span><span class='line'><span class="nb">cd</span> <span class="nv">$MIRROR_PATH</span> <span class="o">&amp;&amp;</span> git clone --mirror <span class="nv">$GIT_BASE</span>/<span class="nv">$REPO</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 接下來下一步，由於之後 git 使用者會透過 post-receive hook 來同步兩個 repository，</span>
+</span><span class='line'><span class="c"># 我們直接修改這個境像 repository 的 owner / group 為 git 來讓它有讀寫權限。</span>
+</span><span class='line'>chown -R git:git <span class="nv">$REPO_PATH</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 再來我們要設定原本 repo 的 hooks ：</span>
+</span><span class='line'><span class="nb">cd</span> <span class="nv">$GIT_BASE</span>/<span class="nv">$REPO</span>/hooks
+</span><span class='line'>
+</span><span class='line'>cat &gt; post-receive <span class="s">&lt;&lt;EOS</span>
+</span><span class='line'><span class="s">#!/bin/bash</span>
+</span><span class='line'><span class="s">/usr/bin/git push --mirror $REPO_PATH</span>
+</span><span class='line'><span class="s">EOS</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 建立完 post-receive 檔案後修改權限：</span>
+</span><span class='line'>chown git:git post-receive
+</span><span class='line'>chmod 700 post-receive
+</span><span class='line'>
+</span><span class='line'><span class="c"># 由於 Git 在做 mirror push 的時候，會保留原始的檔案與資料夾存取權限，</span>
+</span><span class='line'><span class="c"># 在 gitolite 控管下，只有 owner 有讀寫權限，所以一做 mirror push 這個鏡像的 repository 就沒辦法被其他 process 讀取到了，</span>
+</span><span class='line'><span class="c"># 所以我們一開始就要告訴這個 mirror repository 它是被分享的，並且設定它應該要有的存取權限：</span>
+</span><span class='line'>sudo -u git sh <span class="s">&lt;&lt;EOS</span>
+</span><span class='line'><span class="s">set -x</span>
+</span><span class='line'><span class="s">cd $REPO_PATH</span>
+</span><span class='line'><span class="s">chmod a+rX -R ./</span>
+</span><span class='line'><span class="s">git config --add core.sharedRepository 644</span>
+</span><span class='line'><span class="s">EOS</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用时需要用root权限</p>
+
+<pre><code>sudo sh make-mirror.sh &lt;REPO-NAME&gt; # REPO-NAME 中不带.git后缀
+</code></pre>
+
+<p>如果不需要特别强大的项目管理功能，可以用<a href="https://github.com/gitlabhq/gitlabhq">gitlabhq</a>，这是一个类似<a href="https://github.com">github</a>的代码管理应用，支持fork，pull request功能，非常实用，选择哪个用来管理也就见仁见智了。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git中如何退回到旧版本]]></title>
+    <link href="http://wongyouth.com/blog/2012/10/25/return-to-old-revision-on-git-repo/"/>
+    <updated>2012-10-25T09:34:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/10/25/return-to-old-revision-on-git-repo</id>
+    <content type="html"><![CDATA[<p>使用Git用来管理版本时，有时候会有不小心递交了错误的代码，想回退到旧的版本中的场景。让我们看看在Git中应该如何正确操作。</p>
+
+<!-- more -->
+
+
+<p>先来说一下如何保存当前工作区的修改。</p>
+
+<h2>保留当前修改</h2>
+
+<pre><code>git stash                 # 保留当前工作区的修改
+git stash pop             # 恢复保存的修改到工作区
+</code></pre>
+
+<h2>递交的代码没有push到远程的仓库时</h2>
+
+<pre><code>git reset --mixed REVISION # 返回到旧版本REVISION，版本间的差异会到工作区
+git reset --soft REVISION  # 返回到旧版本REVISION，版本间的差异会到index
+git reset --hard REVISION  # 返回到旧版本REVISION，包括当前工作区里的修改
+</code></pre>
+
+<h2>递交的代码已经push到远程的仓库，协同者未同步时</h2>
+
+<p>如果递交的代码已经push到了远程，我们不能用上面的方法，因为上面的方法只是让你的本地状态变成一个没有同步远程的协同者的状态相似。你下次pull远程时会把远程代码库的更新取回来。
+所以我们必须要把远程的代码也返回到旧版。</p>
+
+<pre><code>remote$ git config receive.denyCurrentBranch ignore # 登录到远程代码库，设置取消拒绝当前分支，否则以下的操作无法删除远程master分支
+
+local$ git push origin :master       # 删除远程master分支
+local$ git reset --hard REVISION     # return to old revision
+local$ git push origin master:master # 递交旧版到远程master分支
+</code></pre>
+
+<p>或者回到旧版再强制推到远程</p>
+
+<pre><code>local$ git reset --hard REVISION
+local$ git push --force
+</code></pre>
+
+<h2>递交的代码已经更新到协同者的代码库时</h2>
+
+<p>这个时候让每个协同者返回旧版不是一个好的选择项时，我们只有把旧代码取出，加到当前版之上，push到远程，再让协同者同步。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[rails开发用 vimfiles 配置]]></title>
+    <link href="http://wongyouth.com/blog/2012/07/05/rails-development-oriented-vimfiles/"/>
+    <updated>2012-07-05T09:41:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/07/05/rails-development-oriented-vimfiles</id>
+    <content type="html"><![CDATA[<p>看到很多朋友在烦编辑器的事，就像自己刚开始的时候一样。 我还是选择了vim, 就是喜欢他可以配置到自己喜欢的样子， 不知道你喜欢不喜欢我的配置，但是如果你着急上手，试试我的。</p>
+
+<!-- more -->
+
+
+<p>虽然只在ubuntu测试过，但是应该在别的系统下也可以用</p>
+
+<h2>特点</h2>
+
+<ul>
+<li>单条命令完成安装，免除配置痛苦</li>
+<li>vim插件不包含在repo里，支持一个命令更新所有vimplugins，免除更新插件之苦</li>
+</ul>
+
+
+<h2>包含插件</h2>
+
+<ul>
+<li>vundle, vim插件管理器， <code>:BundleInstall!</code> 更新所有插件</li>
+<li>rails 必须的</li>
+<li>NERDTree 树形文件管理器 <code>F7</code> / <code>F6</code> 当前文件文件夹</li>
+<li>NERDComment 注释用<code>\cc</code>  / <code>\c&lt;space&gt;</code></li>
+<li>delimitMate 自动补全右括号</li>
+<li>zencoding HTML垒码利器 <code>&lt;c-y&gt;,</code></li>
+<li>tabular 代码美化。 按 <code>=</code> 等对齐 <code>\a=</code>， 按 <code>=&gt;</code> 对齐 <code>\a&gt;</code></li>
+<li><del>taglist 标签列表</del> tagbar 标签列表 <code>F8</code></li>
+<li>ctrlp 文件查找 <code>&lt;c-p&gt;</code></li>
+<li>bufExplorer 缓冲列表 <code>&lt;c-k&gt;</code></li>
+<li>preview markdown文件编译结果查看 <code>\P</code></li>
+<li>fugitive 超强大GIT代码仓库查询工具
+
+<ul>
+<li>查状态 <code>:Gstatus</code></li>
+<li>查异同 <code>:Gdiff</code></li>
+<li>搜pattern <code>:Ggrep</code>, 替代ack</li>
+<li>查log <code>:Glog</code></li>
+<li>打开Github上该文件 <code>:Gbrowse</code></li>
+<li>说不完&#8230;</li>
+</ul>
+</li>
+<li>snippets</li>
+<li>语法支持
+
+<ul>
+<li>less, haml</li>
+<li>markdown</li>
+<li>sass, scss</li>
+<li>coffee-script</li>
+<li>css 文件中颜色color, background-color 自动显示为背景色 （需gvim）</li>
+</ul>
+</li>
+<li>配色方案
+
+<ul>
+<li>solarized</li>
+<li>vim-github-colorscheme</li>
+<li>backboard</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>vimrc DIY</h2>
+
+<ul>
+<li>当前行,列高亮</li>
+<li><code>F3</code> 搜索， <code>alt-F3</code> 替换 文件中所有当前光标下文字</li>
+<li><code>F4</code> 插入模式时 切换粘帖模式， 普通模式时 切换 行号</li>
+</ul>
+
+
+<p>你觉得还少了什么？</p>
+
+<p>最后vim英文帮助看着吃力的话你可以下载VIM的中文说明，那就完美了
+<a href="http://vimcdoc.sourceforge.net/">vim中文帮助</a></p>
+
+<h2>Screenshots</h2>
+
+<p><img src="http://pic.yupoo.com/sinaweibo1332356097/C5k2LdP9/medish.jpg" alt="vim-gui" /></p>
+
+<p>repo 在这里 <a href="https://github.com/wongyouth/vimfiles">https://github.com/wongyouth/vimfiles</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在rails中使用mongoid]]></title>
+    <link href="http://wongyouth.com/blog/2012/06/30/use-mongoid-with-rails/"/>
+    <updated>2012-06-30T12:54:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/06/30/use-mongoid-with-rails</id>
+    <content type="html"><![CDATA[<p>在我看来noSQL解决方案有一个最大的优点就是可以方便的scale out, Oracle等大型数据库也可以支持Grid，支持集群但是就是配置起来的繁琐而已，可以写一本厚厚的书啦。而今天要使用的mongodb只是简单的一个配置文件就能搞定，简单易用容易让人理解，只就是生产力的极大提升啊。</p>
+
+<!-- more -->
+
+
+<p>Mongodb可使用的ruby adapter 常用的有Mongoid, Mongo Ruby Driver, Mongo mapper, 在这里不比较两者的异同，我们简单的用现在人气高的一个mongoid。人气值可以在看<a href="https://www.ruby-toolbox.com/categories/mongodb_clients">这里</a></p>
+
+<h2>Step 1: Install Mongodb 2.0</h2>
+
+<p>目前Ubuntu官方库里的mongodb还没有升级到2.0版，我们用mongodb官方提供<a href="http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian-or-ubuntu-linux/">步骤</a>来安装。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># 添加mongodb公司10gen的pgp键</span>
+</span><span class='line'>sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+</span><span class='line'>
+</span><span class='line'><span class="c"># 增加源到apt</span>
+</span><span class='line'>sudo sh -c <span class="s2">&quot;echo &#39;deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen&#39; &gt; /etc/apt/sources.list.d/10gen.list&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 更新源</span>
+</span><span class='line'>sudo apt-get update
+</span><span class='line'>
+</span><span class='line'><span class="c"># 安装mongodb</span>
+</span><span class='line'>sudo apt-get install mongodb-10gen
+</span><span class='line'>
+</span><span class='line'><span class="c"># 启动mongodb</span>
+</span><span class='line'>sudo service mongodb start
+</span><span class='line'>
+</span><span class='line'><span class="c"># test mongo client</span>
+</span><span class='line'>mongo
+</span><span class='line'>
+</span><span class='line'><span class="c"># db.test.save( {a: 1} )</span>
+</span><span class='line'><span class="c"># db.test.find()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Step 2: Setup Gemfile to install mongoid</h2>
+
+<p>在Gemfile中添加mongoid</p>
+
+<pre><code>gem 'mongoid', '~&gt; 3.0.0.rc'
+</code></pre>
+
+<p>执行</p>
+
+<pre><code>bundle install
+</code></pre>
+
+<p>这样就可以使用了。在[railscasts][]中有mongoid的使用视频，我就不接着举例了。
+虽然现在mongoid升级到了3.0rc，有些东西会有变化，但是大的变化不会太大。</p>
+
+<p>mongoid的确是好东西，但是rails社区之前的插件基本都是为mysql特质的，所以很多好插件在mongoid下还不能用，
+这个还需要社区在进一步的发展才能达到，重复造轮子代价太大，我们做迁移之前还是要考虑好这个现实问题的。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu环境下在Rails项目中使用postgresql时的初始配置]]></title>
+    <link href="http://wongyouth.com/blog/2012/06/25/use-postgresql-with-rails/"/>
+    <updated>2012-06-25T14:28:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/06/25/use-postgresql-with-rails</id>
+    <content type="html"><![CDATA[<p>在我们的rails服务器配置中经常用的是 MySQL，
+今天使用开源社区的另一款数据库软件 postgresql 来做一个实验。</p>
+
+<p>测试环境： ubuntu 12.04</p>
+
+<!-- more -->
+
+
+<p>安装与配置postgresql数据库。</p>
+
+<pre><code># 安装 postgresql 和开发库（pg.gem使用）
+sudo apt-get install postgresql libpq-dev
+
+# 修改配置文件使TCP/IP来的链接可用
+
+# /etc/postgresql/9.1/main/postgresql.conf 文件中去掉以下行开头的 `#'
+# listen_addresses = 'localhost'
+
+# 重启 postgresql
+sudo /etc/init.d/postgresql restart
+</code></pre>
+
+<p>生成rails里面使用的postgrelsql的帐号密码，这里我们用MySQL的帐号root。</p>
+
+<pre><code># 创建root帐号
+# -d 可以创建数据库
+# -R 不可以创建角色
+# -S 不是超级用户
+sudo -u postgres createuser -d -R -S root
+</code></pre>
+
+<p>postgres 是 postgresql 的超级帐号，使用他就可以做任何事了，包括找回密码哦，因为默认配置是不需要输入密码的。</p>
+
+<pre><code># 修改root帐号密码
+echo "alter role root password 'root';" | sudo -u postgres psql
+
+# 测试帐号登录
+psql -U root -h localhost template1
+</code></pre>
+
+<p>template1 是安装 postgresql 时自动生成的一个模板，这里为什么要指定 template1 是因为不指定一个操作对象时会报错。</p>
+
+<p>配置rails程序，使其使用postgresql</p>
+
+<pre><code>gem pg
+</code></pre>
+
+<p>config/database.yml</p>
+
+<pre><code>adapter: postgresql
+host: localhost
+database: xxx_development
+username: root
+password: root
+encoding: utf8
+pool: 5
+</code></pre>
+
+<p>生成数据库启动rails</p>
+
+<pre><code>rake db:create
+rails server
+</code></pre>
+
+<p>后面的操作就与MySQL时是一样的啦。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[配置一个新的Ubuntu开发环境]]></title>
+    <link href="http://wongyouth.com/blog/2012/06/20/setup-new-ubuntu-environment/"/>
+    <updated>2012-06-20T14:09:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/06/20/setup-new-ubuntu-environment</id>
+    <content type="html"><![CDATA[<p>今天刚申请到<a href="http://linode.com">linode</a>的<code>vps</code>主机，就迫不及待的安装了ubuntu，于是有要配置安装一大堆东西，
+在这里给总结一下。</p>
+
+<!-- more -->
+
+
+<h2>更新源</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo apt-get update
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>安装系统包</h2>
+
+<pre><code>sudo apt-get -y install git-core curl zsh exuberant-ctags vim autoconf automake openssl \
+  build-essential libc6-dev libreadline6 libreadline6-dev zlib1g zlib1g-dev libssl-dev libyaml-dev \
+  mysql-server libmysqlclient-dev libsqlite3-0 libsqlite3-dev sqlite3 \
+  ncurses-dev libtool bison libxslt1-dev libxml2-dev libqt4-dev
+</code></pre>
+
+<p>nokogiri.gem        need libxml2 libxml2-dev libxslt1-dev
+mysql2.gem          need libmysqlclient-dev
+capybara-webkit.gem need libqt4-dev</p>
+
+<h2>安装<code>oh-my-zsh</code>，如果你使用<code>bash</code>可以跳过此步骤</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | bash
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>切换到<code>zsh</code></h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>chsh -s <span class="sb">`</span>which zsh<span class="sb">`</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>配置主目录里面常用的dotfiles文件</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>git clone git://github.com/wongyouth/dotfiles ~/.dotfiles
+</span><span class='line'><span class="nb">cd</span> ~/.dotfiles
+</span><span class='line'>rake install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>设置<code>vim</code>文件，安装常用的<code>vim</code>插件</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>curl https://raw.github.com/wongyouth/vimfiles/master/install.sh | bash
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>安装<code>ruby</code>环境管理工具<code>rbenv</code></h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>curl https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash
+</span><span class='line'>rbenv bootstrap-ubuntu-12-04
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>安装ruby1.9</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv install 1.9.3-p194
+</span><span class='line'>rbenv global 1.9.3-p194
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>更新<code>gem</code> 并安装 <code>bundler</code> <code>rake</code></h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem update --system
+</span><span class='line'>gem install bundler rake
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>更新<code>rbenv</code>的<code>shim</code>，使<code>rake</code>, <code>bundle</code>命令可以直接使用</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv rehash
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[tmall砸金蛋活动脚本]]></title>
+    <link href="http://wongyouth.com/blog/2012/06/18/tmall-za-jin-dan/"/>
+    <updated>2012-06-18T19:32:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/06/18/tmall-za-jin-dan</id>
+    <content type="html"><![CDATA[<p>今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。
+于是乎写个脚本砸&#8230;</p>
+
+<!-- more -->
+
+
+<p>今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。
+于是就写个脚本砸，虽然机会太微妙，不过看着自动砸挺开心哈。
+现在活动都过去了，放出来应该不会危害什么了吧。</p>
+
+<p>运行环境 ruby</p>
+
+<pre><code>gem install capybara # install capybara
+ruby brick.rb
+</code></pre>
+
+<figure class='code'><figcaption><span> (brick.rb)</span> <a href='http://wongyouth.com/downloads/code/brick.rb'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="c1"># encoding: utf-8</span>
+</span><span class='line'><span class="c1">#</span>
+</span><span class='line'><span class="c1"># 淘宝砸金蛋脚本</span>
+</span><span class='line'><span class="c1"># 当前目录建立 tmall 文件放入帐号:密码，分号隔开</span>
+</span><span class='line'><span class="c1">#</span>
+</span><span class='line'><span class="c1"># mailto wongyouth@gmail.com</span>
+</span><span class='line'><span class="c1"># blog http://wongyouth.github.com</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;rubygems&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;capybara&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;capybara/dsl&#39;</span>
+</span><span class='line'><span class="kp">include</span> <span class="ss">Capybara</span><span class="p">:</span><span class="ss">:DSL</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Capybara</span><span class="o">.</span><span class="n">default_driver</span> <span class="o">=</span> <span class="ss">:selenium</span>
+</span><span class='line'><span class="no">Capybara</span><span class="o">.</span><span class="n">app_host</span> <span class="o">=</span> <span class="s1">&#39;http://www.tmall.com&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">login</span>
+</span><span class='line'>  <span class="n">username</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;tmall&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">visit</span><span class="p">(</span><span class="s1">&#39;http://login.tmall.com&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">setup_frame</span><span class="p">(</span><span class="s1">&#39;loginframe&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">within_frame</span><span class="p">(</span><span class="s1">&#39;loginframe&#39;</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">fill_in</span> <span class="s1">&#39;TPL_username&#39;</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="n">username</span>
+</span><span class='line'>    <span class="n">fill_in</span> <span class="s1">&#39;TPL_password&#39;</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="n">password</span>
+</span><span class='line'>    <span class="n">click_button</span> <span class="s1">&#39;登录&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">rescue</span> <span class="o">=&gt;</span> <span class="n">e</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">e</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">setup_frame</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">jquerify</span>
+</span><span class='line'>  <span class="n">page</span><span class="o">.</span><span class="n">execute_script</span> <span class="sx">%Q{</span>
+</span><span class='line'><span class="sx">    jQuery(&#39;iframe&#39;).attr(&#39;name&#39;, &#39;</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="sx">&#39;);</span>
+</span><span class='line'><span class="sx">  }</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">jquerify</span>
+</span><span class='line'>  <span class="n">page</span><span class="o">.</span><span class="n">execute_script</span> <span class="sx">%Q{</span>
+</span><span class='line'><span class="sx">    var jq = document.createElement(&#39;script&#39;);</span>
+</span><span class='line'><span class="sx">    jq.src = &quot;http://code.jquery.com/jquery-latest.min.js&quot;;</span>
+</span><span class='line'><span class="sx">    document.getElementsByTagName(&#39;head&#39;)[0].appendChild(jq);</span>
+</span><span class='line'><span class="sx">  }</span>
+</span><span class='line'>  <span class="c1"># wait to load jquery</span>
+</span><span class='line'>  <span class="nb">sleep</span> <span class="mi">2</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">brick</span>
+</span><span class='line'>  <span class="n">visit</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="mi">10000</span><span class="o">.</span><span class="n">downto</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">find</span><span class="p">(</span><span class="s1">&#39;#J_Vol_Brick_Btn&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span>
+</span><span class='line'>    <span class="nb">sleep</span> <span class="mi">1</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">rescue</span>
+</span><span class='line'>  <span class="nb">sleep</span> <span class="mi">5</span>
+</span><span class='line'>  <span class="k">retry</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">login</span>
+</span><span class='line'><span class="n">brick</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git分支常用操作]]></title>
+    <link href="http://wongyouth.com/blog/2012/04/26/git-branch/"/>
+    <updated>2012-04-26T10:55:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/04/26/git-branch</id>
+    <content type="html"><![CDATA[<p>在这里我列举了一些日常Git操作时用到的<code>branch</code>分支命令。</p>
+
+<!-- more -->
+
+
+<h2>生成一个分支，名字为issue1</h2>
+
+<pre><code>git branch issue1
+</code></pre>
+
+<h2>切换到一个分支issue1</h2>
+
+<pre><code>git checkout issue1
+</code></pre>
+
+<h2>生成一个本地分支并切换到它</h2>
+
+<pre><code>git checkout -b issue1
+</code></pre>
+
+<h2>修改后提交</h2>
+
+<pre><code>git commit -am 'fix issue1'
+</code></pre>
+
+<h2>切换到主分支</h2>
+
+<pre><code>git checkout master
+</code></pre>
+
+<h2>合并issue1到主分支</h2>
+
+<pre><code>git merge issue1
+</code></pre>
+
+<h2>递交到远程</h2>
+
+<pre><code>git push origin issue1
+</code></pre>
+
+<h2>复制远程分支到本地</h2>
+
+<pre><code>git checkout -b issue1 origin/issue1
+</code></pre>
+
+<h2>删除远程分支</h2>
+
+<pre><code>git push origin :issue1
+</code></pre>
+
+<h2>删除本地分支</h2>
+
+<pre><code>git branch -d issue1
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git标签常用操作]]></title>
+    <link href="http://wongyouth.com/blog/2012/04/26/git-tagging/"/>
+    <updated>2012-04-26T10:51:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/04/26/git-tagging</id>
+    <content type="html"><![CDATA[<p>在这里我列举了一些日常Git操作时用到的<code>tag</code>标签命令。</p>
+
+<!-- more -->
+
+
+<h2>显示所有标签</h2>
+
+<pre><code>git tag
+</code></pre>
+
+<h2>筛选标签</h2>
+
+<pre><code>$ git tag -l 'v1.4.2.*'
+v1.4.2.1
+v1.4.2.2
+v1.4.2.3
+v1.4.2.4
+</code></pre>
+
+<h2>代注释的标签</h2>
+
+<pre><code>$ git tag -a v1.4 -m 'my version 1.4'
+$ git tag
+v0.1
+v1.3
+v1.4
+
+$ git show v1.4
+tag v1.4
+Tagger: Scott Chacon &lt;schacon@gee-mail.com&gt;
+Date:   Mon Feb 9 14:45:11 2009 -0800
+
+my version 1.4
+commit 15027957951b64cf874c3557a0f3547bd83b3ff6
+Merge: 4a447f7... a6b4c97...
+Author: Scott Chacon &lt;schacon@gee-mail.com&gt;
+Date:   Sun Feb 8 19:02:46 2009 -0800
+
+    Merge branch 'experiment'
+</code></pre>
+
+<h2>轻量标签</h2>
+
+<pre><code>$ git tag v1.4-lw
+$ git tag
+v0.1
+v1.3
+v1.4
+v1.4-lw
+v1.5
+</code></pre>
+
+<h2>给过去递交标签</h2>
+
+<pre><code>$ git log --pretty=oneline
+15027957951b64cf874c3557a0f3547bd83b3ff6 Merge branch 'experiment'
+a6b4c97498bd301d84096da251c98a07c7723e65 beginning write support
+0d52aaab4479697da7686c15f77a3d64d9165190 one more thing
+6d52a271eda8725415634dd79daabbc4d9b6008e Merge branch 'experiment'
+0b7434d86859cc7b8c3d5e1dddfed66ff742fcbc added a commit function
+4682c3261057305bdd616e23b64b0857d832627b added a todo file
+166ae0c4d3f420721acbb115cc33848dfcc2121a started write support
+9fceb02d0ae598e95dc970b74767f19372d61af8 updated rakefile
+964f16d36dfccde844893cac5b347e7b3d44abbc commit the todo
+8a5cbc430f1a9c3d00faaeffd07798508422908a updated readme
+
+$ git tag -a v1.2 9fceb02
+</code></pre>
+
+<h2>分享标签</h2>
+
+<pre><code>$ git push origin v1.5
+Counting objects: 50, done.
+Compressing objects: 100% (38/38), done.
+Writing objects: 100% (44/44), 4.56 KiB, done.
+Total 44 (delta 18), reused 8 (delta 1)
+To git@github.com:schacon/simplegit.git
+* [new tag]         v1.5 -&gt; v1.5
+
+$ git push origin --tags
+Counting objects: 50, done.
+Compressing objects: 100% (38/38), done.
+Writing objects: 100% (44/44), 4.56 KiB, done.
+Total 44 (delta 18), reused 8 (delta 1)
+To git@github.com:schacon/simplegit.git
+ * [new tag]         v0.1 -&gt; v0.1
+ * [new tag]         v1.2 -&gt; v1.2
+ * [new tag]         v1.4 -&gt; v1.4
+ * [new tag]         v1.4-lw -&gt; v1.4-lw
+ * [new tag]         v1.5 -&gt; v1.5
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[用octopress来写博客并发布到Github上]]></title>
+    <link href="http://wongyouth.com/blog/2012/04/21/install-octopress-to-write-blogs-and-deploy-on-github-dot-com/"/>
+    <updated>2012-04-21T20:54:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/04/21/install-octopress-to-write-blogs-and-deploy-on-github-dot-com</id>
+    <content type="html"><![CDATA[<p>用过不少博客，MSN spaces，blogger.com，myspace, wordpress，搜狐，总是觉得少了点自由发挥的空间。直到现有有了<a href="http://octopress.org/">octopress</a>，就像我这个博客一样，这才是咱程序猿该有的！</p>
+
+<!-- more -->
+
+
+<ol>
+<li>安装</li>
+<li>配置</li>
+<li>发布</li>
+<li>写第一个博文</li>
+</ol>
+
+
+<h2>安装</h2>
+
+<figure class='code'><figcaption><span>Install octopress</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>git clone git://github.com/imathis/octopress.git octopress
+</span><span class='line'><span class="nb">cd </span>octopress
+</span><span class='line'>bundler install
+</span><span class='line'>rake install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>配置</h2>
+
+<p>你要先有个github.com的帐号，如果没有赶快注册吧。
+注册好后新建一个软件仓库 <a href="https://github.com/new">https://github.com/new</a> ，注意仓库名称要以下这种格式哦<code>yourname.github.com</code>，这样代码发布后自动这个url就可以访问了。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake setup_github_pages
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个命令主要做以下的操作</p>
+
+<ol>
+<li>问你github上的url。 我的是 git@github.com:wongyouth/wongyouth.github.com.git</li>
+<li>将原始的<code>imathis/octopress</code>远端仓库<code>origin</code>名称改为<code>octopress</code></li>
+<li>把你输入的url作为远端仓库名<code>origin</code></li>
+<li>把当前目录从分支<code>master</code>切换到<code>source</code></li>
+<li>把当前目录与<code>origin</code>的仓库关联，能默认push到github中</li>
+<li>配置<code>_deploy</code>目录作为github仓库的<code>master</code>分支</li>
+</ol>
+
+
+<p>要做的就是把原始的blog代码放在<code>source</code>分支中，当要发布时会自动生成发布代码到<code>_deploy</code>目录下以<code>master</code>分支更新到github上。github会以<code>master</code>中的代码作为blog的原始代码。</p>
+
+<h2>发布</h2>
+
+<figure class='code'><figcaption><span>Deploy blog</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake generate
+</span><span class='line'>rake deploy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>当你发布之后，你就可以到 <a href="http://yourname.github.com">http://yourname.github.com</a> 上看到你的博客了，是不是很酷呢。</p>
+
+<h2>写第一个博文</h2>
+
+<figure class='code'><figcaption><span>Create first post</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake new_post<span class="o">[</span><span class="s1">&#39;first post&#39;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>引号里面是博文的标题，这个命令会在<code>source/_posts</code>下面生成一个markdown为后缀的文件，我们要做的就是编辑这个文件的内容，然后</p>
+
+<figure class='code'><figcaption><span>Start a local server for preview</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake preview
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>会在本地启动sinatra服务，用浏览器打开 <a href="http://localhost:4000">http://localhost:4000</a> 就可以看到效果了。如果都没有问题就可以发布了。</p>
+
+<p>有时候写了一半的博文想要先留为草稿放到服务器但是不发布这样情况。
+我们可以在单独的这篇博文开头的yaml里面追加设置</p>
+
+<pre><code>published: false
+</code></pre>
+
+<p>这样deploy的时候就不会发布了。</p>
+
+<h2>其他</h2>
+
+<p>你可以仔细查看以下三个文件，如果觉得有必要就按照自己的配置修改。</p>
+
+<ol>
+<li>_config.yml</li>
+<li>config.rb</li>
+<li>config.ru</li>
+</ol>
+
+
+<p>_config.yml中有关联其他一些社区的配置，比如github.com帐号，facebook帐号等。我认为比较有用的是<a href="http://disqus.com/">disqus</a>的评论帐号。到disqus注册一下，然后设置好<code>disqus_short_name</code>这样你的博客就有了评论功能了，而不是你一个人在唱独角戏了。</p>
+
+<h2>在其他电脑里面同步时的操作</h2>
+
+<pre><code>git clone git@github.com:wongyouth/wongyouth.github.com.git
+cd wongyouth.github.com
+git checkout source
+git clone git@github.com:wongyouth/wongyouth.github.com.git _deploy
+</code></pre>
+
+<p><code>_deploy</code>目录是用来与远程代码库同步的目录，所以我们要把它checkout出来预先做好关联</p>
+
+<p>make a new post and something else &#8230;</p>
+
+<pre><code>rake generate
+rake deploy
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu下安装ruby开发环境]]></title>
+    <link href="http://wongyouth.com/blog/2012/04/21/install-ruby-environment-on-ubuntu/"/>
+    <updated>2012-04-21T14:41:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/04/21/install-ruby-environment-on-ubuntu</id>
+    <content type="html"><![CDATA[<p>要使用rails开发Web应用服务时，在Windows环境下会遇到各种各样的问题，有些Gem也会工作不正常。
+有些人会用MacOS作为开发环境，这当然好，但是我们在也可用免费的Ubuntu来开发，这里就介绍下安装步骤。</p>
+
+<!-- more -->
+
+
+<p>开始的时候我也是用Windows作为Rails项目开发的。
+但是在Windows下会碰到各种各样的问题，最常见的就是Gem包可能只工作在类Unix的环境下。
+有的时候按照官方说明一步一步做仍然有各种各样的不成功。痛定思痛用Ubuntu做为开发环境。</p>
+
+<p>使用Ubuntu有个好处，每天跟Ubuntu打交道会提高整体的服务器排错水平，因为每天用的就是服务器一样的环境，遇到问题每天都要去解决，久而久之水平也就上去了。</p>
+
+<p>闲话休提。让我们看看如何设置ruby环境吧。</p>
+
+<ol>
+<li>预安装库文件</li>
+<li>安装<code>rbenv</code></li>
+<li>安装<code>ruby</code></li>
+<li>创建第一个<code>Rails</code>项目</li>
+</ol>
+
+
+<h2>预安装库文件</h2>
+
+<h4>预安装一些编译时用到的库文件和工具</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo apt-get -y install git-core curl <span class="se">\</span>
+</span><span class='line'>build-essential openssl libreadline6 libreadline6-dev <span class="se">\</span>
+</span><span class='line'>libmysqlclient-dev zlib1g zlib1g-dev libssl-dev libyaml-dev <span class="se">\</span>
+</span><span class='line'>libsqlite3-0 libsqlite3-dev sqlite3 <span class="se">\</span>
+</span><span class='line'>libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake <span class="se">\</span>
+</span><span class='line'>libtool bison subversion libxslt1-dev
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果使用jruby的话，安装一个jdk环境</p>
+
+<pre><code>sudo apt-get install default-jdk
+</code></pre>
+
+<h2>安装<code>rbenv</code></h2>
+
+<p>我使用<a href="https://github.com/sstephenson/rbenv">rbenv</a>而不是rvm来作为ruby的版本管理软件。理由在rbenv的项目页面说明的很清楚了，更安全也更简单</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>安装<code>ruby</code></h2>
+
+<p>假设你使用ruby-1.9.3</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv install 1.9.3-p125
+</span><span class='line'>rbenv global 1.9.3-p125
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>常用rbenv命令</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv versions <span class="c"># 查看可以安装的ruby版本列表</span>
+</span><span class='line'>rbenv version  <span class="c"># 查看当前的ruby版本</span>
+</span><span class='line'>rbenv rehash   <span class="c"># 更新rbenv里的链接指向gems的可执行文件的映射,安装了新gem包时使用</span>
+</span><span class='line'>
+</span><span class='line'>rbenv global jruby-1.6.5         <span class="c"># 切换到jruby-1.6.5，下次登录系统后仍有效</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">RBENV_VERSION</span><span class="o">=</span>jruby-1.6.5 <span class="c"># 切换到jruby-1.6.5环境，只适用于这一次使用</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>创建第一个<code>Rails</code>项目</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem update --system       <span class="c"># 更新gem到最新版本</span>
+</span><span class='line'>gem install bundler rails <span class="c"># 安装bundler和rails</span>
+</span><span class='line'>rbenv rehash              <span class="c"># 刷新rbenv记录的可执行文件，这样rails命令就可以直接使用了</span>
+</span><span class='line'>rails new blog
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+</feed>

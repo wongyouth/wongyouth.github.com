@@ -1,0 +1,422 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>鱼哥的技术博客</title>
+	<meta name="author" content="Wongyouth / 自由鱼">
+
+	
+	<meta name="description" content="2012-06-25 database, rails, server Comments Ubuntu环境下在Rails项目中使用postgresql时的初始配置 在我们的rails服务器配置中经常用的是 MySQL，
+今天使用开源社区的另一款数据库软件 postgresql 来做一个实验。 &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="鱼哥的技术博客" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://wongyouth.com/blog/page/2/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="/javascripts/jiathis.js" type="text/javascript"></script>
+<meta property="wb:webmaster" content="7f133defa7956d35" />
+<meta property="qc:admins" content="544531077671754067140526375" />
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">	
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("wongyouth@gmail.com") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+</div>
+<hgroup>
+  <h1><a href="/">鱼哥的技术博客</a></h1>
+</hgroup>
+
+<p class="subtitle">Do things the hard way.</p>
+
+<p class="bro">Hi buddy, my name is Wang Yongzhi, living in Shanghai China. I am a Rails programmer, and have a passion for Infomation Technology and web trends.</p>
+
+<nav id="main-nav"><ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+		
+		<a class="twitter" href="http://twitter.com/wongyouth" title="Twitter">Twitter</a>
+		
+		
+		<a class="github" href="https://github.com/wongyouth" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner">
+<div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-25T14:28:00+08:00" data-updated="true" itemprop="datePublished">2012-06-25</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/database/'>database</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/server/'>server</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/06/25/use-postgresql-with-rails/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/06/25/use-postgresql-with-rails/" itemprop="url">Ubuntu环境下在Rails项目中使用postgresql时的初始配置</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>在我们的rails服务器配置中经常用的是 MySQL，
+今天使用开源社区的另一款数据库软件 postgresql 来做一个实验。</p>
+
+<p>测试环境： ubuntu 12.04</p>
+
+
+		
+		<a href="/blog/2012/06/25/use-postgresql-with-rails/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-20T14:09:00+08:00" data-updated="true" itemprop="datePublished">2012-06-20</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/server/'>server</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/06/20/setup-new-ubuntu-environment/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/06/20/setup-new-ubuntu-environment/" itemprop="url">配置一个新的Ubuntu开发环境</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>今天刚申请到<a href="http://linode.com">linode</a>的<code>vps</code>主机，就迫不及待的安装了ubuntu，于是有要配置安装一大堆东西，
+在这里给总结一下。</p>
+
+
+		
+		<a href="/blog/2012/06/20/setup-new-ubuntu-environment/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-18T19:32:00+08:00" data-updated="true" itemprop="datePublished">2012-06-18</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming-language/'>programming language</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/06/18/tmall-za-jin-dan/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/06/18/tmall-za-jin-dan/" itemprop="url">Tmall砸金蛋活动脚本</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。
+于是乎写个脚本砸&#8230;</p>
+
+
+		
+		<a href="/blog/2012/06/18/tmall-za-jin-dan/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-26T10:55:00+08:00" data-updated="true" itemprop="datePublished">2012-04-26</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/git/'>git</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/04/26/git-branch/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/04/26/git-branch/" itemprop="url">Git分支常用操作</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>在这里我列举了一些日常Git操作时用到的<code>branch</code>分支命令。</p>
+
+
+		
+		<a href="/blog/2012/04/26/git-branch/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-26T10:51:00+08:00" data-updated="true" itemprop="datePublished">2012-04-26</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/git/'>git</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/04/26/git-tagging/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/04/26/git-tagging/" itemprop="url">Git标签常用操作</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>在这里我列举了一些日常Git操作时用到的<code>tag</code>标签命令。</p>
+
+
+		
+		<a href="/blog/2012/04/26/git-tagging/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-21T20:54:00+08:00" data-updated="true" itemprop="datePublished">2012-04-21</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/blog/'>blog</a>, <a class='category' href='/blog/categories/server/'>server</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/04/21/install-octopress-to-write-blogs-and-deploy-on-github-dot-com/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/04/21/install-octopress-to-write-blogs-and-deploy-on-github-dot-com/" itemprop="url">用octopress来写博客并发布到Github上</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>用过不少博客，MSN spaces，blogger.com，myspace, wordpress，搜狐，总是觉得少了点自由发挥的空间。直到现有有了<a href="http://octopress.org/">octopress</a>，就像我这个博客一样，这才是咱程序猿该有的！</p>
+
+
+		
+		<a href="/blog/2012/04/21/install-octopress-to-write-blogs-and-deploy-on-github-dot-com/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-21T14:41:00+08:00" data-updated="true" itemprop="datePublished">2012-04-21</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming-language/'>programming language</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/04/21/install-ruby-environment-on-ubuntu/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/04/21/install-ruby-environment-on-ubuntu/" itemprop="url">Ubuntu下安装ruby开发环境</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>要使用rails开发Web应用服务时，在Windows环境下会遇到各种各样的问题，有些Gem也会工作不正常。
+有些人会用MacOS作为开发环境，这当然好，但是我们在也可用免费的Ubuntu来开发，这里就介绍下安装步骤。</p>
+
+
+		
+		<a href="/blog/2012/04/21/install-ruby-environment-on-ubuntu/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+</div>
+<nav id="pagenavi">
+    
+        <a href="/" class="prev">Prev</a>
+    
+    
+    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
+</nav></div>
+			</div>
+			<footer id="footer" class="inner"><p>
+Copyright &copy; 2013 - <a href="http://wongyouth.com">http://wongyouth.com</a> - Wongyouth / 自由鱼 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wongyouth';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-30466888-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>

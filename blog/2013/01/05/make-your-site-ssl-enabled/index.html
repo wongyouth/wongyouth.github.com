@@ -1,0 +1,284 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>让你的网站支持SSL - 鱼哥的技术博客</title>
+	<meta name="author" content="Wongyouth / 自由鱼">
+
+	
+	<meta name="description" content="让你的网站支持SSL ssl是什么，ssl就是你在网址里面看到的https。区别于http，如果是ssl的，那么他所传输的数据是保密的，
+别人无法根据监听网络偷取你的信用卡数据，登录密码。现在国内的银行等大型网站基本上都支持ssl了。 我们在用apache作为web服务器来配置一个网站的时候， &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="鱼哥的技术博客" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://wongyouth.com/blog/2013/01/05/make-your-site-ssl-enabled/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="/javascripts/jiathis.js" type="text/javascript"></script>
+<meta property="wb:webmaster" content="7f133defa7956d35" />
+<meta property="qc:admins" content="544531077671754067140526375" />
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">	
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("wongyouth@gmail.com") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+</div>
+<hgroup>
+  <h1><a href="/">鱼哥的技术博客</a></h1>
+</hgroup>
+
+<p class="subtitle">Do things the hard way.</p>
+
+<p class="bro">Hi buddy, my name is Wang Yongzhi, living in Shanghai China. I am a Rails programmer, and have a passion for Infomation Technology and web trends.</p>
+
+<nav id="main-nav"><ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+		
+		<a class="twitter" href="http://twitter.com/wongyouth" title="Twitter">Twitter</a>
+		
+		
+		<a class="github" href="https://github.com/wongyouth" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">让你的网站支持SSL</h1>
+	<div class="entry-content" itemprop="articleBody"><p>ssl是什么，ssl就是你在网址里面看到的https。区别于http，如果是ssl的，那么他所传输的数据是保密的，
+别人无法根据监听网络偷取你的信用卡数据，登录密码。现在国内的银行等大型网站基本上都支持ssl了。</p>
+
+<p>我们在用apache作为web服务器来配置一个网站的时候，往往自动忽略掉配置ssl，原因是ssl的CA一把都是收费的。
+而且费用也都不低。现在终于好了，startssl.com支持免费的单域名了。</p>
+
+<!-- more -->
+
+
+<p>startssl.com支持class1级别的ssl服务，如果你的网站没有多个子域名，那就完全可以使用了。
+如果的你的网站有多个子域名，那么就无法支持全站的ssl。</p>
+
+<p>当然有个折中的方案就是只让登录的处理支持ssl，别的页面不需要ssl，
+下面就是我这个折中方案的做法步骤。</p>
+
+<ul>
+<li>首先需要到startssl.com注册</li>
+<li>验证你的email，domain，30天有效，之后需要重新验证</li>
+<li><p>生成csr文件，当然你可以根据网站向导上的工具来生成</p>
+
+<pre><code>openssl genrsa -des3 -out domain.key 2048        # create key
+openssl req -new -key domain.key -out domain.csr # create certificate sign request
+cat domain.csr # 把输出整个复制到startssl.com生成ssl的输入框内
+</code></pre></li>
+<li><p>复制网站生成的crt内容，保存到文件 domain.crt</p></li>
+<li>下载 <a href="http://www.startssl.com/certs/sub.class1.server.ca.pem">chain</a>文件，root <a href="http://www.startssl.com/certs/ca.pem">CA</a> 文件</li>
+<li>设置apache
+
+<ul>
+<li>a2enmod ssl</li>
+<li>a2enmod rewrite</li>
+<li>修改virtual host配置，当login处理是跳转到ssl，当其他处理时从https跳回到普通的http</li>
+</ul>
+</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;VirtualHost _default_:80&gt;
+</span><span class='line'>  ServerName example.com
+</span><span class='line'>  ServerAlias *.example.com
+</span><span class='line'>  DocumentRoot /home/httpd/private
+</span><span class='line'>
+</span><span class='line'>  ErrorLog /var/log/apache2/example_errors.log
+</span><span class='line'>  LogLevel warn
+</span><span class='line'>  CustomLog /var/log/apache2/example_ssl_access.log combined
+</span><span class='line'>
+</span><span class='line'>  RewriteEngine On
+</span><span class='line'>  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+</span><span class='line'>  RewriteCond %{REQUEST_URI} ^/login
+</span><span class='line'>  RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L]
+</span><span class='line'>&lt;/VirtualHost&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;VirtualHost _default_:443&gt;
+</span><span class='line'>  ServerName example.com
+</span><span class='line'>  ServerAlias *.example.com
+</span><span class='line'>  DocumentRoot /home/httpd/private
+</span><span class='line'>
+</span><span class='line'>  ErrorLog /var/log/apache2/example_errors.log
+</span><span class='line'>  LogLevel warn
+</span><span class='line'>  CustomLog /var/log/apache2/example_ssl_access.log combined
+</span><span class='line'>
+</span><span class='line'>  SSLEngine on
+</span><span class='line'>  SSLCertificateFile /usr/local/apache/conf/ssl.crt
+</span><span class='line'>  SSLCertificateKeyFile /usr/local/apache/conf/ssl.key
+</span><span class='line'>  SSLCertificateChainFile /usr/local/apache/conf/sub.class1.server.ca.pem
+</span><span class='line'>  SSLCACertificateFile /usr/local/apache/conf/ca.pem
+</span><span class='line'>  RewriteEngine On
+</span><span class='line'>
+</span><span class='line'>  # assets files should not be redirected.
+</span><span class='line'>  RewriteRule \.(css|js|gif|jpe?g|png)(\?[0-9]*)?$ - [NC,L]
+</span><span class='line'>
+</span><span class='line'>  RewriteCond %{HTTP:X-Forwarded-Proto} !=http
+</span><span class='line'>  RewriteCond %{REQUEST_URI} !^/login
+</span><span class='line'>  RewriteRule (.*) http://%{HTTP_HOST}%{REQUEST_URI} [L]
+</span><span class='line'>&lt;/VirtualHost&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner"><p>
+Copyright &copy; 2013 - <a href="http://wongyouth.com">http://wongyouth.com</a> - Wongyouth / 自由鱼 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wongyouth';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://wongyouth.com/blog/2013/01/05/make-your-site-ssl-enabled/';
+        var disqus_url = 'http://wongyouth.com/blog/2013/01/05/make-your-site-ssl-enabled/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-30466888-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>

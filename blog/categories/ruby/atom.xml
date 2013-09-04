@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ruby | 鱼哥的技术博客]]></title>
+  <link href="http://wongyouth.com/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://wongyouth.com/"/>
+  <updated>2013-09-04T10:18:28+08:00</updated>
+  <id>http://wongyouth.com/</id>
+  <author>
+    <name><![CDATA[Wongyouth / 自由鱼]]></name>
+    <email><![CDATA[wongyouth@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[speed spider for web crawling]]></title>
+    <link href="http://wongyouth.com/blog/2013/06/01/speed-spider-for-web-crawling/"/>
+    <updated>2013-06-01T22:30:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/06/01/speed-spider-for-web-crawling</id>
+    <content type="html"><![CDATA[<h2>background</h2>
+
+<p>Some days ago I wanted to learn some css stuff from a site, I changed some css style to see what it turns to.
+After 10 minutes after I got tired when I have to change the source again and again in the browser.
+So I googled to find what kind of tools can be used to download files from a site, but I can't find anything satisfied.
+So after searched github I found I can do it myself with little work.</p>
+
+<p>Here comes the <a href="https://github.com/wongyouth/speed_spider">SpeedSpider</a>, it's A simple and speedy web spider for site pages downloading.</p>
+
+<p>UPDATE:</p>
+
+<p>It turns out <code>wget</code> can do all the jobs I wanted except it doest not use threads. So wget way may be slower than SpeedSpider.
+You can download bootstrap page with code below.</p>
+
+<pre><code>wget -m -p -E -k -np http://twitter.github.io/bootstrap
+</code></pre>
+
+<!--more-->
+
+
+<p>SpeedSpider was made with below in mind</p>
+
+<ul>
+<li>download files from a site with a start url</li>
+<li>option for downloading part site obeying a base url, any page not starts with <code>base_url</code> will not be downloaded</li>
+<li>assets files like css, js, image and font should be downloaded besides html files, and not obey <code>base_url</code> rule</li>
+<li>image file include in css file should be download</li>
+<li>url from site other than the start url should not be downloaded</li>
+<li>download files should be save with the same structure with the origin site</li>
+</ul>
+
+
+<h2>Installation</h2>
+
+<p>install it with rubygem:</p>
+
+<pre><code>gem install 'speed_spider'
+</code></pre>
+
+<h3>Usage</h3>
+
+<pre><code>Usage: spider [options] start_url
+
+options:
+    -S, --slient                     slient output
+    -D, --dir String                 directory for download files to save to. "download" by default
+    -b, --base_url String            any url not starts with base_url will not be saved
+    -t, --threads Integer            threads to run for fetching pages, 4 by default
+    -u, --user_agent String          words for request header USER_AGENT
+    -d, --delay Integer              delay between requests
+    -o, --obey_robots_text           obey robots exclustion protocol
+    -l, --depth_limit                limit the depth of the crawl
+    -r, --redirect_limit Integer     number of times HTTP redirects will be followed
+    -a, --accept_cookies             accept cookies from the server and send them back?
+    -s, --skip_query_strings         skip any link with a query string? e.g. http://foo.com/?u=user
+    -H, --proxy_host String          proxy server hostname
+    -P, --proxy_port Integer         proxy server port number
+    -T, --read_timeout Integer       HTTP read timeout in seconds
+    -V, --version                    Show version
+</code></pre>
+
+<h2>Examples</h2>
+
+<pre><code>spider http://twitter.github.io/bootstrap/
+</code></pre>
+
+<p>It will download all files within the same domain as twitter.github.io, and save to download/twitter.github.io/.</p>
+
+<pre><code>spider -b http://ruby-doc.org/core-2.0/ http://ruby-doc.org/core-2.0/
+</code></pre>
+
+<p>It will only download urls start with http://ruby-doc.org/core-2.0/, notice assets files like image, css, js, font will not obey base_url rule.</p>
+]]></content>
+  </entry>
+  
+</feed>
