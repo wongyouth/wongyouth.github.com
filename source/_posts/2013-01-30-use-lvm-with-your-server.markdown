@@ -31,6 +31,17 @@ based on:
     # mount the lv
     sudo mount /dev/mapper/yun-pg /mnt
 
+    # add new device
+    sudo pvcreate /dev/xvde
+
+    # extend vg
+    sudo vgextend yun /dev/mapper/yun-pg
+
+    # extend lv to 8G
+    sudo lvextend -L8G yun-pg
+
+    # extend lv with extra 8G
+    sudo lvextend -L+8G /dev/mapper/yun-pg
 
 how-to: <http://www.howtogeek.com/howto/40702/how-to-manage-and-use-lvm-logical-volume-management-in-ubuntu/><br/>
 recipies: <http://docstore.mik.ua/manuals/hp-ux/en/5992-4589/ch03s03.html><br/>
