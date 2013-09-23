@@ -4,7 +4,7 @@
   <title><![CDATA[鱼哥的技术博客]]></title>
   <link href="http://wongyouth.com/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2013-09-04T10:18:28+08:00</updated>
+  <updated>2013-09-23T14:11:13+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
@@ -200,7 +200,10 @@ options:
 
 <p>Step 3. 映射共享文件夹到实际的文件夹</p>
 
-<pre><code># sudo vi /etc/fstab
+<pre><code>sudo mount --bind /path/to/files /exports/files
+
+# 为了不要每次重复手动设置，可以配置fstab让开机后自动mount该目录
+# sudo vi /etc/fstab
 /path/to/files /exports/files none bind 0 0 # 这里的/path/to/files是实际你要共享的文件夹
 </code></pre>
 
