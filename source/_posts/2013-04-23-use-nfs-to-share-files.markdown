@@ -29,6 +29,9 @@ Step 2. 设置共享文件夹
 
 Step 3. 映射共享文件夹到实际的文件夹
 
+    sudo mount --bind /path/to/files /exports/files
+
+    # 为了不要每次重复手动设置，可以配置fstab让开机后自动mount该目录
     # sudo vi /etc/fstab
     /path/to/files /exports/files none bind 0 0 # 这里的/path/to/files是实际你要共享的文件夹
 
