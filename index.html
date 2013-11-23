@@ -7,10 +7,7 @@
 	<meta name="author" content="Wongyouth / 自由鱼">
 
 	
-	<meta name="description" content="2013-07-03 git Comments Git Revisions 这篇博文记录Git使用中比较中级的技巧，不太容易记住。 先来看一段代码： # Dummy repository
-$ git log --oneline
-77bc990 Third commit
-25d4fc4 &hellip;">
+	<meta name="description" content="2013-11-22 ruby Comments Use Chef for Automating Infrastructure Setup Blow is the memo to automate infrastructure setup for rails environment. &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -91,6 +88,188 @@ $ git log --oneline
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-22T23:55:00+08:00" data-updated="true" itemprop="datePublished">2013-11-22</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/ruby/'>ruby</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/" itemprop="url">Use Chef for Automating Infrastructure Setup</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>Blow is the memo to automate infrastructure setup for rails environment.</p>
+
+<h1>prepare vagrant</h1>
+
+<p>Vagrant can be used to test script since we need a clean system to test our script.</p>
+
+<p>install VirtualBox
+install Vagrant</p>
+
+<h2>Vargrant file</h2>
+
+<figure class='code'><figcaption><span> (Vagrantfile)</span> <a href='/downloads/code/Vagrantfile'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># -*- mode: ruby -*-</span>
+</span><span class='line'><span class="c1"># vi: set ft=ruby :</span>
+</span><span class='line'>
+</span><span class='line'><span class="ss">Vagrant</span><span class="p">:</span><span class="ss">:Config</span><span class="o">.</span><span class="n">run</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;precise64&quot;</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box_url</span> <span class="o">=</span> <span class="s2">&quot;http://files.vagrantup.com/precise64.box&quot;</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">forward_port</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">8080</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>common command</h2>
+
+<pre><code># setup 
+vagrant up
+vagrant destroy
+
+vagrant suspend
+vagrant resume
+
+# setup hostname
+vagrant ssh-config --host chef_rails &gt;&gt; ~/.ssh/config
+</code></pre>
+
+<h1>Use Chef</h1>
+
+<pre><code># install tools
+gem install berkshelf knife-solo
+
+# create a new chef kithen
+knife solo init chef-rails
+cd chef-rails
+
+# install chef on target server
+knife solo bootstrap vagrant@chef_rails
+</code></pre>
+
+<h2>Edit nodes/chef_rails.json to change the behavior of chef</h2>
+
+<figure class='code'><figcaption><span> (chef_rails.json)</span> <a href='/downloads/code/chef_rails.json'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;rbenv_install_rubies&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;global_version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0.0-p353&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;other_versions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1.9.3-p484&quot;</span><span class="p">],</span>
+</span><span class='line'>    <span class="nt">&quot;gems&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;bundler&quot;</span><span class="p">,</span> <span class="s2">&quot;pry&quot;</span><span class="p">],</span>
+</span><span class='line'>    <span class="nt">&quot;lib_packages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;libc6-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libtool&quot;</span><span class="p">,</span> <span class="s2">&quot;libyaml-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;zlib1g-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libssl-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libreadline-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libxml2-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libxslt1-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;ncurses-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libmagickwand-dev&quot;</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nt">&quot;rbenv&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;group_users&quot;</span><span class="p">:</span> <span class="p">[]</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nt">&quot;run_list&quot;</span><span class="p">:[</span>
+</span><span class='line'>    <span class="s2">&quot;recipe[build-essential]&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;recipe[git]&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;recipe[rbenv-install-rubies]&quot;</span>
+</span><span class='line'>  <span class="p">]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this example above, we install <code>build-essential</code>, <code>git</code>, <code>rbenv</code>, and setup ruby 2.0.0-p353 as the default ruby version.</p>
+
+		
+		
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-26T22:17:00+08:00" data-updated="true" itemprop="datePublished">2013-09-26</time></div>
+		<div class="tags">
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/09/26/install-ruby-with-readline-supported-on-mac/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/09/26/install-ruby-with-readline-supported-on-mac/" itemprop="url">Install Ruby With Readline Supported on Mac</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>Just a memo for installing ruby on Mac OSX with the feature of typing Chinese under ruby console.</p>
+
+<pre><code>brew install readline ruby-build
+RUBY_CONFIGURE_OPTS=--with-readline-dir=`brew --prefix readline` rbenv install 1.9.3-p286
+</code></pre>
+
+<p>or to use pure Ruby readline</p>
+
+<pre><code>group :development do
+  gem 'rb_readline'
+end
+</code></pre>
+
+<p>ref: https://github.com/guard/guard/wiki/Add-Readline-support-to-Ruby-on-Mac-OS-X</p>
+
+		
+		
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
@@ -522,82 +701,6 @@ pvreduce: <a href="http://www.cclove.me/Create_Extend_and_Reduce_LVM_on_Ubuntu12
 
 		
 		<a href="/blog/2012/10/25/return-to-old-revision-on-git-repo/" class="more-link">Read more</a>
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-05T09:41:00+08:00" data-updated="true" itemprop="datePublished">2012-07-05</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/rails/'>rails</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2012/07/05/rails-development-oriented-vimfiles/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2012/07/05/rails-development-oriented-vimfiles/" itemprop="url">Rails开发用 Vimfiles 配置</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>看到很多朋友在烦编辑器的事，就像自己刚开始的时候一样。 我还是选择了vim, 就是喜欢他可以配置到自己喜欢的样子， 不知道你喜欢不喜欢我的配置，但是如果你着急上手，试试我的。</p>
-
-
-		
-		<a href="/blog/2012/07/05/rails-development-oriented-vimfiles/" class="more-link">Read more</a>
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-30T12:54:00+08:00" data-updated="true" itemprop="datePublished">2012-06-30</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/database/'>database</a>, <a class='category' href='/blog/categories/rails/'>rails</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2012/06/30/use-mongoid-with-rails/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2012/06/30/use-mongoid-with-rails/" itemprop="url">在rails中使用mongoid</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>在我看来noSQL解决方案有一个最大的优点就是可以方便的scale out, Oracle等大型数据库也可以支持Grid，支持集群但是就是配置起来的繁琐而已，可以写一本厚厚的书啦。而今天要使用的mongodb只是简单的一个配置文件就能搞定，简单易用容易让人理解，只就是生产力的极大提升啊。</p>
-
-
-		
-		<a href="/blog/2012/06/30/use-mongoid-with-rails/" class="more-link">Read more</a>
 	</div>
 
 </article>

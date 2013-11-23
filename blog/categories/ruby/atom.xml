@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | 鱼哥的技术博客]]></title>
   <link href="http://wongyouth.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2013-09-23T14:11:13+08:00</updated>
+  <updated>2013-11-23T17:16:55+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
@@ -12,6 +12,112 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[use chef for automating infrastructure setup]]></title>
+    <link href="http://wongyouth.com/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/"/>
+    <updated>2013-11-22T23:55:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/11/22/use-chef-for-automating-infrastructure-setup</id>
+    <content type="html"><![CDATA[<p>Blow is the memo to automate infrastructure setup for rails environment.</p>
+
+<h1>prepare vagrant</h1>
+
+<p>Vagrant can be used to test script since we need a clean system to test our script.</p>
+
+<p>install VirtualBox
+install Vagrant</p>
+
+<h2>Vargrant file</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Vagrantfile)</span> <a href='/downloads/code/Vagrantfile'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># -*- mode: ruby -*-</span>
+</span><span class='line'><span class="c1"># vi: set ft=ruby :</span>
+</span><span class='line'>
+</span><span class='line'><span class="ss">Vagrant</span><span class="p">:</span><span class="ss">:Config</span><span class="o">.</span><span class="n">run</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;precise64&quot;</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box_url</span> <span class="o">=</span> <span class="s2">&quot;http://files.vagrantup.com/precise64.box&quot;</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">forward_port</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">8080</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>common command</h2>
+
+<pre><code># setup 
+vagrant up
+vagrant destroy
+
+vagrant suspend
+vagrant resume
+
+# setup hostname
+vagrant ssh-config --host chef_rails &gt;&gt; ~/.ssh/config
+</code></pre>
+
+<h1>Use Chef</h1>
+
+<pre><code># install tools
+gem install berkshelf knife-solo
+
+# create a new chef kithen
+knife solo init chef-rails
+cd chef-rails
+
+# install chef on target server
+knife solo bootstrap vagrant@chef_rails
+</code></pre>
+
+<h2>Edit nodes/chef_rails.json to change the behavior of chef</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (chef_rails.json)</span> <a href='/downloads/code/chef_rails.json'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;rbenv_install_rubies&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;global_version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0.0-p353&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;other_versions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1.9.3-p484&quot;</span><span class="p">],</span>
+</span><span class='line'>    <span class="nt">&quot;gems&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;bundler&quot;</span><span class="p">,</span> <span class="s2">&quot;pry&quot;</span><span class="p">],</span>
+</span><span class='line'>    <span class="nt">&quot;lib_packages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;libc6-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libtool&quot;</span><span class="p">,</span> <span class="s2">&quot;libyaml-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;zlib1g-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libssl-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libreadline-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libxml2-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libxslt1-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;ncurses-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libmagickwand-dev&quot;</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nt">&quot;rbenv&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;group_users&quot;</span><span class="p">:</span> <span class="p">[]</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nt">&quot;run_list&quot;</span><span class="p">:[</span>
+</span><span class='line'>    <span class="s2">&quot;recipe[build-essential]&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;recipe[git]&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;recipe[rbenv-install-rubies]&quot;</span>
+</span><span class='line'>  <span class="p">]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>In this example above, we install <code>build-essential</code>, <code>git</code>, <code>rbenv</code>, and setup ruby 2.0.0-p353 as the default ruby version.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[speed spider for web crawling]]></title>

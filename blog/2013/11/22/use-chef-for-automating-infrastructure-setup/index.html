@@ -1,0 +1,267 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>use chef for automating infrastructure setup - 鱼哥的技术博客</title>
+	<meta name="author" content="Wongyouth / 自由鱼">
+
+	
+	<meta name="description" content="Use Chef for Automating Infrastructure Setup Blow is the memo to automate infrastructure setup for rails environment. prepare vagrant Vagrant can be &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="鱼哥的技术博客" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://wongyouth.com/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="/javascripts/jiathis.js" type="text/javascript"></script>
+<meta property="wb:webmaster" content="7f133defa7956d35" />
+<meta property="qc:admins" content="544531077671754067140526375" />
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">	
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("wongyouth@gmail.com") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+</div>
+<hgroup>
+  <h1><a href="/">鱼哥的技术博客</a></h1>
+</hgroup>
+
+<p class="subtitle">Do things the hard way.</p>
+
+<p class="bro">Hi buddy, my name is Wang Yongzhi, living in Shanghai China. I am a Rails programmer, and have a passion for Infomation Technology and web trends.</p>
+
+<nav id="main-nav"><ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+		
+		<a class="twitter" href="http://twitter.com/wongyouth" title="Twitter">Twitter</a>
+		
+		
+		<a class="github" href="https://github.com/wongyouth" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Use Chef for Automating Infrastructure Setup</h1>
+	<div class="entry-content" itemprop="articleBody"><p>Blow is the memo to automate infrastructure setup for rails environment.</p>
+
+<h1>prepare vagrant</h1>
+
+<p>Vagrant can be used to test script since we need a clean system to test our script.</p>
+
+<p>install VirtualBox
+install Vagrant</p>
+
+<h2>Vargrant file</h2>
+
+<figure class='code'><figcaption><span> (Vagrantfile)</span> <a href='/downloads/code/Vagrantfile'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># -*- mode: ruby -*-</span>
+</span><span class='line'><span class="c1"># vi: set ft=ruby :</span>
+</span><span class='line'>
+</span><span class='line'><span class="ss">Vagrant</span><span class="p">:</span><span class="ss">:Config</span><span class="o">.</span><span class="n">run</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;precise64&quot;</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box_url</span> <span class="o">=</span> <span class="s2">&quot;http://files.vagrantup.com/precise64.box&quot;</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">forward_port</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">8080</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>common command</h2>
+
+<pre><code># setup 
+vagrant up
+vagrant destroy
+
+vagrant suspend
+vagrant resume
+
+# setup hostname
+vagrant ssh-config --host chef_rails &gt;&gt; ~/.ssh/config
+</code></pre>
+
+<h1>Use Chef</h1>
+
+<pre><code># install tools
+gem install berkshelf knife-solo
+
+# create a new chef kithen
+knife solo init chef-rails
+cd chef-rails
+
+# install chef on target server
+knife solo bootstrap vagrant@chef_rails
+</code></pre>
+
+<h2>Edit nodes/chef_rails.json to change the behavior of chef</h2>
+
+<figure class='code'><figcaption><span> (chef_rails.json)</span> <a href='/downloads/code/chef_rails.json'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;rbenv_install_rubies&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;global_version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0.0-p353&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;other_versions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1.9.3-p484&quot;</span><span class="p">],</span>
+</span><span class='line'>    <span class="nt">&quot;gems&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;bundler&quot;</span><span class="p">,</span> <span class="s2">&quot;pry&quot;</span><span class="p">],</span>
+</span><span class='line'>    <span class="nt">&quot;lib_packages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;libc6-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libtool&quot;</span><span class="p">,</span> <span class="s2">&quot;libyaml-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;zlib1g-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libssl-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libreadline-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libxml2-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libxslt1-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;ncurses-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libmagickwand-dev&quot;</span><span class="p">]</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nt">&quot;rbenv&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;group_users&quot;</span><span class="p">:</span> <span class="p">[]</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nt">&quot;run_list&quot;</span><span class="p">:[</span>
+</span><span class='line'>    <span class="s2">&quot;recipe[build-essential]&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;recipe[git]&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="s2">&quot;recipe[rbenv-install-rubies]&quot;</span>
+</span><span class='line'>  <span class="p">]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this example above, we install <code>build-essential</code>, <code>git</code>, <code>rbenv</code>, and setup ruby 2.0.0-p353 as the default ruby version.</p>
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner"><p>
+Copyright &copy; 2013 - <a href="http://wongyouth.com">http://wongyouth.com</a> - Wongyouth / 自由鱼 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wongyouth';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://wongyouth.com/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/';
+        var disqus_url = 'http://wongyouth.com/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-30466888-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>
