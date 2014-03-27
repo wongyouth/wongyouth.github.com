@@ -3,10 +3,10 @@ layout: post
 title: "use chef for automating infrastructure setup"
 date: 2013-11-22 23:55
 comments: true
-categories: ruby
+categories: [ruby, chef]
 ---
 
-Blow is the memo to automate infrastructure setup for rails environment.
+Below is a memo to automate infrastructure setup for rails environment.
 
 # prepare vagrant
 
