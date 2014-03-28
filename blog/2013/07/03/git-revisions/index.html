@@ -8,7 +8,7 @@
 
 	
 	<meta name="description" content="Git Revisions 这篇博文将使用一些代码来讲述Git使用中比较中级的技巧。 Git中 ^ 与 ~ 的区别
-假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表 我们看Git履历会用到git log head~2，git log head^2，可能搞不清楚这两者之间有什么区别 &hellip;">
+假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表 Git中 ^ 与 ~ 的区别 我们看Git履历会用到git log head~2，git log head^2， &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -101,6 +101,8 @@
 <!-- more -->
 
 
+<h2>Git中 ^ 与 ~ 的区别</h2>
+
 <p>我们看Git履历会用到<code>git log head~2</code>，<code>git log head^2</code>，可能搞不清楚这两者之间有什么区别。
 先来看一段代码：</p>
 
@@ -110,7 +112,7 @@ $ git log --oneline
 25d4fc4 Second commit
 f0faab6 First commit
 
-$ git log --oneline HEAD^
+$ git log --oneline HEAD~
 25d4fc4 Second commit
 f0faab6 First commit
 
@@ -134,12 +136,34 @@ fatal: ambiguous argument 'HEAD^2': unknown revision or path not in the working 
 
 <p>记住<code>~</code>永远在第一个父节点上回溯。</p>
 
+<p>什么是第二个父节点？通过命令<code>git log --graph</code>我们看下有代码Merge后的日志</p>
+
+<pre>
+* abe6b95 add post for speed-spider (Ryan Wang, 10 months ago)
+* ad57324 add copyright for seo (Ryan Wang, 11 months ago)
+*   302f545 update octopress (Ryan Wang, 11 months ago)
+|\
+| * 09558c6 Sinatra now correctly returns code 404 when a page is not found. Closes #1198 (Brandon Mathis, 12 months ago)
+| * 1bd2b62 Added support for deploying to github.io (Brandon Mathis, 12 months ago)
+* 9c80295 move CNAME to source/ (Ryan Wang, 11 months ago)
+</pre>
+
+
+<ul>
+<li>HEAD 是最后一个递交，也就是<code>abe6b95</code></li>
+<li>HEAD的父节点只有一个，所以也就是 <code>ad57324</code>，记为 HEAD~ 或者 HEAD^</li>
+<li><code>ad57324</code>的父节点也只有一个，<code>302f545</code>，记为 HEAD~2, HEAD~~ 或者 HEAD<sup>^</sup></li>
+<li><code>302f545</code>有两个父节点, 第一个为 <code>9c80295</code>, 记为 HEAD~3，第二个父节点 <code>09558c6</code>，记为 HEAD~2<sup>2</sup></li>
+<li><code>09558c6</code>有一个父节点 &#8220;，记为 HEAD~2<sup>2~，或者</sup> HEAD~2<sup>2^</sup></li>
+</ul>
+
+
 <p>那么如果要表示第二代父节点的第10代祖先的第2个父节点如何表示呢</p>
 
 <pre><code>HEAD^2~10^2
 </code></pre>
 
-<p>再来看第二段代码:</p>
+<h2>假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表</h2>
 
 <pre><code>$ git checkout -b other f0faab6
 Switched to a new branch 'other'
@@ -210,6 +234,10 @@ $ git log other...master
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/28/solve-conflict-caused-by-git-stash/">解决Git stash冲突问题</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/">use chef for automating infrastructure setup</a>
       </li>
     
@@ -225,15 +253,11 @@ $ git log other...master
         <a href="/blog/2013/06/01/speed-spider-for-web-crawling/">speed spider for web crawling</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/04/23/use-nfs-to-share-files/">use nfs to share files</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>分类</h1>
-    <ul id="category-list"><li><a href='/blog/categories/blog'>blog (1)</a></li><li><a href='/blog/categories/chef'>chef (1)</a></li><li><a href='/blog/categories/database'>database (2)</a></li><li><a href='/blog/categories/git'>git (5)</a></li><li><a href='/blog/categories/programming-language'>programming language (2)</a></li><li><a href='/blog/categories/rails'>rails (4)</a></li><li><a href='/blog/categories/ruby'>ruby (2)</a></li><li><a href='/blog/categories/server'>server (8)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/blog'>blog (1)</a></li><li><a href='/blog/categories/chef'>chef (1)</a></li><li><a href='/blog/categories/database'>database (2)</a></li><li><a href='/blog/categories/git'>git (6)</a></li><li><a href='/blog/categories/programming-language'>programming language (2)</a></li><li><a href='/blog/categories/rails'>rails (4)</a></li><li><a href='/blog/categories/ruby'>ruby (2)</a></li><li><a href='/blog/categories/server'>server (8)</a></li></ul>
 </section>
 <section>
   <h1>近期评论</h1>

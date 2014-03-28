@@ -68,7 +68,7 @@
     </url>
     <url>
         <loc>http://wongyouth.com/blog/2013/07/03/git-revisions/</loc>
-        <lastmod>2014-03-28T09:26:33+08:00</lastmod>
+        <lastmod>2014-03-28T15:43:49+08:00</lastmod>
     </url>
     <url>
         <loc>
@@ -83,11 +83,15 @@
         <lastmod>2014-03-28T09:26:33+08:00</lastmod>
     </url>
     <url>
+        <loc>http://wongyouth.com/blog/2014/03/28/solve-conflict-caused-by-git-stash/</loc>
+        <lastmod>2014-03-28T15:48:25+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://wongyouth.com/blog/archives/</loc>
-        <lastmod>2014-03-28T09:26:33+08:00</lastmod>
+        <lastmod>2014-03-28T15:48:25+08:00</lastmod>
     </url>
     <url>
         <loc>http://wongyouth.com/</loc>
-        <lastmod>2014-03-28T09:26:33+08:00</lastmod>
+        <lastmod>2014-03-28T15:48:25+08:00</lastmod>
     </url>
 </urlset>
