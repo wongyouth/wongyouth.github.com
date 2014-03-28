@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programming language | 鱼哥的技术博客]]></title>
   <link href="http://wongyouth.com/blog/categories/programming-language/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2014-03-29T00:42:42+08:00</updated>
+  <updated>2014-03-29T00:46:15+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
@@ -18,22 +18,19 @@
     <link href="http://wongyouth.com/blog/2012/06/18/tmall-za-jin-dan/"/>
     <updated>2012-06-18T19:32:00+08:00</updated>
     <id>http://wongyouth.com/blog/2012/06/18/tmall-za-jin-dan</id>
-    <content type="html"><![CDATA[<p>今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。
+    <content type="html"><![CDATA[<p>今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。<br>
 于是乎写个脚本砸...</p>
 
 <!-- more -->
 
-
-<p>今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。
-于是就写个脚本砸，虽然机会太微妙，不过看着自动砸挺开心哈。
+<p>今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。<br>
+于是就写个脚本砸，虽然机会太微妙，不过看着自动砸挺开心哈。<br>
 现在活动都过去了，放出来应该不会危害什么了吧。</p>
 
 <p>运行环境 ruby</p>
-
-<pre><code>gem install capybara # install capybara
+<div class="highlight"><pre><code class="text language-text" data-lang="text">gem install capybara # install capybara
 ruby brick.rb
-</code></pre>
-
+</code></pre></div>
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (brick.rb)</span> <a href='/downloads/code/brick.rb'>download</a></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -166,14 +163,13 @@ ruby brick.rb
     <link href="http://wongyouth.com/blog/2012/04/21/install-ruby-environment-on-ubuntu/"/>
     <updated>2012-04-21T14:41:00+08:00</updated>
     <id>http://wongyouth.com/blog/2012/04/21/install-ruby-environment-on-ubuntu</id>
-    <content type="html"><![CDATA[<p>要使用rails开发Web应用服务时，在Windows环境下会遇到各种各样的问题，有些Gem也会工作不正常。
+    <content type="html"><![CDATA[<p>要使用rails开发Web应用服务时，在Windows环境下会遇到各种各样的问题，有些Gem也会工作不正常。<br>
 有些人会用MacOS作为开发环境，这当然好，但是我们在也可用免费的Ubuntu来开发，这里就介绍下安装步骤。</p>
 
 <!-- more -->
 
-
-<p>开始的时候我也是用Windows作为Rails项目开发的。
-但是在Windows下会碰到各种各样的问题，最常见的就是Gem包可能只工作在类Unix的环境下。
+<p>开始的时候我也是用Windows作为Rails项目开发的。<br>
+但是在Windows下会碰到各种各样的问题，最常见的就是Gem包可能只工作在类Unix的环境下。<br>
 有的时候按照官方说明一步一步做仍然有各种各样的不成功。痛定思痛用Ubuntu做为开发环境。</p>
 
 <p>使用Ubuntu有个好处，每天跟Ubuntu打交道会提高整体的服务器排错水平，因为每天用的就是服务器一样的环境，遇到问题每天都要去解决，久而久之水平也就上去了。</p>
@@ -187,55 +183,44 @@ ruby brick.rb
 <li>创建第一个<code>Rails</code>项目</li>
 </ol>
 
-
 <h2>预安装库文件</h2>
 
 <h4>预安装一些编译时用到的库文件和工具</h4>
-
-<pre><code class="sh">    sudo apt-get -y install git-core curl \
+<div class="highlight"><pre><code class="sh language-sh" data-lang="sh">    sudo apt-get -y install git-core curl \
     build-essential openssl libreadline6 libreadline6-dev \
     libmysqlclient-dev zlib1g zlib1g-dev libssl-dev libyaml-dev \
     libsqlite3-0 libsqlite3-dev sqlite3 \
     libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake \
     libtool bison subversion libxslt1-dev
-</code></pre>
-
-<p>如果使用jruby的话，安装一个jdk环境
+</code></pre></div>
+<p>如果使用jruby的话，安装一个jdk环境<br>
     sudo apt-get install default-jdk</p>
 
 <h2>安装<code>rbenv</code></h2>
 
 <p>我使用<a href="https://github.com/sstephenson/rbenv">rbenv</a>而不是rvm来作为ruby的版本管理软件。理由在rbenv的项目页面说明的很清楚了，更安全也更简单</p>
-
-<pre><code class="sh">    curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash
-</code></pre>
-
+<div class="highlight"><pre><code class="sh language-sh" data-lang="sh">    curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash
+</code></pre></div>
 <h2>安装<code>ruby</code></h2>
 
 <p>假设你使用ruby-1.9.3</p>
-
-<pre><code class="sh">    rbenv install 1.9.3-p125
+<div class="highlight"><pre><code class="sh language-sh" data-lang="sh">    rbenv install 1.9.3-p125
     rbenv global 1.9.3-p125
-</code></pre>
-
+</code></pre></div>
 <p>常用rbenv命令</p>
-
-<pre><code class="sh">    rbenv versions # 查看可以安装的ruby版本列表
+<div class="highlight"><pre><code class="sh language-sh" data-lang="sh">    rbenv versions # 查看可以安装的ruby版本列表
     rbenv version  # 查看当前的ruby版本
     rbenv rehash   # 更新rbenv里的链接指向gems的可执行文件的映射,安装了新gem包时使用
 
     rbenv global jruby-1.6.5         # 切换到jruby-1.6.5，下次登录系统后仍有效
     export RBENV_VERSION=jruby-1.6.5 # 切换到jruby-1.6.5环境，只适用于这一次使用
-</code></pre>
-
+</code></pre></div>
 <h2>创建第一个<code>Rails</code>项目</h2>
-
-<pre><code class="sh">    gem update --system       # 更新gem到最新版本
+<div class="highlight"><pre><code class="sh language-sh" data-lang="sh">    gem update --system       # 更新gem到最新版本
     gem install bundler rails # 安装bundler和rails
     rbenv rehash              # 刷新rbenv记录的可执行文件，这样rails命令就可以直接使用了
     rails new blog
-</code></pre>
-]]></content>
+</code></pre></div>]]></content>
   </entry>
   
 </feed>

@@ -91,23 +91,20 @@
 	<h1 class="title" itemprop="name">Speed Spider for Web Crawling</h1>
 	<div class="entry-content" itemprop="articleBody"><h2>background</h2>
 
-<p>Some days ago I wanted to learn some css stuff from a site, I changed some css style to see what it turns to.
-After 10 minutes after I got tired when I have to change the source again and again in the browser.
-So I googled to find what kind of tools can be used to download files from a site, but I can&#8217;t find anything satisfied.
+<p>Some days ago I wanted to learn some css stuff from a site, I changed some css style to see what it turns to.<br>
+After 10 minutes after I got tired when I have to change the source again and again in the browser.<br>
+So I googled to find what kind of tools can be used to download files from a site, but I can&#39;t find anything satisfied.<br>
 So after searched github I found I can do it myself with little work.</p>
 
-<p>Here comes the <a href="https://github.com/wongyouth/speed_spider">SpeedSpider</a>, it&#8217;s A simple and speedy web spider for site pages downloading.</p>
+<p>Here comes the <a href="https://github.com/wongyouth/speed_spider">SpeedSpider</a>, it&#39;s A simple and speedy web spider for site pages downloading.</p>
 
 <p>UPDATE:</p>
 
-<p>It turns out <code>wget</code> can do all the jobs I wanted except it doest not use threads. So wget way may be slower than SpeedSpider.
+<p>It turns out <code>wget</code> can do all the jobs I wanted except it doest not use threads. So wget way may be slower than SpeedSpider.<br>
 You can download bootstrap page with code below.</p>
-
-<pre><code>wget -m -p -E -k -np http://twitter.github.io/bootstrap
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">wget -m -p -E -k -np http://twitter.github.io/bootstrap
+</code></pre></div>
 <!--more-->
-
 
 <p>SpeedSpider was made with below in mind</p>
 
@@ -120,21 +117,17 @@ You can download bootstrap page with code below.</p>
 <li>download files should be save with the same structure with the origin site</li>
 </ul>
 
-
 <h2>Installation</h2>
 
 <p>install it with rubygem:</p>
-
-<pre><code>gem install 'speed_spider'
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">gem install &#39;speed_spider&#39;
+</code></pre></div>
 <h3>Usage</h3>
-
-<pre><code>Usage: spider [options] start_url
+<div class="highlight"><pre><code class="text language-text" data-lang="text">Usage: spider [options] start_url
 
 options:
     -S, --slient                     slient output
-    -D, --dir String                 directory for download files to save to. "download" by default
+    -D, --dir String                 directory for download files to save to. &quot;download&quot; by default
     -b, --base_url String            any url not starts with base_url will not be saved
     -t, --threads Integer            threads to run for fetching pages, 4 by default
     -u, --user_agent String          words for request header USER_AGENT
@@ -148,19 +141,14 @@ options:
     -P, --proxy_port Integer         proxy server port number
     -T, --read_timeout Integer       HTTP read timeout in seconds
     -V, --version                    Show version
-</code></pre>
-
+</code></pre></div>
 <h2>Examples</h2>
-
-<pre><code>spider http://twitter.github.io/bootstrap/
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">spider http://twitter.github.io/bootstrap/
+</code></pre></div>
 <p>It will download all files within the same domain as twitter.github.io, and save to download/twitter.github.io/.</p>
-
-<pre><code>spider -b http://ruby-doc.org/core-2.0/ http://ruby-doc.org/core-2.0/
-</code></pre>
-
-<p>It will only download urls start with http://ruby-doc.org/core-2.0/, notice assets files like image, css, js, font will not obey base_url rule.</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">spider -b http://ruby-doc.org/core-2.0/ http://ruby-doc.org/core-2.0/
+</code></pre></div>
+<p>It will only download urls start with <a href="http://ruby-doc.org/core-2.0/">http://ruby-doc.org/core-2.0/</a>, notice assets files like image, css, js, font will not obey base_url rule.</p>
 </div>
 
 </article>

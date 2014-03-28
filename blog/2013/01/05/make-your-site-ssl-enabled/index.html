@@ -90,19 +90,18 @@
 				<div id="content">
           <div> <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">让你的网站支持SSL</h1>
-	<div class="entry-content" itemprop="articleBody"><p>ssl是什么，ssl就是你在网址里面看到的https。区别于http，如果是ssl的，那么他所传输的数据是保密的，
+	<div class="entry-content" itemprop="articleBody"><p>ssl是什么，ssl就是你在网址里面看到的https。区别于http，如果是ssl的，那么他所传输的数据是保密的，<br>
 别人无法根据监听网络偷取你的信用卡数据，登录密码。现在国内的银行等大型网站基本上都支持ssl了。</p>
 
-<p>我们在用apache作为web服务器来配置一个网站的时候，往往自动忽略掉配置ssl，原因是ssl的CA一把都是收费的。
+<p>我们在用apache作为web服务器来配置一个网站的时候，往往自动忽略掉配置ssl，原因是ssl的CA一把都是收费的。<br>
 而且费用也都不低。现在终于好了，startssl.com支持免费的单域名了。</p>
 
 <!-- more -->
 
-
-<p>startssl.com支持class1级别的ssl服务，如果你的网站没有多个子域名，那就完全可以使用了。
+<p>startssl.com支持class1级别的ssl服务，如果你的网站没有多个子域名，那就完全可以使用了。<br>
 如果的你的网站有多个子域名，那么就无法支持全站的ssl。</p>
 
-<p>当然有个折中的方案就是只让登录的处理支持ssl，别的页面不需要ssl，
+<p>当然有个折中的方案就是只让登录的处理支持ssl，别的页面不需要ssl，<br>
 下面就是我这个折中方案的做法步骤。</p>
 
 <ul>
@@ -110,22 +109,19 @@
 <li>验证你的email，domain，30天有效，之后需要重新验证</li>
 <li><p>生成csr文件，当然你可以根据网站向导上的工具来生成</p>
 
-<pre><code>openssl genrsa -des3 -out domain.key 2048        # create key
-openssl req -new -key domain.key -out domain.csr # create certificate sign request
-cat domain.csr # 把输出整个复制到startssl.com生成ssl的输入框内
-</code></pre></li>
+<p>openssl genrsa -des3 -out domain.key 2048        # create key<br>
+  openssl req -new -key domain.key -out domain.csr # create certificate sign request<br>
+  cat domain.csr # 把输出整个复制到startssl.com生成ssl的输入框内</p></li>
 <li><p>复制网站生成的crt内容，保存到文件 domain.crt</p></li>
-<li>下载 <a href="http://www.startssl.com/certs/sub.class1.server.ca.pem">chain</a>文件，root <a href="http://www.startssl.com/certs/ca.pem">CA</a> 文件</li>
-<li>设置apache
+<li><p>下载 <a href="http://www.startssl.com/certs/sub.class1.server.ca.pem">chain</a>文件，root <a href="http://www.startssl.com/certs/ca.pem">CA</a> 文件</p></li>
+<li><p>设置apache</p>
 
 <ul>
 <li>a2enmod ssl</li>
 <li>a2enmod rewrite</li>
 <li>修改virtual host配置，当login处理是跳转到ssl，当其他处理时从https跳回到普通的http</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -203,9 +199,6 @@ cat domain.csr # 把输出整个复制到startssl.com生成ssl的输入框内
 </span><span class='line'>  RewriteCond %{REQUEST_URI} !^/login
 </span><span class='line'>  RewriteRule (.*) http://%{HTTP_HOST}%{REQUEST_URI} [L]
 </span><span class='line'>&lt;/VirtualHost&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-
 </div>
 
 </article>

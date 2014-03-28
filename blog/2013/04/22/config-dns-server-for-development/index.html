@@ -91,24 +91,20 @@
 				<div id="content">
           <div> <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">Config Dns Server for Development</h1>
-	<div class="entry-content" itemprop="articleBody"><p>开发的时候我们很多时候需要配置一个与线上相同的环境来做测试。
-其中一项就是我们需要用线上相同的域名在做测试，这样就需要在开发环境里面配置域名映射。
-最为简单的情况就是使用/etc/hosts，但是如果是有一团队来做测试，需要所有的人有相同的配置，
+	<div class="entry-content" itemprop="articleBody"><p>开发的时候我们很多时候需要配置一个与线上相同的环境来做测试。<br>
+其中一项就是我们需要用线上相同的域名在做测试，这样就需要在开发环境里面配置域名映射。<br>
+最为简单的情况就是使用/etc/hosts，但是如果是有一团队来做测试，需要所有的人有相同的配置，<br>
 特别是有新成员来的时候，相同的工作要不厌其烦的重复做重复说明。</p>
 
 <p>还有一种办法就是找一台机器来做域名解析服务，其实配置起来也不是很麻烦，下面就让我来讲一个简单的例子。</p>
 
 <!-- more -->
 
-
 <p>Step 1. 安装bind9</p>
-
-<pre><code>sudo apt-get install bind9
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo apt-get install bind9
+</code></pre></div>
 <p>Step 2. 配置bind</p>
-
-<pre><code>#sudo vi /etc/bind/named.conf.options
+<div class="highlight"><pre><code class="text language-text" data-lang="text">#sudo vi /etc/bind/named.conf.options
 
 # 本DNS不知道的域名会到8.8.8.8服务器问
 forwarders {
@@ -120,17 +116,15 @@ recursion yes;
 
 # 允许外部访问
 allow-query {anry;};
-</code></pre>
-
+</code></pre></div>
 <p>step 3. 配置本地DNS</p>
 
 <p>假如我们要配置一个 taobao.com 的DNS</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">#sudo vi /etc/bind/named.conf.local
 
-<pre><code>#sudo vi /etc/bind/named.conf.local
-
-zone "taobao.com" {
+zone &quot;taobao.com&quot; {
   type master;
-  file "/etc/bind/db.taobao.com";
+  file &quot;/etc/bind/db.taobao.com&quot;;
 };
 
 #sudo vi /etc/bind/db.taobao.com
@@ -152,9 +146,8 @@ mx      IN      MX      192.168.0.100
 www     IN      A       192.168.0.100
 m       IN      CNAME   www                                       # 设置别名
 *       IN      A       192.168.0.100                             # 没有设置过的子域名都转到这个IP
-</code></pre>
-
-<p>通过以上的配置，只要在系统里面把DNS设置好，在浏览器里面输入 <code>taobao.com</code> 就会解析到 192.168.0.100这个IP，而不是真正的淘宝网了。
+</code></pre></div>
+<p>通过以上的配置，只要在系统里面把DNS设置好，在浏览器里面输入 <code>taobao.com</code> 就会解析到 192.168.0.100这个IP，而不是真正的淘宝网了。<br>
 如果有路由器的配置权限，只要把路由器的DHCP地址设为这个DNS服务器的IP，这样系统里面设置DNS这一步也可以省略，真正即插即用。</p>
 </div>
 

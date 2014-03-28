@@ -8,7 +8,8 @@
 
 	
 	<meta name="description" content="Use Nfs to Share Files 当一个服务器不能负载的时候，就需要增加一个服务器来做负载均衡，这个时候就需要做文件共享。
-这一次我们来看看如何在ubuntu12.04上用nfs来做文件共享 服务器端配置 Step 1. 安装nfs服务 sudo apt-get install &hellip;">
+这一次我们来看看如何在ubuntu12.04上用nfs来做文件共享 服务器端配置 Step 1. 安装nfs服务
+sudo apt-get install &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -90,63 +91,48 @@
 				<div id="content">
           <div> <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">Use Nfs to Share Files</h1>
-	<div class="entry-content" itemprop="articleBody"><p>当一个服务器不能负载的时候，就需要增加一个服务器来做负载均衡，这个时候就需要做文件共享。
+	<div class="entry-content" itemprop="articleBody"><p>当一个服务器不能负载的时候，就需要增加一个服务器来做负载均衡，这个时候就需要做文件共享。<br>
 这一次我们来看看如何在ubuntu12.04上用nfs来做文件共享</p>
 
 <!-- more -->
 
-
 <h2>服务器端配置</h2>
 
 <p>Step 1. 安装nfs服务</p>
-
-<pre><code>sudo apt-get install nfs-kernel-server
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo apt-get install nfs-kernel-server
+</code></pre></div>
 <p>Step 2. 设置共享文件夹</p>
-
-<pre><code>sudo mkdir -p /exports/files
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo mkdir -p /exports/files
 #sudo vi /etc/exports
 /exports/files *(rw,async,anonuid=1000,anongid=1000)
-</code></pre>
-
-<p>为什么要做一个映射，而不直接使用实际的文件夹，是因为不需要暴露太多的信息给客户端。
+</code></pre></div>
+<p>为什么要做一个映射，而不直接使用实际的文件夹，是因为不需要暴露太多的信息给客户端。<br>
 这里我们把默认的权限设置为uid为1000的用户帐号，这样如果客户端新加一个文件的时候就能自动设置文件所有者属性</p>
 
 <p>Step 3. 映射共享文件夹到实际的文件夹</p>
-
-<pre><code>sudo mount --bind /path/to/files /exports/files
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo mount --bind /path/to/files /exports/files
 
 # 为了不要每次重复手动设置，可以配置fstab让开机后自动mount该目录
 # sudo vi /etc/fstab
 /path/to/files /exports/files none bind 0 0 # 这里的/path/to/files是实际你要共享的文件夹
-</code></pre>
-
+</code></pre></div>
 <p>Step 4. 启动服务</p>
-
-<pre><code>sudo exportfs  -ra
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo exportfs  -ra
 sudo service nfs-kernel-server restart
-</code></pre>
-
+</code></pre></div>
 <h2>客户端配置</h2>
 
 <p>Step 1. 安装nfs客户端</p>
-
-<pre><code>sudo apt-get install nfs-common
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo apt-get install nfs-common
+</code></pre></div>
 <p>Step 2. 做文件映射</p>
-
-<pre><code>sudo mkdir -p /data/files
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo mkdir -p /data/files
 #sudo vi /etc/fstab
 server:/exports/files /data/files nfs proto=tcp,port=2049
-</code></pre>
-
+</code></pre></div>
 <p>在/etc/fstab写的好处是下次系统自启动后会自动加载该配置</p>
-
-<pre><code>sudo mount /data/files
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo mount /data/files
+</code></pre></div>
 <p>最后要说的是现在的配置是没有做安全设置的，还需要用防火墙做ip过滤，这个设置方法本片就略过了。</p>
 
 <p>该篇博文参考： <a href="https://help.ubuntu.com/community/SettingUpNFSHowTo">https://help.ubuntu.com/community/SettingUpNFSHowTo</a></p>

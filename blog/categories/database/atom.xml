@@ -4,7 +4,7 @@
   <title><![CDATA[Category: database | 鱼哥的技术博客]]></title>
   <link href="http://wongyouth.com/blog/categories/database/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2014-03-29T00:42:42+08:00</updated>
+  <updated>2014-03-29T00:46:15+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
@@ -22,18 +22,16 @@
 
 <!-- more -->
 
-
 <p>Mongodb可使用的ruby adapter 常用的有Mongoid, Mongo Ruby Driver, Mongo mapper, 在这里不比较两者的异同，我们简单的用现在人气高的一个mongoid。人气值可以在看<a href="https://www.ruby-toolbox.com/categories/mongodb_clients">这里</a></p>
 
 <h2>Step 1: Install Mongodb 2.0</h2>
 
 <p>目前Ubuntu官方库里的mongodb还没有升级到2.0版，我们用mongodb官方提供<a href="http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian-or-ubuntu-linux/">步骤</a>来安装。</p>
-
-<pre><code class="sh">    # 添加mongodb公司10gen的pgp键
+<div class="highlight"><pre><code class="sh language-sh" data-lang="sh">    # 添加mongodb公司10gen的pgp键
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
     # 增加源到apt
-    sudo sh -c "echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' &gt; /etc/apt/sources.list.d/10gen.list"
+    sudo sh -c &quot;echo &#39;deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen&#39; &gt; /etc/apt/sources.list.d/10gen.list&quot;
 
     # 更新源
     sudo apt-get update
@@ -49,22 +47,19 @@
 
     # db.test.save( {a: 1} )
     # db.test.find()
-</code></pre>
-
+</code></pre></div>
 <h2>Step 2: Setup Gemfile to install mongoid</h2>
 
 <p>在Gemfile中添加mongoid</p>
-
-<pre><code>gem 'mongoid', '~&gt; 3.0.0.rc'
-</code></pre>
-
-<p>执行
+<div class="highlight"><pre><code class="text language-text" data-lang="text">gem &#39;mongoid&#39;, &#39;~&gt; 3.0.0.rc&#39;
+</code></pre></div>
+<p>执行<br>
     bundle install</p>
 
-<p>这样就可以使用了。在[railscasts][]中有mongoid的使用视频，我就不接着举例了。
+<p>这样就可以使用了。在[railscasts][]中有mongoid的使用视频，我就不接着举例了。<br>
 虽然现在mongoid升级到了3.0rc，有些东西会有变化，但是大的变化不会太大。</p>
 
-<p>mongoid的确是好东西，但是rails社区之前的插件基本都是为mysql特质的，所以很多好插件在mongoid下还不能用，
+<p>mongoid的确是好东西，但是rails社区之前的插件基本都是为mysql特质的，所以很多好插件在mongoid下还不能用，<br>
 这个还需要社区在进一步的发展才能达到，重复造轮子代价太大，我们做迁移之前还是要考虑好这个现实问题的。</p>
 ]]></content>
   </entry>
@@ -74,67 +69,56 @@
     <link href="http://wongyouth.com/blog/2012/06/25/use-postgresql-with-rails/"/>
     <updated>2012-06-25T14:28:00+08:00</updated>
     <id>http://wongyouth.com/blog/2012/06/25/use-postgresql-with-rails</id>
-    <content type="html"><![CDATA[<p>在我们的rails服务器配置中经常用的是 MySQL，
+    <content type="html"><![CDATA[<p>在我们的rails服务器配置中经常用的是 MySQL，<br>
 今天使用开源社区的另一款数据库软件 postgresql 来做一个实验。</p>
 
 <p>测试环境： ubuntu 12.04</p>
 
 <!-- more -->
 
-
-<p>安装与配置postgresql数据库。
-    # 安装 postgresql 和开发库（pg.gem使用）
+<p>安装与配置postgresql数据库。<br>
+    # 安装 postgresql 和开发库（pg.gem使用）<br>
     sudo apt-get install postgresql libpq-dev</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text"># 修改配置文件使TCP/IP来的链接可用
 
-<pre><code># 修改配置文件使TCP/IP来的链接可用
-
-# /etc/postgresql/9.1/main/postgresql.conf 文件中去掉以下行开头的 `#'
-# listen_addresses = 'localhost'
+# /etc/postgresql/9.1/main/postgresql.conf 文件中去掉以下行开头的 `#&#39;
+# listen_addresses = &#39;localhost&#39;
 
 # 重启 postgresql
 sudo /etc/init.d/postgresql restart
-</code></pre>
-
-<p>生成rails里面使用的postgrelsql的帐号密码，这里我们用MySQL的帐号root。
-    # 创建root帐号
-    # -d 可以创建数据库
-    # -R 不可以创建角色
-    # -S 不是超级用户
+</code></pre></div>
+<p>生成rails里面使用的postgrelsql的帐号密码，这里我们用MySQL的帐号root。<br>
+    # 创建root帐号<br>
+    # -d 可以创建数据库<br>
+    # -R 不可以创建角色<br>
+    # -S 不是超级用户<br>
     sudo -u postgres createuser -d -R -S root</p>
 
 <p>postgres 是 postgresql 的超级帐号，使用他就可以做任何事了，包括找回密码哦，因为默认配置是不需要输入密码的。</p>
-
-<pre><code># 修改root帐号密码
-echo "alter role root password 'root';" | sudo -u postgres psql
+<div class="highlight"><pre><code class="text language-text" data-lang="text"># 修改root帐号密码
+echo &quot;alter role root password &#39;root&#39;;&quot; | sudo -u postgres psql
 
 # 测试帐号登录
 psql -U root -h localhost template1
-</code></pre>
-
+</code></pre></div>
 <p>template1 是安装 postgresql 时自动生成的一个模板，这里为什么要指定 template1 是因为不指定一个操作对象时会报错。</p>
 
 <p>配置rails程序，使其使用postgresql</p>
-
-<pre><code>gem pg
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">gem pg
+</code></pre></div>
 <p>config/database.yml</p>
-
-<pre><code>adapter: postgresql
+<div class="highlight"><pre><code class="text language-text" data-lang="text">adapter: postgresql
 host: localhost
 database: xxx_development
 username: root
 password: root
 encoding: utf8
 pool: 5
-</code></pre>
-
+</code></pre></div>
 <p>生成数据库启动rails</p>
-
-<pre><code>rake db:create
+<div class="highlight"><pre><code class="text language-text" data-lang="text">rake db:create
 rails server
-</code></pre>
-
+</code></pre></div>
 <p>后面的操作就与MySQL时是一样的啦。</p>
 ]]></content>
   </entry>

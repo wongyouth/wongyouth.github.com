@@ -96,14 +96,12 @@
 
 <!-- more -->
 
-
 <ol>
 <li>安装</li>
 <li>配置</li>
 <li>发布</li>
 <li>写第一个博文</li>
 </ol>
-
 
 <h2>安装</h2>
 
@@ -117,28 +115,25 @@
 </span><span class='line'>rake install
 </span></code></pre></td></tr></table></div></figure>
 
-
 <h2>配置</h2>
 
-<p>你要先有个github.com的帐号，如果没有赶快注册吧。
+<p>你要先有个github.com的帐号，如果没有赶快注册吧。<br>
 注册好后新建一个软件仓库 <a href="https://github.com/new">https://github.com/new</a> ，注意仓库名称要以下这种格式哦<code>yourname.github.com</code>，这样代码发布后自动这个url就可以访问了。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>rake setup_github_pages
 </span></code></pre></td></tr></table></div></figure>
 
-
 <p>这个命令主要做以下的操作</p>
 
 <ol>
-<li>问你github上的url。 我的是 git@github.com:wongyouth/wongyouth.github.com.git</li>
+<li>问你github上的url。 我的是 <a href="mailto:git@github.com">git@github.com</a>:wongyouth/wongyouth.github.com.git</li>
 <li>将原始的<code>imathis/octopress</code>远端仓库<code>origin</code>名称改为<code>octopress</code></li>
 <li>把你输入的url作为远端仓库名<code>origin</code></li>
 <li>把当前目录从分支<code>master</code>切换到<code>source</code></li>
 <li>把当前目录与<code>origin</code>的仓库关联，能默认push到github中</li>
 <li>配置<code>_deploy</code>目录作为github仓库的<code>master</code>分支</li>
 </ol>
-
 
 <p>要做的就是把原始的blog代码放在<code>source</code>分支中，当要发布时会自动生成发布代码到<code>_deploy</code>目录下以<code>master</code>分支更新到github上。github会以<code>master</code>中的代码作为blog的原始代码。</p>
 
@@ -150,7 +145,6 @@
 </span><span class='line'>rake deploy
 </span></code></pre></td></tr></table></div></figure>
 
-
 <p>当你发布之后，你就可以到 <a href="http://yourname.github.com">http://yourname.github.com</a> 上看到你的博客了，是不是很酷呢。</p>
 
 <h2>写第一个博文</h2>
@@ -159,22 +153,18 @@
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>rake new_post<span class="o">[</span><span class="s1">&#39;first post&#39;</span><span class="o">]</span>
 </span></code></pre></td></tr></table></div></figure>
 
-
 <p>引号里面是博文的标题，这个命令会在<code>source/_posts</code>下面生成一个markdown为后缀的文件，我们要做的就是编辑这个文件的内容，然后</p>
 
 <figure class='code'><figcaption><span>Start a local server for preview</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>rake preview
 </span></code></pre></td></tr></table></div></figure>
 
-
 <p>会在本地启动sinatra服务，用浏览器打开 <a href="http://localhost:4000">http://localhost:4000</a> 就可以看到效果了。如果都没有问题就可以发布了。</p>
 
-<p>有时候写了一半的博文想要先留为草稿放到服务器但是不发布这样情况。
+<p>有时候写了一半的博文想要先留为草稿放到服务器但是不发布这样情况。<br>
 我们可以在单独的这篇博文开头的yaml里面追加设置</p>
-
-<pre><code>published: false
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">published: false
+</code></pre></div>
 <p>这样deploy的时候就不会发布了。</p>
 
 <h2>其他</h2>
@@ -182,30 +172,25 @@
 <p>你可以仔细查看以下三个文件，如果觉得有必要就按照自己的配置修改。</p>
 
 <ol>
-<li>_config.yml</li>
-<li>config.rb</li>
-<li>config.ru</li>
+<li> _config.yml</li>
+<li> config.rb</li>
+<li> config.ru</li>
 </ol>
-
 
 <p>_config.yml中有关联其他一些社区的配置，比如github.com帐号，facebook帐号等。我认为比较有用的是<a href="http://disqus.com/">disqus</a>的评论帐号。到disqus注册一下，然后设置好<code>disqus_short_name</code>这样你的博客就有了评论功能了，而不是你一个人在唱独角戏了。</p>
 
 <h2>在其他电脑里面同步时的操作</h2>
-
-<pre><code>git clone git@github.com:wongyouth/wongyouth.github.com.git
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git clone git@github.com:wongyouth/wongyouth.github.com.git
 cd wongyouth.github.com
 git checkout source
 git clone git@github.com:wongyouth/wongyouth.github.com.git _deploy
-</code></pre>
-
+</code></pre></div>
 <p><code>_deploy</code>目录是用来与远程代码库同步的目录，所以我们要把它checkout出来预先做好关联</p>
 
 <p>make a new post and something else &#8230;</p>
-
-<pre><code>rake generate
+<div class="highlight"><pre><code class="text language-text" data-lang="text">rake generate
 rake deploy
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </article>
 

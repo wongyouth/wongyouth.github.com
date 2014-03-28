@@ -93,7 +93,6 @@
 
 <!-- more -->
 
-
 <p>Mongodb可使用的ruby adapter 常用的有Mongoid, Mongo Ruby Driver, Mongo mapper, 在这里不比较两者的异同，我们简单的用现在人气高的一个mongoid。人气值可以在看<a href="https://www.ruby-toolbox.com/categories/mongodb_clients">这里</a></p>
 
 <h2>Step 1: Install Mongodb 2.0</h2>
@@ -142,21 +141,18 @@
 </span><span class='line'><span class="c"># db.test.find()</span>
 </span></code></pre></td></tr></table></div></figure>
 
-
 <h2>Step 2: Setup Gemfile to install mongoid</h2>
 
 <p>在Gemfile中添加mongoid</p>
-
-<pre><code>gem 'mongoid', '~&gt; 3.0.0.rc'
-</code></pre>
-
-<p>执行
+<div class="highlight"><pre><code class="text language-text" data-lang="text">gem &#39;mongoid&#39;, &#39;~&gt; 3.0.0.rc&#39;
+</code></pre></div>
+<p>执行<br>
     bundle install</p>
 
-<p>这样就可以使用了。在[railscasts][]中有mongoid的使用视频，我就不接着举例了。
+<p>这样就可以使用了。在[railscasts][]中有mongoid的使用视频，我就不接着举例了。<br>
 虽然现在mongoid升级到了3.0rc，有些东西会有变化，但是大的变化不会太大。</p>
 
-<p>mongoid的确是好东西，但是rails社区之前的插件基本都是为mysql特质的，所以很多好插件在mongoid下还不能用，
+<p>mongoid的确是好东西，但是rails社区之前的插件基本都是为mysql特质的，所以很多好插件在mongoid下还不能用，<br>
 这个还需要社区在进一步的发展才能达到，重复造轮子代价太大，我们做迁移之前还是要考虑好这个现实问题的。</p>
 </div>
 

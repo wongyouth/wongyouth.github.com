@@ -7,7 +7,8 @@
 	<meta name="author" content="Wongyouth / 自由鱼">
 
 	
-	<meta name="description" content="Use Lvm With Your Server based on: * a disk /dev/xvdd more than 50G * ubuntu 12.04 LTS # install lvm2
+	<meta name="description" content="Use Lvm With Your Server based on: * a disk /dev/xvdd more than 50G * ubuntu 12.04 LTS
+# install lvm2
 sudo apt-get install lvm2 # create a pysical &hellip;">
 	
 
@@ -90,11 +91,10 @@ sudo apt-get install lvm2 # create a pysical &hellip;">
 				<div id="content">
           <div> <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">Use Lvm With Your Server</h1>
-	<div class="entry-content" itemprop="articleBody"><p>based on:
-  * a disk /dev/xvdd more than 50G
+	<div class="entry-content" itemprop="articleBody"><p>based on:<br>
+  * a disk /dev/xvdd more than 50G<br>
   * ubuntu 12.04 LTS</p>
-
-<pre><code># install lvm2
+<div class="highlight"><pre><code class="text language-text" data-lang="text"># install lvm2
 sudo apt-get install lvm2
 
 # create a pysical volume
@@ -125,10 +125,9 @@ sudo lvextend -L8G yun-pg
 
 # extend lv with extra 8G
 sudo lvextend -L+8G /dev/mapper/yun-pg
-</code></pre>
-
-<p>how-to: <a href="http://www.howtogeek.com/howto/40702/how-to-manage-and-use-lvm-logical-volume-management-in-ubuntu/">http://www.howtogeek.com/howto/40702/how-to-manage-and-use-lvm-logical-volume-management-in-ubuntu/</a><br/>
-recipies: <a href="http://docstore.mik.ua/manuals/hp-ux/en/5992-4589/ch03s03.html">http://docstore.mik.ua/manuals/hp-ux/en/5992-4589/ch03s03.html</a><br/>
+</code></pre></div>
+<p>how-to: <a href="http://www.howtogeek.com/howto/40702/how-to-manage-and-use-lvm-logical-volume-management-in-ubuntu/">http://www.howtogeek.com/howto/40702/how-to-manage-and-use-lvm-logical-volume-management-in-ubuntu/</a><br/><br>
+recipies: <a href="http://docstore.mik.ua/manuals/hp-ux/en/5992-4589/ch03s03.html">http://docstore.mik.ua/manuals/hp-ux/en/5992-4589/ch03s03.html</a><br/><br>
 pvreduce: <a href="http://www.cclove.me/Create_Extend_and_Reduce_LVM_on_Ubuntu1204.html">http://www.cclove.me/Create_Extend_and_Reduce_LVM_on_Ubuntu1204.html</a><br/></p>
 </div>
 

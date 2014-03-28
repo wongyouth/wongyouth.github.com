@@ -7,11 +7,14 @@
 	<meta name="author" content="Wongyouth / 自由鱼">
 
 	
-	<meta name="description" content="Git标签常用操作 在这里我列举了一些日常Git操作时用到的tag标签命令。 显示所有标签 git tag 筛选标签 $ git tag -l 'v1.4.2.*'
+	<meta name="description" content="Git标签常用操作 在这里我列举了一些日常Git操作时用到的tag标签命令。 显示所有标签
+git tag 筛选标签
+$ git tag -l &#39;v1.4.2.*&#39;
 v1.4.2.1
 v1.4.2.2
 v1.4.2.3
-v1.4.2.4 代注释的标签 $ git tag -a v1.4 -m ' &hellip;">
+v1.4.2.4 代注释的标签
+$ git tag -a &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -97,24 +100,18 @@ v1.4.2.4 代注释的标签 $ git tag -a v1.4 -m ' &hellip;">
 
 <!-- more -->
 
-
 <h2>显示所有标签</h2>
-
-<pre><code>git tag
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git tag
+</code></pre></div>
 <h2>筛选标签</h2>
-
-<pre><code>$ git tag -l 'v1.4.2.*'
+<div class="highlight"><pre><code class="text language-text" data-lang="text">$ git tag -l &#39;v1.4.2.*&#39;
 v1.4.2.1
 v1.4.2.2
 v1.4.2.3
 v1.4.2.4
-</code></pre>
-
+</code></pre></div>
 <h2>代注释的标签</h2>
-
-<pre><code>$ git tag -a v1.4 -m 'my version 1.4'
+<div class="highlight"><pre><code class="text language-text" data-lang="text">$ git tag -a v1.4 -m &#39;my version 1.4&#39;
 $ git tag
 v0.1
 v1.3
@@ -131,27 +128,23 @@ Merge: 4a447f7... a6b4c97...
 Author: Scott Chacon &lt;schacon@gee-mail.com&gt;
 Date:   Sun Feb 8 19:02:46 2009 -0800
 
-    Merge branch 'experiment'
-</code></pre>
-
+    Merge branch &#39;experiment&#39;
+</code></pre></div>
 <h2>轻量标签</h2>
-
-<pre><code>$ git tag v1.4-lw
+<div class="highlight"><pre><code class="text language-text" data-lang="text">$ git tag v1.4-lw
 $ git tag
 v0.1
 v1.3
 v1.4
 v1.4-lw
 v1.5
-</code></pre>
-
+</code></pre></div>
 <h2>给过去递交标签</h2>
-
-<pre><code>$ git log --pretty=oneline
-15027957951b64cf874c3557a0f3547bd83b3ff6 Merge branch 'experiment'
+<div class="highlight"><pre><code class="text language-text" data-lang="text">$ git log --pretty=oneline
+15027957951b64cf874c3557a0f3547bd83b3ff6 Merge branch &#39;experiment&#39;
 a6b4c97498bd301d84096da251c98a07c7723e65 beginning write support
 0d52aaab4479697da7686c15f77a3d64d9165190 one more thing
-6d52a271eda8725415634dd79daabbc4d9b6008e Merge branch 'experiment'
+6d52a271eda8725415634dd79daabbc4d9b6008e Merge branch &#39;experiment&#39;
 0b7434d86859cc7b8c3d5e1dddfed66ff742fcbc added a commit function
 4682c3261057305bdd616e23b64b0857d832627b added a todo file
 166ae0c4d3f420721acbb115cc33848dfcc2121a started write support
@@ -160,11 +153,9 @@ a6b4c97498bd301d84096da251c98a07c7723e65 beginning write support
 8a5cbc430f1a9c3d00faaeffd07798508422908a updated readme
 
 $ git tag -a v1.2 9fceb02
-</code></pre>
-
+</code></pre></div>
 <h2>分享标签</h2>
-
-<pre><code>$ git push origin v1.5
+<div class="highlight"><pre><code class="text language-text" data-lang="text">$ git push origin v1.5
 Counting objects: 50, done.
 Compressing objects: 100% (38/38), done.
 Writing objects: 100% (44/44), 4.56 KiB, done.
@@ -183,8 +174,7 @@ To git@github.com:schacon/simplegit.git
  * [new tag]         v1.4 -&gt; v1.4
  * [new tag]         v1.4-lw -&gt; v1.4-lw
  * [new tag]         v1.5 -&gt; v1.5
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </article>
 

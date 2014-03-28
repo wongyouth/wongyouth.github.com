@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | 鱼哥的技术博客]]></title>
   <link href="http://wongyouth.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2014-03-29T00:42:42+08:00</updated>
+  <updated>2014-03-29T00:46:15+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
@@ -18,7 +18,7 @@
     <link href="http://wongyouth.com/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/"/>
     <updated>2013-11-22T23:55:00+08:00</updated>
     <id>http://wongyouth.com/blog/2013/11/22/use-chef-for-automating-infrastructure-setup</id>
-    <content type="html"><![CDATA[<p>本篇主要分享一下如何使用Chef进行快速部署一个应用到服务器。
+    <content type="html"><![CDATA[<p>本篇主要分享一下如何使用Chef进行快速部署一个应用到服务器。<br>
 为了讲解的需要这里做了一些假定。</p>
 
 <ul>
@@ -29,12 +29,10 @@
 <li>该应用使用Nginx作为Web服务器</li>
 </ul>
 
-
 <!--more-->
 
-
-<p>先来说一下Vagrant是什么？Vagrant可以看做是一个接口，是他Vagrant提供的接口可以方便的操作VirtualBox虚拟机。
-VirtualBox虚拟机是一个免费的支持Windows, Linux, Mac 的全平台虚拟机。VirtualBox的使用场景多种多样。
+<p>先来说一下Vagrant是什么？Vagrant可以看做是一个接口，是他Vagrant提供的接口可以方便的操作VirtualBox虚拟机。<br>
+VirtualBox虚拟机是一个免费的支持Windows, Linux, Mac 的全平台虚拟机。VirtualBox的使用场景多种多样。<br>
 在这里我们可以用来当做一台干净的测试机。</p>
 
 <h1>准备Vagrant环境</h1>
@@ -45,7 +43,6 @@ VirtualBox虚拟机是一个免费的支持Windows, Linux, Mac 的全平台虚�
 <li><a href="http://www.virtualbox.org/">Install VirtualBox</a></li>
 <li><a href="http://www.vagrantup.com/">Install Vagrant</a></li>
 </ul>
-
 
 <h2>Vargrant file</h2>
 
@@ -71,21 +68,19 @@ VirtualBox虚拟机是一个免费的支持Windows, Linux, Mac 的全平台虚�
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>Vagrant常用命令</h2>
-
-<pre><code>vagrant up # 启动Vagrant的虚拟机
+<div class="highlight"><pre><code class="text language-text" data-lang="text">vagrant up # 启动Vagrant的虚拟机
 vagrant suspend # 休眠虚拟机，可以快速恢复
 vagrant resume # 恢复虚拟机，可快速恢复到休眠前状态
 vagrant halt # 关闭虚拟机电源。不使用额外空间保存状态，但是启动时间延长
 
 # 增加Vagrant虚拟机的信息到SSH配置里
 vagrant ssh-config --host chef_rails &gt;&gt; ~/.ssh/config
-</code></pre>
-
+</code></pre></div>
 <h1>使用Chef</h1>
 
-<p>Chef是一个功能强大的自动花部署工具，facebook的大公司也都在用它，官方的Chef是需要有个Chef Server来存放
-所有服务器信息，当Chef Client需要部署一台机器时会询问Chef Server服务器该台机器的信息。商用许可证自然价格不菲。
-社区里面开发了一个单机版的 Chef Solo，无需服务器配合，所有配置信息全部存放在一起，基本也能很好地满足普通的需求了。
+<p>Chef是一个功能强大的自动花部署工具，facebook的大公司也都在用它，官方的Chef是需要有个Chef Server来存放<br>
+所有服务器信息，当Chef Client需要部署一台机器时会询问Chef Server服务器该台机器的信息。商用许可证自然价格不菲。<br>
+社区里面开发了一个单机版的 Chef Solo，无需服务器配合，所有配置信息全部存放在一起，基本也能很好地满足普通的需求了。<br>
 Chef使用ruby代码编写脚本，接口设计花了很多功夫，让不知道ruby的人也能方便使用。毕竟Chef的目标用户是服务器管理员不是程序员。</p>
 
 <h2>Chef的常用命令</h2>
@@ -98,10 +93,8 @@ Chef使用ruby代码编写脚本，接口设计花了很多功夫，让不知道
 <li>Chef，实际的部署工具</li>
 </ul>
 
-
 <p>来看看各个工具的实际使用情况</p>
-
-<pre><code># berkshelf包管理工具，类似GemBundler
+<div class="highlight"><pre><code class="text language-text" data-lang="text"># berkshelf包管理工具，类似GemBundler
 gem install berkshelf
 berks install # 安装 chef 包
 
@@ -110,8 +103,7 @@ gem install knife-solo
 
 # 生成一个部署项目
 knife solo init chef-rails
-</code></pre>
-
+</code></pre></div>
 <h2>以下摘录一段chef片段</h2>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (chef_rails.json)</span> <a href='/downloads/code/chef_rails.json'>download</a></figcaption>
@@ -158,15 +150,13 @@ knife solo init chef-rails
 <h2>一个完成可用的例子</h2>
 
 <p><code>chef-rails</code> 是我写好的一个配置rails项目的工具，能够自动配置nginx, postgresql, memcached, ruby, rails</p>
-
-<pre><code>git clone https://github.com/wongyouth/chef-rails
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git clone https://github.com/wongyouth/chef-rails
 cd chef-rails
 bundle
 
 # install chef on target server
 knife solo bootstrap vagrant@chef_rails # 假设安装到之前设置好的Vagrant虚拟机服务器上
-</code></pre>
-
+</code></pre></div>
 <p>最后一步比较慢，可以华丽的起身喝一杯咖啡了。</p>
 
 <p>P.S. 最近网络不太好，可能有些文件被墙掉下载很慢需要多次尝试。</p>
@@ -174,11 +164,10 @@ knife solo bootstrap vagrant@chef_rails # 假设安装到之前设置好的Vagra
 <p>参考</p>
 
 <ul>
-<li>https://github.com/wongyouth/chef-rails</li>
-<li>https://github.com/ouyangzhiping/railsbox-example</li>
-<li>http://ruby-china.org/topics/13211</li>
+<li><a href="https://github.com/wongyouth/chef-rails">https://github.com/wongyouth/chef-rails</a></li>
+<li><a href="https://github.com/ouyangzhiping/railsbox-example">https://github.com/ouyangzhiping/railsbox-example</a></li>
+<li><a href="http://ruby-china.org/topics/13211">http://ruby-china.org/topics/13211</a></li>
 </ul>
-
 ]]></content>
   </entry>
   
@@ -188,19 +177,15 @@ knife solo bootstrap vagrant@chef_rails # 假设安装到之前设置好的Vagra
     <updated>2013-09-26T22:17:00+08:00</updated>
     <id>http://wongyouth.com/blog/2013/09/26/install-ruby-with-readline-supported-on-mac</id>
     <content type="html"><![CDATA[<p>Just a memo for installing ruby on Mac OSX with the feature of typing Chinese under ruby console.</p>
-
-<pre><code>brew install readline ruby-build
+<div class="highlight"><pre><code class="text language-text" data-lang="text">brew install readline ruby-build
 RUBY_CONFIGURE_OPTS=--with-readline-dir=`brew --prefix readline` rbenv install 1.9.3-p286
-</code></pre>
-
+</code></pre></div>
 <p>or to use pure Ruby readline</p>
-
-<pre><code>group :development do
-  gem 'rb_readline'
+<div class="highlight"><pre><code class="text language-text" data-lang="text">group :development do
+  gem &#39;rb_readline&#39;
 end
-</code></pre>
-
-<p>ref: https://github.com/guard/guard/wiki/Add-Readline-support-to-Ruby-on-Mac-OS-X</p>
+</code></pre></div>
+<p>ref: <a href="https://github.com/guard/guard/wiki/Add-Readline-support-to-Ruby-on-Mac-OS-X">https://github.com/guard/guard/wiki/Add-Readline-support-to-Ruby-on-Mac-OS-X</a></p>
 ]]></content>
   </entry>
   
@@ -211,23 +196,20 @@ end
     <id>http://wongyouth.com/blog/2013/06/01/speed-spider-for-web-crawling</id>
     <content type="html"><![CDATA[<h2>background</h2>
 
-<p>Some days ago I wanted to learn some css stuff from a site, I changed some css style to see what it turns to.
-After 10 minutes after I got tired when I have to change the source again and again in the browser.
-So I googled to find what kind of tools can be used to download files from a site, but I can't find anything satisfied.
+<p>Some days ago I wanted to learn some css stuff from a site, I changed some css style to see what it turns to.<br>
+After 10 minutes after I got tired when I have to change the source again and again in the browser.<br>
+So I googled to find what kind of tools can be used to download files from a site, but I can&#39;t find anything satisfied.<br>
 So after searched github I found I can do it myself with little work.</p>
 
-<p>Here comes the <a href="https://github.com/wongyouth/speed_spider">SpeedSpider</a>, it's A simple and speedy web spider for site pages downloading.</p>
+<p>Here comes the <a href="https://github.com/wongyouth/speed_spider">SpeedSpider</a>, it&#39;s A simple and speedy web spider for site pages downloading.</p>
 
 <p>UPDATE:</p>
 
-<p>It turns out <code>wget</code> can do all the jobs I wanted except it doest not use threads. So wget way may be slower than SpeedSpider.
+<p>It turns out <code>wget</code> can do all the jobs I wanted except it doest not use threads. So wget way may be slower than SpeedSpider.<br>
 You can download bootstrap page with code below.</p>
-
-<pre><code>wget -m -p -E -k -np http://twitter.github.io/bootstrap
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">wget -m -p -E -k -np http://twitter.github.io/bootstrap
+</code></pre></div>
 <!--more-->
-
 
 <p>SpeedSpider was made with below in mind</p>
 
@@ -240,21 +222,17 @@ You can download bootstrap page with code below.</p>
 <li>download files should be save with the same structure with the origin site</li>
 </ul>
 
-
 <h2>Installation</h2>
 
 <p>install it with rubygem:</p>
-
-<pre><code>gem install 'speed_spider'
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">gem install &#39;speed_spider&#39;
+</code></pre></div>
 <h3>Usage</h3>
-
-<pre><code>Usage: spider [options] start_url
+<div class="highlight"><pre><code class="text language-text" data-lang="text">Usage: spider [options] start_url
 
 options:
     -S, --slient                     slient output
-    -D, --dir String                 directory for download files to save to. "download" by default
+    -D, --dir String                 directory for download files to save to. &quot;download&quot; by default
     -b, --base_url String            any url not starts with base_url will not be saved
     -t, --threads Integer            threads to run for fetching pages, 4 by default
     -u, --user_agent String          words for request header USER_AGENT
@@ -268,19 +246,14 @@ options:
     -P, --proxy_port Integer         proxy server port number
     -T, --read_timeout Integer       HTTP read timeout in seconds
     -V, --version                    Show version
-</code></pre>
-
+</code></pre></div>
 <h2>Examples</h2>
-
-<pre><code>spider http://twitter.github.io/bootstrap/
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">spider http://twitter.github.io/bootstrap/
+</code></pre></div>
 <p>It will download all files within the same domain as twitter.github.io, and save to download/twitter.github.io/.</p>
-
-<pre><code>spider -b http://ruby-doc.org/core-2.0/ http://ruby-doc.org/core-2.0/
-</code></pre>
-
-<p>It will only download urls start with http://ruby-doc.org/core-2.0/, notice assets files like image, css, js, font will not obey base_url rule.</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">spider -b http://ruby-doc.org/core-2.0/ http://ruby-doc.org/core-2.0/
+</code></pre></div>
+<p>It will only download urls start with <a href="http://ruby-doc.org/core-2.0/">http://ruby-doc.org/core-2.0/</a>, notice assets files like image, css, js, font will not obey base_url rule.</p>
 ]]></content>
   </entry>
   

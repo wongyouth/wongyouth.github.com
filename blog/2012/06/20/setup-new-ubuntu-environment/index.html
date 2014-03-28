@@ -9,7 +9,8 @@
 	
 	<meta name="description" content="配置一个新的Ubuntu开发环境 今天刚申请到linode的vps主机，就迫不及待的安装了ubuntu，于是有要配置安装一大堆东西，
 在这里给总结一下。 更新源 1
-sudo apt-get update 安装系统包 sudo apt-get -y install git-core curl &hellip;">
+sudo apt-get update 安装系统包
+sudo apt-get -y install git-core curl &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -91,11 +92,10 @@ sudo apt-get update 安装系统包 sudo apt-get -y install git-core curl &helli
 				<div id="content">
           <div> <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">配置一个新的Ubuntu开发环境</h1>
-	<div class="entry-content" itemprop="articleBody"><p>今天刚申请到<a href="http://linode.com">linode</a>的<code>vps</code>主机，就迫不及待的安装了ubuntu，于是有要配置安装一大堆东西，
+	<div class="entry-content" itemprop="articleBody"><p>今天刚申请到<a href="http://linode.com">linode</a>的<code>vps</code>主机，就迫不及待的安装了ubuntu，于是有要配置安装一大堆东西，<br>
 在这里给总结一下。</p>
 
 <!-- more -->
-
 
 <h2>更新源</h2>
 
@@ -103,17 +103,14 @@ sudo apt-get update 安装系统包 sudo apt-get -y install git-core curl &helli
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>sudo apt-get update
 </span></code></pre></td></tr></table></div></figure>
 
-
 <h2>安装系统包</h2>
-
-<pre><code>sudo apt-get -y install git-core curl zsh exuberant-ctags vim autoconf automake openssl \
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo apt-get -y install git-core curl zsh exuberant-ctags vim autoconf automake openssl \
   build-essential libc6-dev libreadline6 libreadline6-dev zlib1g zlib1g-dev libssl-dev libyaml-dev \
   mysql-server libmysqlclient-dev libsqlite3-0 libsqlite3-dev sqlite3 \
   ncurses-dev libtool bison libxslt1-dev libxml2-dev libqt4-dev
-</code></pre>
-
-<p>nokogiri.gem        need libxml2 libxml2-dev libxslt1-dev
-mysql2.gem          need libmysqlclient-dev
+</code></pre></div>
+<p>nokogiri.gem        need libxml2 libxml2-dev libxslt1-dev<br>
+mysql2.gem          need libmysqlclient-dev<br>
 capybara-webkit.gem need libqt4-dev</p>
 
 <h2>安装<code>oh-my-zsh</code>，如果你使用<code>bash</code>可以跳过此步骤</h2>
@@ -122,13 +119,11 @@ capybara-webkit.gem need libqt4-dev</p>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | bash
 </span></code></pre></td></tr></table></div></figure>
 
-
 <h2>切换到<code>zsh</code></h2>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>chsh -s <span class="sb">`</span>which zsh<span class="sb">`</span>
 </span></code></pre></td></tr></table></div></figure>
-
 
 <h2>配置主目录里面常用的dotfiles文件</h2>
 
@@ -140,13 +135,11 @@ capybara-webkit.gem need libqt4-dev</p>
 </span><span class='line'>rake install
 </span></code></pre></td></tr></table></div></figure>
 
-
 <h2>设置<code>vim</code>文件，安装常用的<code>vim</code>插件</h2>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>curl https://raw.github.com/wongyouth/vimfiles/master/install.sh | bash
 </span></code></pre></td></tr></table></div></figure>
-
 
 <h2>安装<code>ruby</code>环境管理工具<code>rbenv</code></h2>
 
@@ -156,7 +149,6 @@ capybara-webkit.gem need libqt4-dev</p>
 </span><span class='line'>rbenv bootstrap-ubuntu-12-04
 </span></code></pre></td></tr></table></div></figure>
 
-
 <h2>安装ruby1.9</h2>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -164,7 +156,6 @@ capybara-webkit.gem need libqt4-dev</p>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv install 1.9.3-p194
 </span><span class='line'>rbenv global 1.9.3-p194
 </span></code></pre></td></tr></table></div></figure>
-
 
 <h2>更新<code>gem</code> 并安装 <code>bundler</code> <code>rake</code></h2>
 
@@ -174,15 +165,11 @@ capybara-webkit.gem need libqt4-dev</p>
 </span><span class='line'>gem install bundler rake
 </span></code></pre></td></tr></table></div></figure>
 
-
 <h2>更新<code>rbenv</code>的<code>shim</code>，使<code>rake</code>, <code>bundle</code>命令可以直接使用</h2>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv rehash
 </span></code></pre></td></tr></table></div></figure>
-
-
-
 </div>
 
 </article>

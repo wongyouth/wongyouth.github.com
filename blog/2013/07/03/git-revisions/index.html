@@ -97,16 +97,13 @@
 <li>假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表</li>
 </ul>
 
-
 <!-- more -->
-
 
 <h2>Git中 ^ 与 ~ 的区别</h2>
 
-<p>我们看Git履历会用到<code>git log head~2</code>，<code>git log head^2</code>，可能搞不清楚这两者之间有什么区别。
+<p>我们看Git履历会用到<code>git log head~2</code>，<code>git log head^2</code>，可能搞不清楚这两者之间有什么区别。<br>
 先来看一段代码：</p>
-
-<pre><code># Dummy repository
+<div class="highlight"><pre><code class="text language-text" data-lang="text"># Dummy repository
 $ git log --oneline
 77bc990 Third commit
 25d4fc4 Second commit
@@ -124,14 +121,13 @@ $ git log --oneline HEAD^^
 f0faab6 First commit
 
 $ git log --oneline HEAD^2
-fatal: ambiguous argument 'HEAD^2': unknown revision or path not in the working tree.
-</code></pre>
-
+fatal: ambiguous argument &#39;HEAD^2&#39;: unknown revision or path not in the working tree.
+</code></pre></div>
 <p>从这里可以看出来<code>^</code> 与 <code>~</code> 是有区别的</p>
 
 <p><code>HEAD^2</code> 与 <code>HEAD~2</code> 的区别</p>
 
-<p><code>HEAD^2</code> 表示的是当前HEAD的第二个父节点
+<p><code>HEAD^2</code> 表示的是当前HEAD的第二个父节点<br>
 <code>HEAD~2</code> 表示的是当前HEAD的第一个父节点的第一个父节点</p>
 
 <p>记住<code>~</code>永远在第一个父节点上回溯。</p>
@@ -148,29 +144,24 @@ fatal: ambiguous argument 'HEAD^2': unknown revision or path not in the working 
 * 9c80295 move CNAME to source/ (Ryan Wang, 11 months ago)
 </pre>
 
-
 <ul>
 <li>HEAD 是最后一个递交，也就是<code>abe6b95</code></li>
 <li>HEAD的父节点只有一个，所以也就是 <code>ad57324</code>，记为 HEAD~ 或者 HEAD^</li>
 <li><code>ad57324</code>的父节点也只有一个，<code>302f545</code>，记为 HEAD~2, HEAD~~ 或者 HEAD^^</li>
-<li><code>302f545</code>有两个父节点, 第一个为 <code>9c80295</code>, 记为 HEAD~3，第二个父节点 <code>09558c6</code>，记为 HEAD~2<sup>2</sup></li>
-<li><code>09558c6</code>有一个父节点 &#8220;，记为 HEAD~2<sup>2</sup>~，或者 HEAD~2<sup>2</sup>^</li>
+<li><code>302f545</code>有两个父节点, 第一个为 <code>9c80295</code>, 记为 HEAD~3，第二个父节点 <code>09558c6</code>，记为 HEAD~2^2</li>
+<li><code>09558c6</code>有一个父节点 &#8220;，记为 HEAD~2^2~，或者 HEAD~2^2^</li>
 </ul>
 
-
 <p>那么如果要表示第二代父节点的第10代祖先的第2个父节点如何表示呢</p>
-
-<pre><code>HEAD^2~10^2
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">HEAD^2~10^2
+</code></pre></div>
 <h2>假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表</h2>
-
-<pre><code>$ git checkout -b other f0faab6
-Switched to a new branch 'other'
+<div class="highlight"><pre><code class="text language-text" data-lang="text">$ git checkout -b other f0faab6
+Switched to a new branch &#39;other&#39;
 
 $ #touch file
 $ git add file
-$ git commit -m "Adding file" file
+$ git commit -m &quot;Adding file&quot; file
 
 $ git log --oneline
 1762164 Adding file
@@ -182,15 +173,13 @@ $ git log --oneline other..master
 
 $ git log --oneline master..other
 1762164 Adding file
-</code></pre>
-
-<p>可以看出 <code>..</code> 前后分支对换，结果是不一样的
-这段代码的意思是找出在一个分支上有，但是在另一个分支上没有的递交。
+</code></pre></div>
+<p>可以看出 <code>..</code> 前后分支对换，结果是不一样的<br>
+这段代码的意思是找出在一个分支上有，但是在另一个分支上没有的递交。<br>
 其原理是先回溯到两者的共同祖先，然后用这个祖先比较分支，这样就得出来只属于那个分支的递交履历。</p>
 
 <p>再看第三段代码：</p>
-
-<pre><code>$ git log master...other
+<div class="highlight"><pre><code class="text language-text" data-lang="text">$ git log master...other
 1762164 Adding file
 77bc990 Third commit
 25d4fc4 Second commit
@@ -199,8 +188,7 @@ $ git log other...master
 1762164 Adding file
 77bc990 Third commit
 25d4fc4 Second commit
-</code></pre>
-
+</code></pre></div>
 <p>比较之前的代码，可以看出来结果与前后关系相同，两者的履历都会显示。</p>
 </div>
 

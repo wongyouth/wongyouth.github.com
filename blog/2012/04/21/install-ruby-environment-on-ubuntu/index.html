@@ -90,14 +90,13 @@
 				<div id="content">
           <div> <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">Ubuntu下安装ruby开发环境</h1>
-	<div class="entry-content" itemprop="articleBody"><p>要使用rails开发Web应用服务时，在Windows环境下会遇到各种各样的问题，有些Gem也会工作不正常。
+	<div class="entry-content" itemprop="articleBody"><p>要使用rails开发Web应用服务时，在Windows环境下会遇到各种各样的问题，有些Gem也会工作不正常。<br>
 有些人会用MacOS作为开发环境，这当然好，但是我们在也可用免费的Ubuntu来开发，这里就介绍下安装步骤。</p>
 
 <!-- more -->
 
-
-<p>开始的时候我也是用Windows作为Rails项目开发的。
-但是在Windows下会碰到各种各样的问题，最常见的就是Gem包可能只工作在类Unix的环境下。
+<p>开始的时候我也是用Windows作为Rails项目开发的。<br>
+但是在Windows下会碰到各种各样的问题，最常见的就是Gem包可能只工作在类Unix的环境下。<br>
 有的时候按照官方说明一步一步做仍然有各种各样的不成功。痛定思痛用Ubuntu做为开发环境。</p>
 
 <p>使用Ubuntu有个好处，每天跟Ubuntu打交道会提高整体的服务器排错水平，因为每天用的就是服务器一样的环境，遇到问题每天都要去解决，久而久之水平也就上去了。</p>
@@ -110,7 +109,6 @@
 <li>安装<code>ruby</code></li>
 <li>创建第一个<code>Rails</code>项目</li>
 </ol>
-
 
 <h2>预安装库文件</h2>
 
@@ -130,8 +128,7 @@
 </span><span class='line'>libtool bison subversion libxslt1-dev
 </span></code></pre></td></tr></table></div></figure>
 
-
-<p>如果使用jruby的话，安装一个jdk环境
+<p>如果使用jruby的话，安装一个jdk环境<br>
     sudo apt-get install default-jdk</p>
 
 <h2>安装<code>rbenv</code></h2>
@@ -142,7 +139,6 @@
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash
 </span></code></pre></td></tr></table></div></figure>
 
-
 <h2>安装<code>ruby</code></h2>
 
 <p>假设你使用ruby-1.9.3</p>
@@ -152,7 +148,6 @@
 </pre></td><td class='code'><pre><code class='sh'><span class='line'>rbenv install 1.9.3-p125
 </span><span class='line'>rbenv global 1.9.3-p125
 </span></code></pre></td></tr></table></div></figure>
-
 
 <p>常用rbenv命令</p>
 
@@ -170,7 +165,6 @@
 </span><span class='line'><span class="nb">export </span><span class="nv">RBENV_VERSION</span><span class="o">=</span>jruby-1.6.5 <span class="c"># 切换到jruby-1.6.5环境，只适用于这一次使用</span>
 </span></code></pre></td></tr></table></div></figure>
 
-
 <h2>创建第一个<code>Rails</code>项目</h2>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -182,7 +176,6 @@
 </span><span class='line'>rbenv rehash              <span class="c"># 刷新rbenv记录的可执行文件，这样rails命令就可以直接使用了</span>
 </span><span class='line'>rails new blog
 </span></code></pre></td></tr></table></div></figure>
-
 </div>
 
 </article>

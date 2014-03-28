@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rails | 鱼哥的技术博客]]></title>
   <link href="http://wongyouth.com/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2014-03-29T00:42:42+08:00</updated>
+  <updated>2014-03-29T00:46:15+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
@@ -20,23 +20,20 @@
     <id>http://wongyouth.com/blog/2013/06/01/speed-spider-for-web-crawling</id>
     <content type="html"><![CDATA[<h2>background</h2>
 
-<p>Some days ago I wanted to learn some css stuff from a site, I changed some css style to see what it turns to.
-After 10 minutes after I got tired when I have to change the source again and again in the browser.
-So I googled to find what kind of tools can be used to download files from a site, but I can't find anything satisfied.
+<p>Some days ago I wanted to learn some css stuff from a site, I changed some css style to see what it turns to.<br>
+After 10 minutes after I got tired when I have to change the source again and again in the browser.<br>
+So I googled to find what kind of tools can be used to download files from a site, but I can&#39;t find anything satisfied.<br>
 So after searched github I found I can do it myself with little work.</p>
 
-<p>Here comes the <a href="https://github.com/wongyouth/speed_spider">SpeedSpider</a>, it's A simple and speedy web spider for site pages downloading.</p>
+<p>Here comes the <a href="https://github.com/wongyouth/speed_spider">SpeedSpider</a>, it&#39;s A simple and speedy web spider for site pages downloading.</p>
 
 <p>UPDATE:</p>
 
-<p>It turns out <code>wget</code> can do all the jobs I wanted except it doest not use threads. So wget way may be slower than SpeedSpider.
+<p>It turns out <code>wget</code> can do all the jobs I wanted except it doest not use threads. So wget way may be slower than SpeedSpider.<br>
 You can download bootstrap page with code below.</p>
-
-<pre><code>wget -m -p -E -k -np http://twitter.github.io/bootstrap
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">wget -m -p -E -k -np http://twitter.github.io/bootstrap
+</code></pre></div>
 <!--more-->
-
 
 <p>SpeedSpider was made with below in mind</p>
 
@@ -49,21 +46,17 @@ You can download bootstrap page with code below.</p>
 <li>download files should be save with the same structure with the origin site</li>
 </ul>
 
-
 <h2>Installation</h2>
 
 <p>install it with rubygem:</p>
-
-<pre><code>gem install 'speed_spider'
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">gem install &#39;speed_spider&#39;
+</code></pre></div>
 <h3>Usage</h3>
-
-<pre><code>Usage: spider [options] start_url
+<div class="highlight"><pre><code class="text language-text" data-lang="text">Usage: spider [options] start_url
 
 options:
     -S, --slient                     slient output
-    -D, --dir String                 directory for download files to save to. "download" by default
+    -D, --dir String                 directory for download files to save to. &quot;download&quot; by default
     -b, --base_url String            any url not starts with base_url will not be saved
     -t, --threads Integer            threads to run for fetching pages, 4 by default
     -u, --user_agent String          words for request header USER_AGENT
@@ -77,19 +70,14 @@ options:
     -P, --proxy_port Integer         proxy server port number
     -T, --read_timeout Integer       HTTP read timeout in seconds
     -V, --version                    Show version
-</code></pre>
-
+</code></pre></div>
 <h2>Examples</h2>
-
-<pre><code>spider http://twitter.github.io/bootstrap/
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">spider http://twitter.github.io/bootstrap/
+</code></pre></div>
 <p>It will download all files within the same domain as twitter.github.io, and save to download/twitter.github.io/.</p>
-
-<pre><code>spider -b http://ruby-doc.org/core-2.0/ http://ruby-doc.org/core-2.0/
-</code></pre>
-
-<p>It will only download urls start with http://ruby-doc.org/core-2.0/, notice assets files like image, css, js, font will not obey base_url rule.</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">spider -b http://ruby-doc.org/core-2.0/ http://ruby-doc.org/core-2.0/
+</code></pre></div>
+<p>It will only download urls start with <a href="http://ruby-doc.org/core-2.0/">http://ruby-doc.org/core-2.0/</a>, notice assets files like image, css, js, font will not obey base_url rule.</p>
 ]]></content>
   </entry>
   
@@ -102,7 +90,6 @@ options:
 
 <!-- more -->
 
-
 <p>虽然只在ubuntu测试过，但是应该在别的系统下也可以用</p>
 
 <h2>特点</h2>
@@ -111,7 +98,6 @@ options:
 <li>单条命令完成安装，免除配置痛苦</li>
 <li>vim插件不包含在repo里，支持一个命令更新所有vimplugins，免除更新插件之苦</li>
 </ul>
-
 
 <h2>包含插件</h2>
 
@@ -123,7 +109,7 @@ options:
 <li>delimitMate 自动补全右括号</li>
 <li>zencoding HTML垒码利器 <code>&lt;c-y&gt;,</code></li>
 <li>tabular 代码美化。 按 <code>=</code> 等对齐 <code>\a=</code>， 按 <code>=&gt;</code> 对齐 <code>\a&gt;</code></li>
-<li><del>taglist 标签列表</del> tagbar 标签列表 <code>F8</code></li>
+<li>~~taglist 标签列表~~ tagbar 标签列表 <code>F8</code></li>
 <li>ctrlp 文件查找 <code>&lt;c-p&gt;</code></li>
 <li>bufExplorer 缓冲列表 <code>&lt;c-k&gt;</code></li>
 <li>preview markdown文件编译结果查看 <code>\P</code></li>
@@ -136,8 +122,7 @@ options:
 <li>查log <code>:Glog</code></li>
 <li>打开Github上该文件 <code>:Gbrowse</code></li>
 <li>说不完...</li>
-</ul>
-</li>
+</ul></li>
 <li>snippets</li>
 <li>语法支持
 
@@ -147,18 +132,15 @@ options:
 <li>sass, scss</li>
 <li>coffee-script</li>
 <li>css 文件中颜色color, background-color 自动显示为背景色 （需gvim）</li>
-</ul>
-</li>
+</ul></li>
 <li>配色方案
 
 <ul>
 <li>solarized</li>
 <li>vim-github-colorscheme</li>
 <li>backboard</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-
 
 <h2>vimrc DIY</h2>
 
@@ -168,15 +150,14 @@ options:
 <li><code>F4</code> 插入模式时 切换粘帖模式， 普通模式时 切换 行号</li>
 </ul>
 
-
 <p>你觉得还少了什么？</p>
 
-<p>最后vim英文帮助看着吃力的话你可以下载VIM的中文说明，那就完美了
+<p>最后vim英文帮助看着吃力的话你可以下载VIM的中文说明，那就完美了<br>
 <a href="http://vimcdoc.sourceforge.net/">vim中文帮助</a></p>
 
 <h2>Screenshots</h2>
 
-<p><img src="http://pic.yupoo.com/sinaweibo1332356097/C5k2LdP9/medish.jpg" alt="vim-gui" /></p>
+<p><img src="http://pic.yupoo.com/sinaweibo1332356097/C5k2LdP9/medish.jpg" alt="vim-gui"></p>
 
 <p>repo 在这里 <a href="https://github.com/wongyouth/vimfiles">https://github.com/wongyouth/vimfiles</a></p>
 ]]></content>
@@ -191,18 +172,16 @@ options:
 
 <!-- more -->
 
-
 <p>Mongodb可使用的ruby adapter 常用的有Mongoid, Mongo Ruby Driver, Mongo mapper, 在这里不比较两者的异同，我们简单的用现在人气高的一个mongoid。人气值可以在看<a href="https://www.ruby-toolbox.com/categories/mongodb_clients">这里</a></p>
 
 <h2>Step 1: Install Mongodb 2.0</h2>
 
 <p>目前Ubuntu官方库里的mongodb还没有升级到2.0版，我们用mongodb官方提供<a href="http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian-or-ubuntu-linux/">步骤</a>来安装。</p>
-
-<pre><code class="sh">    # 添加mongodb公司10gen的pgp键
+<div class="highlight"><pre><code class="sh language-sh" data-lang="sh">    # 添加mongodb公司10gen的pgp键
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
     # 增加源到apt
-    sudo sh -c "echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' &gt; /etc/apt/sources.list.d/10gen.list"
+    sudo sh -c &quot;echo &#39;deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen&#39; &gt; /etc/apt/sources.list.d/10gen.list&quot;
 
     # 更新源
     sudo apt-get update
@@ -218,22 +197,19 @@ options:
 
     # db.test.save( {a: 1} )
     # db.test.find()
-</code></pre>
-
+</code></pre></div>
 <h2>Step 2: Setup Gemfile to install mongoid</h2>
 
 <p>在Gemfile中添加mongoid</p>
-
-<pre><code>gem 'mongoid', '~&gt; 3.0.0.rc'
-</code></pre>
-
-<p>执行
+<div class="highlight"><pre><code class="text language-text" data-lang="text">gem &#39;mongoid&#39;, &#39;~&gt; 3.0.0.rc&#39;
+</code></pre></div>
+<p>执行<br>
     bundle install</p>
 
-<p>这样就可以使用了。在[railscasts][]中有mongoid的使用视频，我就不接着举例了。
+<p>这样就可以使用了。在[railscasts][]中有mongoid的使用视频，我就不接着举例了。<br>
 虽然现在mongoid升级到了3.0rc，有些东西会有变化，但是大的变化不会太大。</p>
 
-<p>mongoid的确是好东西，但是rails社区之前的插件基本都是为mysql特质的，所以很多好插件在mongoid下还不能用，
+<p>mongoid的确是好东西，但是rails社区之前的插件基本都是为mysql特质的，所以很多好插件在mongoid下还不能用，<br>
 这个还需要社区在进一步的发展才能达到，重复造轮子代价太大，我们做迁移之前还是要考虑好这个现实问题的。</p>
 ]]></content>
   </entry>
@@ -243,67 +219,56 @@ options:
     <link href="http://wongyouth.com/blog/2012/06/25/use-postgresql-with-rails/"/>
     <updated>2012-06-25T14:28:00+08:00</updated>
     <id>http://wongyouth.com/blog/2012/06/25/use-postgresql-with-rails</id>
-    <content type="html"><![CDATA[<p>在我们的rails服务器配置中经常用的是 MySQL，
+    <content type="html"><![CDATA[<p>在我们的rails服务器配置中经常用的是 MySQL，<br>
 今天使用开源社区的另一款数据库软件 postgresql 来做一个实验。</p>
 
 <p>测试环境： ubuntu 12.04</p>
 
 <!-- more -->
 
-
-<p>安装与配置postgresql数据库。
-    # 安装 postgresql 和开发库（pg.gem使用）
+<p>安装与配置postgresql数据库。<br>
+    # 安装 postgresql 和开发库（pg.gem使用）<br>
     sudo apt-get install postgresql libpq-dev</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text"># 修改配置文件使TCP/IP来的链接可用
 
-<pre><code># 修改配置文件使TCP/IP来的链接可用
-
-# /etc/postgresql/9.1/main/postgresql.conf 文件中去掉以下行开头的 `#'
-# listen_addresses = 'localhost'
+# /etc/postgresql/9.1/main/postgresql.conf 文件中去掉以下行开头的 `#&#39;
+# listen_addresses = &#39;localhost&#39;
 
 # 重启 postgresql
 sudo /etc/init.d/postgresql restart
-</code></pre>
-
-<p>生成rails里面使用的postgrelsql的帐号密码，这里我们用MySQL的帐号root。
-    # 创建root帐号
-    # -d 可以创建数据库
-    # -R 不可以创建角色
-    # -S 不是超级用户
+</code></pre></div>
+<p>生成rails里面使用的postgrelsql的帐号密码，这里我们用MySQL的帐号root。<br>
+    # 创建root帐号<br>
+    # -d 可以创建数据库<br>
+    # -R 不可以创建角色<br>
+    # -S 不是超级用户<br>
     sudo -u postgres createuser -d -R -S root</p>
 
 <p>postgres 是 postgresql 的超级帐号，使用他就可以做任何事了，包括找回密码哦，因为默认配置是不需要输入密码的。</p>
-
-<pre><code># 修改root帐号密码
-echo "alter role root password 'root';" | sudo -u postgres psql
+<div class="highlight"><pre><code class="text language-text" data-lang="text"># 修改root帐号密码
+echo &quot;alter role root password &#39;root&#39;;&quot; | sudo -u postgres psql
 
 # 测试帐号登录
 psql -U root -h localhost template1
-</code></pre>
-
+</code></pre></div>
 <p>template1 是安装 postgresql 时自动生成的一个模板，这里为什么要指定 template1 是因为不指定一个操作对象时会报错。</p>
 
 <p>配置rails程序，使其使用postgresql</p>
-
-<pre><code>gem pg
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">gem pg
+</code></pre></div>
 <p>config/database.yml</p>
-
-<pre><code>adapter: postgresql
+<div class="highlight"><pre><code class="text language-text" data-lang="text">adapter: postgresql
 host: localhost
 database: xxx_development
 username: root
 password: root
 encoding: utf8
 pool: 5
-</code></pre>
-
+</code></pre></div>
 <p>生成数据库启动rails</p>
-
-<pre><code>rake db:create
+<div class="highlight"><pre><code class="text language-text" data-lang="text">rake db:create
 rails server
-</code></pre>
-
+</code></pre></div>
 <p>后面的操作就与MySQL时是一样的啦。</p>
 ]]></content>
   </entry>

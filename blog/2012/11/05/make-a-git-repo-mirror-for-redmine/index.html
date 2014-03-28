@@ -93,102 +93,97 @@
 
 <!-- more -->
 
-
-<p>以下代码参照了<a href="http://blog.buginception.com/blog/2012/04/02/redmine-use-git-code-review">http://blog.buginception.com/blog/2012/04/02/redmine-use-git-code-review</a></p>
-
-<figure class='code'><figcaption><span> (make-mirror.sh)</span> <a href='/downloads/code/make-mirror.sh'>download</a></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/bash</span>
-</span><span class='line'>
-</span><span class='line'><span class="nb">set</span> -x
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$1&quot;</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="o">]</span>; <span class="k">then</span>
-</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Usage: $0 [repo]&quot;</span>
-</span><span class='line'>  <span class="nb">exit </span>1
-</span><span class='line'><span class="k">fi</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">REPO</span><span class="o">=</span><span class="nv">$1</span>.git
-</span><span class='line'><span class="nv">GIT_BASE</span><span class="o">=</span>/home/git/repositories
-</span><span class='line'><span class="nv">MIRROR_PATH</span><span class="o">=</span>/home/jxb/git-mirrors
-</span><span class='line'><span class="nv">REPO_PATH</span><span class="o">=</span><span class="nv">$MIRROR_PATH</span>/<span class="nv">$REPO</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># 我們要使用 git clone --mirror 建立一個原始 repo 的鏡像：</span>
-</span><span class='line'><span class="nb">cd</span> <span class="nv">$MIRROR_PATH</span> <span class="o">&amp;&amp;</span> git clone --mirror <span class="nv">$GIT_BASE</span>/<span class="nv">$REPO</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># 接下來下一步，由於之後 git 使用者會透過 post-receive hook 來同步兩個 repository，</span>
-</span><span class='line'><span class="c"># 我們直接修改這個境像 repository 的 owner / group 為 git 來讓它有讀寫權限。</span>
-</span><span class='line'>chown -R git:git <span class="nv">$REPO_PATH</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># 再來我們要設定原本 repo 的 hooks ：</span>
-</span><span class='line'><span class="nb">cd</span> <span class="nv">$GIT_BASE</span>/<span class="nv">$REPO</span>/hooks
-</span><span class='line'>
-</span><span class='line'>cat &gt; post-receive <span class="s">&lt;&lt;EOS</span>
-</span><span class='line'><span class="s">#!/bin/bash</span>
-</span><span class='line'><span class="s">/usr/bin/git push --mirror $REPO_PATH</span>
-</span><span class='line'><span class="s">EOS</span>
-</span><span class='line'>
-</span><span class='line'><span class="c"># 建立完 post-receive 檔案後修改權限：</span>
-</span><span class='line'>chown git:git post-receive
-</span><span class='line'>chmod 700 post-receive
-</span><span class='line'>
-</span><span class='line'><span class="c"># 由於 Git 在做 mirror push 的時候，會保留原始的檔案與資料夾存取權限，</span>
-</span><span class='line'><span class="c"># 在 gitolite 控管下，只有 owner 有讀寫權限，所以一做 mirror push 這個鏡像的 repository 就沒辦法被其他 process 讀取到了，</span>
-</span><span class='line'><span class="c"># 所以我們一開始就要告訴這個 mirror repository 它是被分享的，並且設定它應該要有的存取權限：</span>
-</span><span class='line'>sudo -u git sh <span class="s">&lt;&lt;EOS</span>
-</span><span class='line'><span class="s">set -x</span>
-</span><span class='line'><span class="s">cd $REPO_PATH</span>
-</span><span class='line'><span class="s">chmod a+rX -R ./</span>
-</span><span class='line'><span class="s">git config --add core.sharedRepository 644</span>
-</span><span class='line'><span class="s">EOS</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>以下代码参照了<a href="http://blog.buginception.com/blog/2012/04/02/redmine-use-git-code-review">http://blog.buginception.com/blog/2012/04/02/redmine-use-git-code-review</a><br>
+<figure class='code'><figcaption><span> (make-mirror.sh)</span> <a href='/downloads/code/make-mirror.sh'>download</a></figcaption><br>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span><br>
+<span class='line-number'>2</span><br>
+<span class='line-number'>3</span><br>
+<span class='line-number'>4</span><br>
+<span class='line-number'>5</span><br>
+<span class='line-number'>6</span><br>
+<span class='line-number'>7</span><br>
+<span class='line-number'>8</span><br>
+<span class='line-number'>9</span><br>
+<span class='line-number'>10</span><br>
+<span class='line-number'>11</span><br>
+<span class='line-number'>12</span><br>
+<span class='line-number'>13</span><br>
+<span class='line-number'>14</span><br>
+<span class='line-number'>15</span><br>
+<span class='line-number'>16</span><br>
+<span class='line-number'>17</span><br>
+<span class='line-number'>18</span><br>
+<span class='line-number'>19</span><br>
+<span class='line-number'>20</span><br>
+<span class='line-number'>21</span><br>
+<span class='line-number'>22</span><br>
+<span class='line-number'>23</span><br>
+<span class='line-number'>24</span><br>
+<span class='line-number'>25</span><br>
+<span class='line-number'>26</span><br>
+<span class='line-number'>27</span><br>
+<span class='line-number'>28</span><br>
+<span class='line-number'>29</span><br>
+<span class='line-number'>30</span><br>
+<span class='line-number'>31</span><br>
+<span class='line-number'>32</span><br>
+<span class='line-number'>33</span><br>
+<span class='line-number'>34</span><br>
+<span class='line-number'>35</span><br>
+<span class='line-number'>36</span><br>
+<span class='line-number'>37</span><br>
+<span class='line-number'>38</span><br>
+<span class='line-number'>39</span><br>
+<span class='line-number'>40</span><br>
+<span class='line-number'>41</span><br>
+<span class='line-number'>42</span><br>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/bash</span><br>
+</span><span class='line'><br>
+</span><span class='line'><span class="nb">set</span> -x<br>
+</span><span class='line'><br>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$1&quot;</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="o">]</span>; <span class="k">then</span><br>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Usage: $0 [repo]&quot;</span><br>
+</span><span class='line'>  <span class="nb">exit </span>1<br>
+</span><span class='line'><span class="k">fi</span><br>
+</span><span class='line'><br>
+</span><span class='line'><span class="nv">REPO</span><span class="o">=</span><span class="nv">$1</span>.git<br>
+</span><span class='line'><span class="nv">GIT_BASE</span><span class="o">=</span>/home/git/repositories<br>
+</span><span class='line'><span class="nv">MIRROR_PATH</span><span class="o">=</span>/home/jxb/git-mirrors<br>
+</span><span class='line'><span class="nv">REPO_PATH</span><span class="o">=</span><span class="nv">$MIRROR_PATH</span>/<span class="nv">$REPO</span><br>
+</span><span class='line'><br>
+</span><span class='line'><span class="c"># 我們要使用 git clone --mirror 建立一個原始 repo 的鏡像：</span><br>
+</span><span class='line'><span class="nb">cd</span> <span class="nv">$MIRROR_PATH</span> <span class="o">&amp;&amp;</span> git clone --mirror <span class="nv">$GIT_BASE</span>/<span class="nv">$REPO</span><br>
+</span><span class='line'><br>
+</span><span class='line'><span class="c"># 接下來下一步，由於之後 git 使用者會透過 post-receive hook 來同步兩個 repository，</span><br>
+</span><span class='line'><span class="c"># 我們直接修改這個境像 repository 的 owner / group 為 git 來讓它有讀寫權限。</span><br>
+</span><span class='line'>chown -R git:git <span class="nv">$REPO_PATH</span><br>
+</span><span class='line'><br>
+</span><span class='line'><span class="c"># 再來我們要設定原本 repo 的 hooks ：</span><br>
+</span><span class='line'><span class="nb">cd</span> <span class="nv">$GIT_BASE</span>/<span class="nv">$REPO</span>/hooks<br>
+</span><span class='line'><br>
+</span><span class='line'>cat &gt; post-receive <span class="s">&lt;&lt;EOS</span><br>
+</span><span class='line'><span class="s">#!/bin/bash</span><br>
+</span><span class='line'><span class="s">/usr/bin/git push --mirror $REPO_PATH</span><br>
+</span><span class='line'><span class="s">EOS</span><br>
+</span><span class='line'><br>
+</span><span class='line'><span class="c"># 建立完 post-receive 檔案後修改權限：</span><br>
+</span><span class='line'>chown git:git post-receive<br>
+</span><span class='line'>chmod 700 post-receive<br>
+</span><span class='line'><br>
+</span><span class='line'><span class="c"># 由於 Git 在做 mirror push 的時候，會保留原始的檔案與資料夾存取權限，</span><br>
+</span><span class='line'><span class="c"># 在 gitolite 控管下，只有 owner 有讀寫權限，所以一做 mirror push 這個鏡像的 repository 就沒辦法被其他 process 讀取到了，</span><br>
+</span><span class='line'><span class="c"># 所以我們一開始就要告訴這個 mirror repository 它是被分享的，並且設定它應該要有的存取權限：</span><br>
+</span><span class='line'>sudo -u git sh <span class="s">&lt;&lt;EOS</span><br>
+</span><span class='line'><span class="s">set -x</span><br>
+</span><span class='line'><span class="s">cd $REPO_PATH</span><br>
+</span><span class='line'><span class="s">chmod a+rX -R ./</span><br>
+</span><span class='line'><span class="s">git config --add core.sharedRepository 644</span><br>
+</span><span class='line'><span class="s">EOS</span><br>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>使用时需要用root权限</p>
-
-<pre><code>sudo sh make-mirror.sh &lt;REPO-NAME&gt; # REPO-NAME 中不带.git后缀
-</code></pre>
-
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo sh make-mirror.sh &lt;REPO-NAME&gt; # REPO-NAME 中不带.git后缀
+</code></pre></div>
 <p>如果不需要特别强大的项目管理功能，可以用<a href="https://github.com/gitlabhq/gitlabhq">gitlabhq</a>，这是一个类似<a href="https://github.com">github</a>的代码管理应用，支持fork，pull request功能，非常实用，选择哪个用来管理也就见仁见智了。</p>
 </div>
 
