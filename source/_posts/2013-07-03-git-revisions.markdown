@@ -6,8 +6,14 @@ comments: true
 categories: git
 ---
 
-这篇博文记录Git使用中比较中级的技巧，不太容易记住。
+这篇博文将使用一些代码来讲述Git使用中比较中级的技巧。
 
+* Git中 ^ 与 ~ 的区别
+* 假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表
+
+<!-- more -->
+
+我们看Git履历会用到`git log head~2`，`git log head^2`，可能搞不清楚这两者之间有什么区别。
 先来看一段代码：
 
     # Dummy repository
@@ -15,14 +21,18 @@ categories: git
     77bc990 Third commit
     25d4fc4 Second commit
     f0faab6 First commit
+
     $ git log --oneline HEAD^
     25d4fc4 Second commit
     f0faab6 First commit
+
     $ git log --oneline HEAD^
     25d4fc4 Second commit
     f0faab6 First commit
+
     $ git log --oneline HEAD^^
     f0faab6 First commit
+
     $ git log --oneline HEAD^2
     fatal: ambiguous argument 'HEAD^2': unknown revision or path not in the working tree.
 
@@ -44,15 +54,19 @@ categories: git
 
     $ git checkout -b other f0faab6
     Switched to a new branch 'other'
-    $ touch file
+
+    $ #touch file
     $ git add file
     $ git commit -m "Adding file" file
+
     $ git log --oneline
     1762164 Adding file
     f0faab6 First commit
+
     $ git log --oneline other..master
     77bc990 Third commit
     25d4fc4 Second commit
+
     $ git log --oneline master..other
     1762164 Adding file
 
@@ -67,9 +81,10 @@ categories: git
     1762164 Adding file
     77bc990 Third commit
     25d4fc4 Second commit
+
     $ git log other...master
     1762164 Adding file
     77bc990 Third commit
     25d4fc4 Second commit
 
-比较之前的代码，可以看出来结果与前后关系相同，两者的履历都会显示
+比较之前的代码，可以看出来结果与前后关系相同，两者的履历都会显示。
