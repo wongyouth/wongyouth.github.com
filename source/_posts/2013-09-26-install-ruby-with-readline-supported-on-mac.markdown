@@ -3,7 +3,7 @@ layout: post
 title: "install ruby with readline supported on Mac"
 date: 2013-09-26 22:17
 comments: true
-categories: 
+categories: [ruby, mac]
 ---
 
 Just a memo for installing ruby on Mac OSX with the feature of typing Chinese under ruby console.
