@@ -21,37 +21,43 @@ categories: git
 
 1. 复制修改的代码到备份目录，`reset` 旧代码，`check out`出线上版本。
 
-      cp file /backup/dir
-      git reset --hard head # 恢复head代码，抛弃工作区的修改
-      git checkout master
+```sh
+cp file /backup/dir
+git reset --hard head # 恢复head代码，抛弃工作区的修改
+git checkout master
 
-      # do your job
+# do your job
 
-      # when your job's done
-      git checkout feature_branch
-      cp /backup/dir file
+# when your job's done
+git checkout feature_branch
+cp /backup/dir file
+```
 
 2. 递交现在的代码（即使还没有做完），取出线上版本，完工后回退临时递交
 
-      git commit -am 'work in process'
-      git checkout master
+```sh
+git commit -am 'work in process'
+git checkout master
 
-      # do your job
+# do your job
 
-      # when your job's done
-      git checkout feature_branch
-      git reset head~
+# when your job's done
+git checkout feature_branch
+git reset head~
+```
 
 Git 自带了对于前一种方案的支持，这就是`stash`命令。我们来看下用stash怎么做。
 
-    git stash
-    git checkout master
+```sh
+git stash
+git checkout master
 
-    # do your job
+# do your job
 
-    # when your job's done
-    git checkout feature_branch
-    git stash pop
+# when your job's done
+git checkout feature_branch
+git stash pop
+```
 
 ## Git stash 冲突的解决办法
 
