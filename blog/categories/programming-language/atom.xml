@@ -4,7 +4,7 @@
   <title><![CDATA[Category: programming language | 鱼哥的技术博客]]></title>
   <link href="http://wongyouth.com/blog/categories/programming-language/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2014-03-28T20:59:47+08:00</updated>
+  <updated>2014-03-29T00:42:42+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
@@ -192,71 +192,49 @@ ruby brick.rb
 
 <h4>预安装一些编译时用到的库文件和工具</h4>
 
-<p>```sh</p>
-
-<pre><code>sudo apt-get -y install git-core curl \
-build-essential openssl libreadline6 libreadline6-dev \
-libmysqlclient-dev zlib1g zlib1g-dev libssl-dev libyaml-dev \
-libsqlite3-0 libsqlite3-dev sqlite3 \
-libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake \
-libtool bison subversion libxslt1-dev
+<pre><code class="sh">    sudo apt-get -y install git-core curl \
+    build-essential openssl libreadline6 libreadline6-dev \
+    libmysqlclient-dev zlib1g zlib1g-dev libssl-dev libyaml-dev \
+    libsqlite3-0 libsqlite3-dev sqlite3 \
+    libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake \
+    libtool bison subversion libxslt1-dev
 </code></pre>
 
-<p>```</p>
-
-<p>如果使用jruby的话，安装一个jdk环境</p>
-
-<pre><code>sudo apt-get install default-jdk
-</code></pre>
+<p>如果使用jruby的话，安装一个jdk环境
+    sudo apt-get install default-jdk</p>
 
 <h2>安装<code>rbenv</code></h2>
 
 <p>我使用<a href="https://github.com/sstephenson/rbenv">rbenv</a>而不是rvm来作为ruby的版本管理软件。理由在rbenv的项目页面说明的很清楚了，更安全也更简单</p>
 
-<p>```sh</p>
-
-<pre><code>curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash
+<pre><code class="sh">    curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash
 </code></pre>
-
-<p>```</p>
 
 <h2>安装<code>ruby</code></h2>
 
 <p>假设你使用ruby-1.9.3</p>
 
-<p>```sh</p>
-
-<pre><code>rbenv install 1.9.3-p125
-rbenv global 1.9.3-p125
+<pre><code class="sh">    rbenv install 1.9.3-p125
+    rbenv global 1.9.3-p125
 </code></pre>
-
-<p>```</p>
 
 <p>常用rbenv命令</p>
 
-<p>```sh</p>
+<pre><code class="sh">    rbenv versions # 查看可以安装的ruby版本列表
+    rbenv version  # 查看当前的ruby版本
+    rbenv rehash   # 更新rbenv里的链接指向gems的可执行文件的映射,安装了新gem包时使用
 
-<pre><code>rbenv versions # 查看可以安装的ruby版本列表
-rbenv version  # 查看当前的ruby版本
-rbenv rehash   # 更新rbenv里的链接指向gems的可执行文件的映射,安装了新gem包时使用
-
-rbenv global jruby-1.6.5         # 切换到jruby-1.6.5，下次登录系统后仍有效
-export RBENV_VERSION=jruby-1.6.5 # 切换到jruby-1.6.5环境，只适用于这一次使用
+    rbenv global jruby-1.6.5         # 切换到jruby-1.6.5，下次登录系统后仍有效
+    export RBENV_VERSION=jruby-1.6.5 # 切换到jruby-1.6.5环境，只适用于这一次使用
 </code></pre>
-
-<p>```</p>
 
 <h2>创建第一个<code>Rails</code>项目</h2>
 
-<p>```sh</p>
-
-<pre><code>gem update --system       # 更新gem到最新版本
-gem install bundler rails # 安装bundler和rails
-rbenv rehash              # 刷新rbenv记录的可执行文件，这样rails命令就可以直接使用了
-rails new blog
+<pre><code class="sh">    gem update --system       # 更新gem到最新版本
+    gem install bundler rails # 安装bundler和rails
+    rbenv rehash              # 刷新rbenv记录的可执行文件，这样rails命令就可以直接使用了
+    rails new blog
 </code></pre>
-
-<p>```</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | 鱼哥的技术博客]]></title>
   <link href="http://wongyouth.com/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2014-03-28T20:59:47+08:00</updated>
+  <updated>2014-03-29T00:42:42+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
@@ -36,33 +36,39 @@
 此时我们有几种方法可以做</p>
 
 <ol>
-<li><p>复制修改的代码到备份目录，<code>reset</code> 旧代码，<code>check out</code>出线上版本。</p>
-
-<p>   cp file /backup/dir
-   git reset --hard head # 恢复head代码，抛弃工作区的修改
-   git checkout master</p>
-
-<p>   # do your job</p>
-
-<p>   # when your job's done
-   git checkout feature_branch
-   cp /backup/dir file</p></li>
-<li><p>递交现在的代码（即使还没有做完），取出线上版本，完工后回退临时递交</p>
-
-<p>   git commit -am 'work in process'
-   git checkout master</p>
-
-<p>   # do your job</p>
-
-<p>   # when your job's done
-   git checkout feature_branch
-   git reset head~</p></li>
+<li>复制修改的代码到备份目录，<code>reset</code> 旧代码，<code>check out</code>出线上版本。</li>
 </ol>
 
 
+<pre><code class="sh">cp file /backup/dir
+git reset --hard head # 恢复head代码，抛弃工作区的修改
+git checkout master
+
+# do your job
+
+# when your job's done
+git checkout feature_branch
+cp /backup/dir file
+</code></pre>
+
+<ol>
+<li>递交现在的代码（即使还没有做完），取出线上版本，完工后回退临时递交</li>
+</ol>
+
+
+<pre><code class="sh">git commit -am 'work in process'
+git checkout master
+
+# do your job
+
+# when your job's done
+git checkout feature_branch
+git reset head~
+</code></pre>
+
 <p>Git 自带了对于前一种方案的支持，这就是<code>stash</code>命令。我们来看下用stash怎么做。</p>
 
-<pre><code>git stash
+<pre><code class="sh">git stash
 git checkout master
 
 # do your job
@@ -170,9 +176,9 @@ fatal: ambiguous argument 'HEAD^2': unknown revision or path not in the working 
 <ul>
 <li>HEAD 是最后一个递交，也就是<code>abe6b95</code></li>
 <li>HEAD的父节点只有一个，所以也就是 <code>ad57324</code>，记为 HEAD~ 或者 HEAD^</li>
-<li><code>ad57324</code>的父节点也只有一个，<code>302f545</code>，记为 HEAD~2, HEAD~~ 或者 HEAD<sup>^</sup></li>
+<li><code>ad57324</code>的父节点也只有一个，<code>302f545</code>，记为 HEAD~2, HEAD~~ 或者 HEAD^^</li>
 <li><code>302f545</code>有两个父节点, 第一个为 <code>9c80295</code>, 记为 HEAD~3，第二个父节点 <code>09558c6</code>，记为 HEAD~2<sup>2</sup></li>
-<li><code>09558c6</code>有一个父节点 ``，记为 HEAD~2<sup>2~，或者</sup> HEAD~2<sup>2^</sup></li>
+<li><code>09558c6</code>有一个父节点 ``，记为 HEAD~2<sup>2</sup>~，或者 HEAD~2<sup>2</sup>^</li>
 </ul>
 
 

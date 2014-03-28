@@ -4,7 +4,7 @@
   <title><![CDATA[Category: server | 鱼哥的技术博客]]></title>
   <link href="http://wongyouth.com/blog/categories/server/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2014-03-28T20:59:47+08:00</updated>
+  <updated>2014-03-29T00:42:42+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
@@ -244,49 +244,45 @@ cat domain.csr # 把输出整个复制到startssl.com生成ssl的输入框内
 </ul>
 
 
-<p>```</p>
+<pre><code>    &lt;VirtualHost _default_:80&gt;
+      ServerName example.com
+      ServerAlias *.example.com
+      DocumentRoot /home/httpd/private
 
-<pre><code>&lt;VirtualHost _default_:80&gt;
-  ServerName example.com
-  ServerAlias *.example.com
-  DocumentRoot /home/httpd/private
+      ErrorLog /var/log/apache2/example_errors.log
+      LogLevel warn
+      CustomLog /var/log/apache2/example_ssl_access.log combined
 
-  ErrorLog /var/log/apache2/example_errors.log
-  LogLevel warn
-  CustomLog /var/log/apache2/example_ssl_access.log combined
+      RewriteEngine On
+      RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+      RewriteCond %{REQUEST_URI} ^/login
+      RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L]
+    &lt;/VirtualHost&gt;
 
-  RewriteEngine On
-  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
-  RewriteCond %{REQUEST_URI} ^/login
-  RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L]
-&lt;/VirtualHost&gt;
+    &lt;VirtualHost _default_:443&gt;
+      ServerName example.com
+      ServerAlias *.example.com
+      DocumentRoot /home/httpd/private
 
-&lt;VirtualHost _default_:443&gt;
-  ServerName example.com
-  ServerAlias *.example.com
-  DocumentRoot /home/httpd/private
+      ErrorLog /var/log/apache2/example_errors.log
+      LogLevel warn
+      CustomLog /var/log/apache2/example_ssl_access.log combined
 
-  ErrorLog /var/log/apache2/example_errors.log
-  LogLevel warn
-  CustomLog /var/log/apache2/example_ssl_access.log combined
+      SSLEngine on
+      SSLCertificateFile /usr/local/apache/conf/ssl.crt
+      SSLCertificateKeyFile /usr/local/apache/conf/ssl.key
+      SSLCertificateChainFile /usr/local/apache/conf/sub.class1.server.ca.pem
+      SSLCACertificateFile /usr/local/apache/conf/ca.pem
+      RewriteEngine On
 
-  SSLEngine on
-  SSLCertificateFile /usr/local/apache/conf/ssl.crt
-  SSLCertificateKeyFile /usr/local/apache/conf/ssl.key
-  SSLCertificateChainFile /usr/local/apache/conf/sub.class1.server.ca.pem
-  SSLCACertificateFile /usr/local/apache/conf/ca.pem
-  RewriteEngine On
+      # assets files should not be redirected.
+      RewriteRule \.(css|js|gif|jpe?g|png)(\?[0-9]*)?$ - [NC,L]
 
-  # assets files should not be redirected.
-  RewriteRule \.(css|js|gif|jpe?g|png)(\?[0-9]*)?$ - [NC,L]
-
-  RewriteCond %{HTTP:X-Forwarded-Proto} !=http
-  RewriteCond %{REQUEST_URI} !^/login
-  RewriteRule (.*) http://%{HTTP_HOST}%{REQUEST_URI} [L]
-&lt;/VirtualHost&gt;
+      RewriteCond %{HTTP:X-Forwarded-Proto} !=http
+      RewriteCond %{REQUEST_URI} !^/login
+      RewriteRule (.*) http://%{HTTP_HOST}%{REQUEST_URI} [L]
+    &lt;/VirtualHost&gt;
 </code></pre>
-
-<p>```</p>
 ]]></content>
   </entry>
   

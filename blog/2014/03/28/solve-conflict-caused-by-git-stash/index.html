@@ -108,41 +108,75 @@ Git stash pop 时冲突的解决方法 首先了解下什么是 Git stash 考虑
 此时我们有几种方法可以做</p>
 
 <ol>
-<li><p>复制修改的代码到备份目录，<code>reset</code> 旧代码，<code>check out</code>出线上版本。</p>
-
-<p>   cp file /backup/dir
-   git reset &#8211;hard head # 恢复head代码，抛弃工作区的修改
-   git checkout master</p>
-
-<p>   # do your job</p>
-
-<p>   # when your job&#8217;s done
-   git checkout feature_branch
-   cp /backup/dir file</p></li>
-<li><p>递交现在的代码（即使还没有做完），取出线上版本，完工后回退临时递交</p>
-
-<p>   git commit -am &#8216;work in process&#8217;
-   git checkout master</p>
-
-<p>   # do your job</p>
-
-<p>   # when your job&#8217;s done
-   git checkout feature_branch
-   git reset head~</p></li>
+<li>复制修改的代码到备份目录，<code>reset</code> 旧代码，<code>check out</code>出线上版本。</li>
 </ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>cp file /backup/dir
+</span><span class='line'>git reset --hard head <span class="c"># 恢复head代码，抛弃工作区的修改</span>
+</span><span class='line'>git checkout master
+</span><span class='line'>
+</span><span class='line'><span class="c"># do your job</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># when your job&#39;s done</span>
+</span><span class='line'>git checkout feature_branch
+</span><span class='line'>cp /backup/dir file
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>递交现在的代码（即使还没有做完），取出线上版本，完工后回退临时递交</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>git commit -am <span class="s1">&#39;work in process&#39;</span>
+</span><span class='line'>git checkout master
+</span><span class='line'>
+</span><span class='line'><span class="c"># do your job</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># when your job&#39;s done</span>
+</span><span class='line'>git checkout feature_branch
+</span><span class='line'>git reset head~
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Git 自带了对于前一种方案的支持，这就是<code>stash</code>命令。我们来看下用stash怎么做。</p>
 
-<pre><code>git stash
-git checkout master
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>git stash
+</span><span class='line'>git checkout master
+</span><span class='line'>
+</span><span class='line'><span class="c"># do your job</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># when your job&#39;s done</span>
+</span><span class='line'>git checkout feature_branch
+</span><span class='line'>git stash pop
+</span></code></pre></td></tr></table></div></figure>
 
-# do your job
-
-# when your job's done
-git checkout feature_branch
-git stash pop
-</code></pre>
 
 <h2>Git stash 冲突的解决办法</h2>
 

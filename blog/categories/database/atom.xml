@@ -4,7 +4,7 @@
   <title><![CDATA[Category: database | 鱼哥的技术博客]]></title>
   <link href="http://wongyouth.com/blog/categories/database/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2014-03-28T20:59:47+08:00</updated>
+  <updated>2014-03-29T00:42:42+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
@@ -29,31 +29,27 @@
 
 <p>目前Ubuntu官方库里的mongodb还没有升级到2.0版，我们用mongodb官方提供<a href="http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian-or-ubuntu-linux/">步骤</a>来安装。</p>
 
-<p>```sh</p>
+<pre><code class="sh">    # 添加mongodb公司10gen的pgp键
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
-<pre><code># 添加mongodb公司10gen的pgp键
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+    # 增加源到apt
+    sudo sh -c "echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' &gt; /etc/apt/sources.list.d/10gen.list"
 
-# 增加源到apt
-sudo sh -c "echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' &gt; /etc/apt/sources.list.d/10gen.list"
+    # 更新源
+    sudo apt-get update
 
-# 更新源
-sudo apt-get update
+    # 安装mongodb
+    sudo apt-get install mongodb-10gen
 
-# 安装mongodb
-sudo apt-get install mongodb-10gen
+    # 启动mongodb
+    sudo service mongodb start
 
-# 启动mongodb
-sudo service mongodb start
+    # test mongo client
+    mongo
 
-# test mongo client
-mongo
-
-# db.test.save( {a: 1} )
-# db.test.find()
+    # db.test.save( {a: 1} )
+    # db.test.find()
 </code></pre>
-
-<p>```</p>
 
 <h2>Step 2: Setup Gemfile to install mongoid</h2>
 
@@ -62,10 +58,8 @@ mongo
 <pre><code>gem 'mongoid', '~&gt; 3.0.0.rc'
 </code></pre>
 
-<p>执行</p>
-
-<pre><code>bundle install
-</code></pre>
+<p>执行
+    bundle install</p>
 
 <p>这样就可以使用了。在[railscasts][]中有mongoid的使用视频，我就不接着举例了。
 虽然现在mongoid升级到了3.0rc，有些东西会有变化，但是大的变化不会太大。</p>
@@ -88,12 +82,11 @@ mongo
 <!-- more -->
 
 
-<p>安装与配置postgresql数据库。</p>
+<p>安装与配置postgresql数据库。
+    # 安装 postgresql 和开发库（pg.gem使用）
+    sudo apt-get install postgresql libpq-dev</p>
 
-<pre><code># 安装 postgresql 和开发库（pg.gem使用）
-sudo apt-get install postgresql libpq-dev
-
-# 修改配置文件使TCP/IP来的链接可用
+<pre><code># 修改配置文件使TCP/IP来的链接可用
 
 # /etc/postgresql/9.1/main/postgresql.conf 文件中去掉以下行开头的 `#'
 # listen_addresses = 'localhost'
@@ -102,14 +95,12 @@ sudo apt-get install postgresql libpq-dev
 sudo /etc/init.d/postgresql restart
 </code></pre>
 
-<p>生成rails里面使用的postgrelsql的帐号密码，这里我们用MySQL的帐号root。</p>
-
-<pre><code># 创建root帐号
-# -d 可以创建数据库
-# -R 不可以创建角色
-# -S 不是超级用户
-sudo -u postgres createuser -d -R -S root
-</code></pre>
+<p>生成rails里面使用的postgrelsql的帐号密码，这里我们用MySQL的帐号root。
+    # 创建root帐号
+    # -d 可以创建数据库
+    # -R 不可以创建角色
+    # -S 不是超级用户
+    sudo -u postgres createuser -d -R -S root</p>
 
 <p>postgres 是 postgresql 的超级帐号，使用他就可以做任何事了，包括找回密码哦，因为默认配置是不需要输入密码的。</p>
 

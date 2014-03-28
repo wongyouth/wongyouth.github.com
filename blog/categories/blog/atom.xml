@@ -4,7 +4,7 @@
   <title><![CDATA[Category: blog | 鱼哥的技术博客]]></title>
   <link href="http://wongyouth.com/blog/categories/blog/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2014-03-28T20:59:47+08:00</updated>
+  <updated>2014-03-29T00:42:42+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
@@ -33,27 +33,19 @@
 
 <h2>安装</h2>
 
-<p>``` sh Install octopress</p>
-
-<pre><code>git clone git://github.com/imathis/octopress.git octopress
-cd octopress
-bundler install
-rake install
+<pre><code class="sh Install octopress">    git clone git://github.com/imathis/octopress.git octopress
+    cd octopress
+    bundler install
+    rake install
 </code></pre>
-
-<p>```</p>
 
 <h2>配置</h2>
 
 <p>你要先有个github.com的帐号，如果没有赶快注册吧。
 注册好后新建一个软件仓库 <a href="https://github.com/new">https://github.com/new</a> ，注意仓库名称要以下这种格式哦<code>yourname.github.com</code>，这样代码发布后自动这个url就可以访问了。</p>
 
-<p>``` sh</p>
-
-<pre><code>rake setup_github_pages
+<pre><code class="sh">    rake setup_github_pages
 </code></pre>
-
-<p>```</p>
 
 <p>这个命令主要做以下的操作</p>
 
@@ -71,33 +63,21 @@ rake install
 
 <h2>发布</h2>
 
-<p>``` sh Deploy blog</p>
-
-<pre><code>rake generate
-rake deploy
+<pre><code class="sh Deploy blog">    rake generate
+    rake deploy
 </code></pre>
-
-<p>```</p>
 
 <p>当你发布之后，你就可以到 <a href="http://yourname.github.com">http://yourname.github.com</a> 上看到你的博客了，是不是很酷呢。</p>
 
 <h2>写第一个博文</h2>
 
-<p>``` sh Create first post</p>
-
-<pre><code>rake new_post['first post']
+<pre><code class="sh Create first post">    rake new_post['first post']
 </code></pre>
-
-<p>```</p>
 
 <p>引号里面是博文的标题，这个命令会在<code>source/_posts</code>下面生成一个markdown为后缀的文件，我们要做的就是编辑这个文件的内容，然后</p>
 
-<p>``` sh Start a local server for preview</p>
-
-<pre><code>rake preview
+<pre><code class="sh Start a local server for preview">    rake preview
 </code></pre>
-
-<p>```</p>
 
 <p>会在本地启动sinatra服务，用浏览器打开 <a href="http://localhost:4000">http://localhost:4000</a> 就可以看到效果了。如果都没有问题就可以发布了。</p>
 
