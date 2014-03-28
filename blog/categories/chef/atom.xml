@@ -4,7 +4,7 @@
   <title><![CDATA[Category: chef | 鱼哥的技术博客]]></title>
   <link href="http://wongyouth.com/blog/categories/chef/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2014-03-28T15:50:37+08:00</updated>
+  <updated>2014-03-28T20:59:47+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
@@ -14,20 +14,42 @@
 
   
   <entry>
-    <title type="html"><![CDATA[use chef for automating infrastructure setup]]></title>
+    <title type="html"><![CDATA[使用chef来自动化部署]]></title>
     <link href="http://wongyouth.com/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/"/>
     <updated>2013-11-22T23:55:00+08:00</updated>
     <id>http://wongyouth.com/blog/2013/11/22/use-chef-for-automating-infrastructure-setup</id>
-    <content type="html"><![CDATA[<p>Below is a memo to automate infrastructure setup for rails environment.</p>
+    <content type="html"><![CDATA[<p>本篇主要分享一下如何使用Chef进行快速部署一个应用到服务器。
+为了讲解的需要这里做了一些假定。</p>
 
-<h1>prepare vagrant</h1>
+<ul>
+<li>使用Vagrant作为一个测试服务器</li>
+<li>使用Rails开发了一个应用</li>
+<li>该应用使用了一台Postgresql数据库服务器</li>
+<li>该应用有一台memcached用来做缓存服务</li>
+<li>该应用使用Nginx作为Web服务器</li>
+</ul>
 
-<p>Vagrant can be used to test script since we need a clean system to test our script.</p>
 
-<p>install VirtualBox
-install Vagrant</p>
+<!--more-->
+
+
+<p>先来说一下Vagrant是什么？Vagrant可以看做是一个接口，是他Vagrant提供的接口可以方便的操作VirtualBox虚拟机。
+VirtualBox虚拟机是一个免费的支持Windows, Linux, Mac 的全平台虚拟机。VirtualBox的使用场景多种多样。
+在这里我们可以用来当做一台干净的测试机。</p>
+
+<h1>准备Vagrant环境</h1>
+
+<p>首先从各自官网安装软件</p>
+
+<ul>
+<li><a href="http://www.virtualbox.org/">Install VirtualBox</a></li>
+<li><a href="http://www.vagrantup.com/">Install Vagrant</a></li>
+</ul>
+
 
 <h2>Vargrant file</h2>
+
+<p>配置一个Vagrantfile，这里我指定使用Ubuntu12.04 64位系统，该文件将会从网上自动下载。</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (Vagrantfile)</span> <a href='/downloads/code/Vagrantfile'>download</a></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -48,33 +70,49 @@ install Vagrant</p>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<h2>common command</h2>
+<h2>Vagrant常用命令</h2>
 
-<pre><code># setup 
-vagrant up
-vagrant destroy
+<pre><code>vagrant up # 启动Vagrant的虚拟机
+vagrant suspend # 休眠虚拟机，可以快速恢复
+vagrant resume # 恢复虚拟机，可快速恢复到休眠前状态
+vagrant halt # 关闭虚拟机电源。不使用额外空间保存状态，但是启动时间延长
 
-vagrant suspend
-vagrant resume
-
-# setup hostname
+# 增加Vagrant虚拟机的信息到SSH配置里
 vagrant ssh-config --host chef_rails &gt;&gt; ~/.ssh/config
 </code></pre>
 
-<h1>Use Chef</h1>
+<h1>使用Chef</h1>
 
-<pre><code># install tools
-gem install berkshelf knife-solo
+<p>Chef是一个功能强大的自动花部署工具，facebook的大公司也都在用它，官方的Chef是需要有个Chef Server来存放
+所有服务器信息，当Chef Client需要部署一台机器时会询问Chef Server服务器该台机器的信息。商用许可证自然价格不菲。
+社区里面开发了一个单机版的 Chef Solo，无需服务器配合，所有配置信息全部存放在一起，基本也能很好地满足普通的需求了。
+Chef使用ruby代码编写脚本，接口设计花了很多功夫，让不知道ruby的人也能方便使用。毕竟Chef的目标用户是服务器管理员不是程序员。</p>
 
-# create a new chef kithen
+<h2>Chef的常用命令</h2>
+
+<p>使用 Chef 时还有一些相应地工具需要来熟悉一下，清楚他们各自的作用。</p>
+
+<ul>
+<li>Berkshelf，脚本包管理工具，用来分享使用别人写好的脚本</li>
+<li>Knife，一个远程工具，使用他我们无需登录到目标服务器即可完成所有操作</li>
+<li>Chef，实际的部署工具</li>
+</ul>
+
+
+<p>来看看各个工具的实际使用情况</p>
+
+<pre><code># berkshelf包管理工具，类似GemBundler
+gem install berkshelf
+berks install # 安装 chef 包
+
+# knife solo 是 knife 的solo版本，可以生成项目，上传项目文件到目标机器，远程执行部署命令
+gem install knife-solo
+
+# 生成一个部署项目
 knife solo init chef-rails
-cd chef-rails
-
-# install chef on target server
-knife solo bootstrap vagrant@chef_rails
 </code></pre>
 
-<h2>Edit nodes/chef_rails.json to change the behavior of chef</h2>
+<h2>以下摘录一段chef片段</h2>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (chef_rails.json)</span> <a href='/downloads/code/chef_rails.json'>download</a></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -116,6 +154,31 @@ knife solo bootstrap vagrant@chef_rails
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>In this example above, we install <code>build-essential</code>, <code>git</code>, <code>rbenv</code>, and setup ruby 2.0.0-p353 as the default ruby version.</p>
+
+<h2>一个完成可用的例子</h2>
+
+<p><code>chef-rails</code> 是我写好的一个配置rails项目的工具，能够自动配置nginx, postgresql, memcached, ruby, rails</p>
+
+<pre><code>git clone https://github.com/wongyouth/chef-rails
+cd chef-rails
+bundle
+
+# install chef on target server
+knife solo bootstrap vagrant@chef_rails # 假设安装到之前设置好的Vagrant虚拟机服务器上
+</code></pre>
+
+<p>最后一步比较慢，可以华丽的起身喝一杯咖啡了。</p>
+
+<p>P.S. 最近网络不太好，可能有些文件被墙掉下载很慢需要多次尝试。</p>
+
+<p>参考</p>
+
+<ul>
+<li>https://github.com/wongyouth/chef-rails</li>
+<li>https://github.com/ouyangzhiping/railsbox-example</li>
+<li>http://ruby-china.org/topics/13211</li>
+</ul>
+
 ]]></content>
   </entry>
   

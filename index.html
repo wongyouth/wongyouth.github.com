@@ -162,111 +162,23 @@ Git stash pop 时冲突的解决方法 Read more 2013-11-22 chef, &hellip;">
 			<span class="comments"><a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/#disqus_thread">Comments</a></span>
 		
 	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/" itemprop="url">Use Chef for Automating Infrastructure Setup</a></h1>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/" itemprop="url">使用chef来自动化部署</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<p>Below is a memo to automate infrastructure setup for rails environment.</p>
+		<p>本篇主要分享一下如何使用Chef进行快速部署一个应用到服务器。
+为了讲解的需要这里做了一些假定。</p>
 
-<h1>prepare vagrant</h1>
-
-<p>Vagrant can be used to test script since we need a clean system to test our script.</p>
-
-<p>install VirtualBox
-install Vagrant</p>
-
-<h2>Vargrant file</h2>
-
-<figure class='code'><figcaption><span> (Vagrantfile)</span> <a href='/downloads/code/Vagrantfile'>download</a></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># -*- mode: ruby -*-</span>
-</span><span class='line'><span class="c1"># vi: set ft=ruby :</span>
-</span><span class='line'>
-</span><span class='line'><span class="ss">Vagrant</span><span class="p">:</span><span class="ss">:Config</span><span class="o">.</span><span class="n">run</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;precise64&quot;</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box_url</span> <span class="o">=</span> <span class="s2">&quot;http://files.vagrantup.com/precise64.box&quot;</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">forward_port</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">8080</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>使用Vagrant作为一个测试服务器</li>
+<li>使用Rails开发了一个应用</li>
+<li>该应用使用了一台Postgresql数据库服务器</li>
+<li>该应用有一台memcached用来做缓存服务</li>
+<li>该应用使用Nginx作为Web服务器</li>
+</ul>
 
 
-<h2>common command</h2>
-
-<pre><code># setup 
-vagrant up
-vagrant destroy
-
-vagrant suspend
-vagrant resume
-
-# setup hostname
-vagrant ssh-config --host chef_rails &gt;&gt; ~/.ssh/config
-</code></pre>
-
-<h1>Use Chef</h1>
-
-<pre><code># install tools
-gem install berkshelf knife-solo
-
-# create a new chef kithen
-knife solo init chef-rails
-cd chef-rails
-
-# install chef on target server
-knife solo bootstrap vagrant@chef_rails
-</code></pre>
-
-<h2>Edit nodes/chef_rails.json to change the behavior of chef</h2>
-
-<figure class='code'><figcaption><span> (chef_rails.json)</span> <a href='/downloads/code/chef_rails.json'>download</a></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="nt">&quot;rbenv_install_rubies&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nt">&quot;global_version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0.0-p353&quot;</span><span class="p">,</span>
-</span><span class='line'>    <span class="nt">&quot;other_versions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1.9.3-p484&quot;</span><span class="p">],</span>
-</span><span class='line'>    <span class="nt">&quot;gems&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;bundler&quot;</span><span class="p">,</span> <span class="s2">&quot;pry&quot;</span><span class="p">],</span>
-</span><span class='line'>    <span class="nt">&quot;lib_packages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;libc6-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libtool&quot;</span><span class="p">,</span> <span class="s2">&quot;libyaml-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;zlib1g-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libssl-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libreadline-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libxml2-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libxslt1-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;ncurses-dev&quot;</span><span class="p">,</span> <span class="s2">&quot;libmagickwand-dev&quot;</span><span class="p">]</span>
-</span><span class='line'>  <span class="p">},</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="nt">&quot;rbenv&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nt">&quot;group_users&quot;</span><span class="p">:</span> <span class="p">[]</span>
-</span><span class='line'>  <span class="p">},</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="nt">&quot;run_list&quot;</span><span class="p">:[</span>
-</span><span class='line'>    <span class="s2">&quot;recipe[build-essential]&quot;</span><span class="p">,</span>
-</span><span class='line'>    <span class="s2">&quot;recipe[git]&quot;</span><span class="p">,</span>
-</span><span class='line'>    <span class="s2">&quot;recipe[rbenv-install-rubies]&quot;</span>
-</span><span class='line'>  <span class="p">]</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>In this example above, we install <code>build-essential</code>, <code>git</code>, <code>rbenv</code>, and setup ruby 2.0.0-p353 as the default ruby version.</p>
 
 		
-		
+		<a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/" class="more-link">Read more</a>
 	</div>
 
 </article>
@@ -288,6 +200,10 @@ knife solo bootstrap vagrant@chef_rails
 
 <time datetime="2013-09-26T22:17:00+08:00" data-updated="true" itemprop="datePublished">2013-09-26</time></div>
 		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/mac/'>mac</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+
 
 </div>
 		
@@ -672,7 +588,7 @@ pvreduce: <a href="http://www.cclove.me/Create_Extend_and_Reduce_LVM_on_Ubuntu12
       </li>
     
       <li class="post">
-        <a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/">use chef for automating infrastructure setup</a>
+        <a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/">使用chef来自动化部署</a>
       </li>
     
       <li class="post">
@@ -691,7 +607,7 @@ pvreduce: <a href="http://www.cclove.me/Create_Extend_and_Reduce_LVM_on_Ubuntu12
 </section>
 <section>
   <h1>分类</h1>
-    <ul id="category-list"><li><a href='/blog/categories/blog'>blog (1)</a></li><li><a href='/blog/categories/chef'>chef (1)</a></li><li><a href='/blog/categories/database'>database (2)</a></li><li><a href='/blog/categories/git'>git (6)</a></li><li><a href='/blog/categories/programming-language'>programming language (2)</a></li><li><a href='/blog/categories/rails'>rails (4)</a></li><li><a href='/blog/categories/ruby'>ruby (2)</a></li><li><a href='/blog/categories/server'>server (8)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/blog'>blog (1)</a></li><li><a href='/blog/categories/chef'>chef (1)</a></li><li><a href='/blog/categories/database'>database (2)</a></li><li><a href='/blog/categories/git'>git (6)</a></li><li><a href='/blog/categories/mac'>mac (1)</a></li><li><a href='/blog/categories/programming-language'>programming language (2)</a></li><li><a href='/blog/categories/rails'>rails (4)</a></li><li><a href='/blog/categories/ruby'>ruby (3)</a></li><li><a href='/blog/categories/server'>server (8)</a></li></ul>
 </section>
 <section>
   <h1>近期评论</h1>
