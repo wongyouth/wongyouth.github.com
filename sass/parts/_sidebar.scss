@@ -1,0 +1,63 @@
+.container .mid-col .mid-col-container {
+  padding-right: 20px !important;
+}
+
+.container {
+  #content {
+    margin-right: 300px;
+    &.inner {
+      width: 100%;
+    }
+    > div {
+      float: left;
+      width: 100%;
+    }
+    .sidebar {
+      float: left;
+      width: 300px;
+      margin-right: -100%;
+      clear: none;
+      section {
+        margin-bottom: 30px;
+        padding: 5px;
+        h1 {
+          background-color: #666;
+          color: #eee;
+        }
+        ul, li {
+          list-style: none;
+        }
+        li {
+          margin: 5px 0;
+          padding: 5px 0;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+      }
+      section {
+        margin: 20px 20px 20px 30px;
+      }
+    }
+  }
+
+  footer.inner {
+    clear: both;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .container {
+    #content {
+      > div {
+        float: none;
+      }
+
+      .sidebar {
+        float: none;
+        width: 100%;
+        section {
+          margin: 0;
+        }
+      }
+    }
+  }
+}
