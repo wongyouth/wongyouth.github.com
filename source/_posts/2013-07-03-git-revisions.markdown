@@ -13,6 +13,8 @@ categories: git
 
 <!-- more -->
 
+## Git中 ^ 与 ~ 的区别
+
 我们看Git履历会用到`git log head~2`，`git log head^2`，可能搞不清楚这两者之间有什么区别。
 先来看一段代码：
 
@@ -22,7 +24,7 @@ categories: git
     25d4fc4 Second commit
     f0faab6 First commit
 
-    $ git log --oneline HEAD^
+    $ git log --oneline HEAD~
     25d4fc4 Second commit
     f0faab6 First commit
 
@@ -45,12 +47,31 @@ categories: git
 
 记住`~`永远在第一个父节点上回溯。
 
+什么是第二个父节点？通过命令`git log --graph`我们看下有代码Merge后的日志
+
+<pre>
+* abe6b95 add post for speed-spider (Ryan Wang, 10 months ago)
+* ad57324 add copyright for seo (Ryan Wang, 11 months ago)
+*   302f545 update octopress (Ryan Wang, 11 months ago)
+|\
+| * 09558c6 Sinatra now correctly returns code 404 when a page is not found. Closes #1198 (Brandon Mathis, 12 months ago)
+| * 1bd2b62 Added support for deploying to github.io (Brandon Mathis, 12 months ago)
+* 9c80295 move CNAME to source/ (Ryan Wang, 11 months ago)
+</pre>
+
+* HEAD 是最后一个递交，也就是`abe6b95`
+* HEAD的父节点只有一个，所以也就是 `ad57324`，记为 HEAD~ 或者 HEAD^
+* `ad57324`的父节点也只有一个，`302f545`，记为 HEAD~2, HEAD~~ 或者 HEAD^^
+* `302f545`有两个父节点, 第一个为 `9c80295`, 记为 HEAD~3，第二个父节点 `09558c6`，记为 HEAD~2^2
+* `09558c6`有一个父节点 ``，记为 HEAD~2^2~，或者 HEAD~2^2^
+
+
 那么如果要表示第二代父节点的第10代祖先的第2个父节点如何表示呢
 
     HEAD^2~10^2
 
 
-再来看第二段代码:
+## 假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表
 
     $ git checkout -b other f0faab6
     Switched to a new branch 'other'
@@ -88,3 +109,4 @@ categories: git
     25d4fc4 Second commit
 
 比较之前的代码，可以看出来结果与前后关系相同，两者的履历都会显示。
+
