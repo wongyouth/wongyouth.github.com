@@ -7,11 +7,8 @@
 	<meta name="author" content="Wongyouth / 自由鱼">
 
 	
-	<meta name="description" content="Git Revisions 这篇博文记录Git使用中比较中级的技巧，不太容易记住。 先来看一段代码： # Dummy repository
-$ git log --oneline
-77bc990 Third commit
-25d4fc4 Second commit
-f0faab6 First &hellip;">
+	<meta name="description" content="Git Revisions 这篇博文将使用一些代码来讲述Git使用中比较中级的技巧。 Git中 ^ 与 ~ 的区别
+假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表 我们看Git履历会用到git log head~2，git log head^2，可能搞不清楚这两者之间有什么区别 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,23 +90,37 @@ f0faab6 First &hellip;">
 				<div id="content">
           <div> <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">Git Revisions</h1>
-	<div class="entry-content" itemprop="articleBody"><p>这篇博文记录Git使用中比较中级的技巧，不太容易记住。</p>
+	<div class="entry-content" itemprop="articleBody"><p>这篇博文将使用一些代码来讲述Git使用中比较中级的技巧。</p>
 
-<p>先来看一段代码：</p>
+<ul>
+<li>Git中 ^ 与 ~ 的区别</li>
+<li>假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表</li>
+</ul>
+
+
+<!-- more -->
+
+
+<p>我们看Git履历会用到<code>git log head~2</code>，<code>git log head^2</code>，可能搞不清楚这两者之间有什么区别。
+先来看一段代码：</p>
 
 <pre><code># Dummy repository
 $ git log --oneline
 77bc990 Third commit
 25d4fc4 Second commit
 f0faab6 First commit
+
 $ git log --oneline HEAD^
 25d4fc4 Second commit
 f0faab6 First commit
+
 $ git log --oneline HEAD^
 25d4fc4 Second commit
 f0faab6 First commit
+
 $ git log --oneline HEAD^^
 f0faab6 First commit
+
 $ git log --oneline HEAD^2
 fatal: ambiguous argument 'HEAD^2': unknown revision or path not in the working tree.
 </code></pre>
@@ -132,15 +143,19 @@ fatal: ambiguous argument 'HEAD^2': unknown revision or path not in the working 
 
 <pre><code>$ git checkout -b other f0faab6
 Switched to a new branch 'other'
-$ touch file
+
+$ #touch file
 $ git add file
 $ git commit -m "Adding file" file
+
 $ git log --oneline
 1762164 Adding file
 f0faab6 First commit
+
 $ git log --oneline other..master
 77bc990 Third commit
 25d4fc4 Second commit
+
 $ git log --oneline master..other
 1762164 Adding file
 </code></pre>
@@ -155,13 +170,14 @@ $ git log --oneline master..other
 1762164 Adding file
 77bc990 Third commit
 25d4fc4 Second commit
+
 $ git log other...master
 1762164 Adding file
 77bc990 Third commit
 25d4fc4 Second commit
 </code></pre>
 
-<p>比较之前的代码，可以看出来结果与前后关系相同，两者的履历都会显示</p>
+<p>比较之前的代码，可以看出来结果与前后关系相同，两者的履历都会显示。</p>
 </div>
 
 </article>
@@ -258,6 +274,7 @@ $ git log other...master
 
             
           </aside>
+          <span class="toggle-sidebar"></span>
         </div>
 			</div>
 			<footer id="footer" class="inner"><p>

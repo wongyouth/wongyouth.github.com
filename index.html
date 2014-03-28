@@ -301,78 +301,17 @@ end
 	</div>
 	<h1 class="title" itemprop="name"><a href="/blog/2013/07/03/git-revisions/" itemprop="url">Git Revisions</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<p>这篇博文记录Git使用中比较中级的技巧，不太容易记住。</p>
+		<p>这篇博文将使用一些代码来讲述Git使用中比较中级的技巧。</p>
 
-<p>先来看一段代码：</p>
+<ul>
+<li>Git中 ^ 与 ~ 的区别</li>
+<li>假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表</li>
+</ul>
 
-<pre><code># Dummy repository
-$ git log --oneline
-77bc990 Third commit
-25d4fc4 Second commit
-f0faab6 First commit
-$ git log --oneline HEAD^
-25d4fc4 Second commit
-f0faab6 First commit
-$ git log --oneline HEAD^
-25d4fc4 Second commit
-f0faab6 First commit
-$ git log --oneline HEAD^^
-f0faab6 First commit
-$ git log --oneline HEAD^2
-fatal: ambiguous argument 'HEAD^2': unknown revision or path not in the working tree.
-</code></pre>
 
-<p>从这里可以看出来<code>^</code> 与 <code>~</code> 是有区别的</p>
-
-<p><code>HEAD^2</code> 与 <code>HEAD~2</code> 的区别</p>
-
-<p><code>HEAD^2</code> 表示的是当前HEAD的第二个父节点
-<code>HEAD~2</code> 表示的是当前HEAD的第一个父节点的第一个父节点</p>
-
-<p>记住<code>~</code>永远在第一个父节点上回溯。</p>
-
-<p>那么如果要表示第二代父节点的第10代祖先的第2个父节点如何表示呢</p>
-
-<pre><code>HEAD^2~10^2
-</code></pre>
-
-<p>再来看第二段代码:</p>
-
-<pre><code>$ git checkout -b other f0faab6
-Switched to a new branch 'other'
-$ touch file
-$ git add file
-$ git commit -m "Adding file" file
-$ git log --oneline
-1762164 Adding file
-f0faab6 First commit
-$ git log --oneline other..master
-77bc990 Third commit
-25d4fc4 Second commit
-$ git log --oneline master..other
-1762164 Adding file
-</code></pre>
-
-<p>可以看出 <code>..</code> 前后分支对换，结果是不一样的
-这段代码的意思是找出在一个分支上有，但是在另一个分支上没有的递交。
-其原理是先回溯到两者的共同祖先，然后用这个祖先比较分支，这样就得出来只属于那个分支的递交履历。</p>
-
-<p>再看第三段代码：</p>
-
-<pre><code>$ git log master...other
-1762164 Adding file
-77bc990 Third commit
-25d4fc4 Second commit
-$ git log other...master
-1762164 Adding file
-77bc990 Third commit
-25d4fc4 Second commit
-</code></pre>
-
-<p>比较之前的代码，可以看出来结果与前后关系相同，两者的履历都会显示</p>
 
 		
-		
+		<a href="/blog/2013/07/03/git-revisions/" class="more-link">Read more</a>
 	</div>
 
 </article>
@@ -786,6 +725,7 @@ pvreduce: <a href="http://www.cclove.me/Create_Extend_and_Reduce_LVM_on_Ubuntu12
 
             
           </aside>
+          <span class="toggle-sidebar"></span>
         </div>
 			</div>
 			<footer id="footer" class="inner"><p>
