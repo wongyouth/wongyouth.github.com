@@ -13,5 +13,3 @@ group :development do
   gem 'rubypants', '~> 0.2.0'
   gem 'stringex', '~> 2.4.2'
 end
-
-#gem 'sinatra', '~> 1.4.2'
