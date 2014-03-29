@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[鱼哥的技术博客]]></title>
+  <title><![CDATA[Ryan's blog]]></title>
   <link href="http://wongyouth.com/atom.xml" rel="self"/>
   <link href="http://wongyouth.com/"/>
-  <updated>2014-03-29T00:46:15+08:00</updated>
+  <updated>2014-03-29T13:28:55+08:00</updated>
   <id>http://wongyouth.com/</id>
   <author>
     <name><![CDATA[Wongyouth / 自由鱼]]></name>
