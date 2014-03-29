@@ -1,8 +1,9 @@
 ---
-layout: default
+layout: index
 ---
 
 {% assign index = true %}
+{% assign sidebar = 'sidebar' %}
 <div class="blog-list" itemscope itemtype="http://schema.org/Blog">
 {% for post in paginator.posts %}
 {% assign content = post.content %}
