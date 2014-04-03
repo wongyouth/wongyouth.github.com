@@ -29,6 +29,11 @@ footer.content {
 
 .sidebar {
   padding-top: 20px;
+  float: left;
+  width: 260px;
+  margin-right: -100%;
+  clear: none;
+
   section {
     margin-bottom: 30px;
     padding-left: 20px;
@@ -57,12 +62,6 @@ footer.content {
       float: left;
       width: 100%;
     }
-    .sidebar {
-      float: left;
-      width: 260px;
-      margin-right: -100%;
-      clear: none;
-    }
   }
 
   footer.inner {
@@ -89,7 +88,7 @@ footer.content {
     }
   }
   .content-container {
-    #content, .sidebar {
+    #content {
       width: 100%;
       float: none;
     }
