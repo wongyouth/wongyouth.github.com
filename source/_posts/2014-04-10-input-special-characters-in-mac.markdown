@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Mac电脑里面快速输入特殊字符"
+title: "Mac里快速输入特殊字符"
 date: 2014-04-10 08:42
 comments: true
-categories: 
+categories: mac
 ---
 
 无意中发现的在Mac特殊字符输入方法。按住Option键的同时输入=，就会变成不等号(≠)了。

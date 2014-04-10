@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "使用chef来自动化部署"
+title: "使用Chef来自动化部署"
 date: 2013-11-22 23:55
 comments: true
 categories: [ruby, chef]
