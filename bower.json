@@ -1,0 +1,19 @@
+{
+  "name": "wongyouth.github.com",
+  "version": "0.0.0",
+  "authors": [
+    "Ryan Wang <wongyouth@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "qrcodejs": "https://github.com/davidshimjs/qrcodejs.git"
+  }
+}
