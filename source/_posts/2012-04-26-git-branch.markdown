@@ -50,3 +50,10 @@ tags: [git, branch]
 
     git branch -d issue1
 
+## 关联当前分支与一个远程分支(> git 1.8)
+
+    git branch -u origin/foo
+
+## 关联指定分支与一个远程分支
+
+    git branch -u origin/foo bar
