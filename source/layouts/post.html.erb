@@ -1,2 +1,10 @@
 <% wrap_layout :layout do %>
+  <h1 class="post-title">
+    <i class="glyphicon glyphicon-info-sign"></i>
+    <%= current_article.title %>
+  </h1>
+
+  <div class="post-content">
+    <%= yield %>
+  </div>
 <% end %>

@@ -12,3 +12,5 @@ gem "builder", "~> 3.0"
 gem "bootstrap-sass", require: false
 gem 'redcarpet'
 gem 'nokogiri'
+gem 'debugger'
+gem 'pry'
