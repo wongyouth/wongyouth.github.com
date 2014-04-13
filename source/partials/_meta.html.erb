@@ -1,0 +1,13 @@
+<div class="meta text-right">
+  <div class="date">
+    <icon class="glyphicon glyphicon-calendar"></icon>
+    <%= article.date.strftime("%Y-%m-%d") %>
+  </div>
+  <div class="tags">
+    <icon class="glyphicon glyphicon-tag"></icon>
+    <% article.tags.each do |tag| %>
+      <%= link_to tag, tag_path(tag) %>
+    <% end %>
+  </div>
+</div>
+

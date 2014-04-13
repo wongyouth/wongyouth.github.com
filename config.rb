@@ -1,9 +1,15 @@
-activate :livereload
+###
+# Syntax
+###
+activate :syntax, :line_numbers => true
+set :markdown_engine, :redcarpet
+set :markdown, :fenced_code_blocks => true, :smartypants => true
+
 ###
 # Blog settings
 ###
 
-# Time.zone = "UTC"
+Time.zone = "Beijing"
 
 activate :blog do |blog|
   # This will add a prefix to all links, template references and source paths
@@ -14,7 +20,7 @@ activate :blog do |blog|
   # blog.sources = "{year}-{month}-{day}-{title}.html"
   # blog.taglink = "tags/{tag}.html"
   # blog.layout = "layout"
-  # blog.summary_separator = /(READMORE)/
+  blog.summary_separator = /<!-- *more *-->/
   # blog.summary_length = 250
   # blog.year_link = "{year}.html"
   # blog.month_link = "{year}/{month}.html"
@@ -25,9 +31,9 @@ activate :blog do |blog|
   blog.calendar_template = "calendar.html"
 
   # Enable pagination
-  # blog.paginate = true
+  blog.paginate = true
   # blog.per_page = 10
-  # blog.page_link = "page/{num}"
+  blog.page_link = "blog/page/{num}"
 end
 
 page "/feed.xml", layout: false
@@ -70,7 +76,11 @@ page "/feed.xml", layout: false
 # activate :automatic_image_sizes
 
 # Reload the browser automatically whenever files change
-# activate :livereload
+
+configure :development do
+  set :debug_assets, true
+  activate :livereload
+end
 
 # Methods defined in the helpers block are available in templates
 # helpers do
@@ -88,22 +98,22 @@ set :images_dir, 'images'
 # Build-specific configuration
 configure :build do
   # For example, change the Compass output style for deployment
-  # activate :minify_css
+  #activate :minify_css
 
   # Minify Javascript on build
-  # activate :minify_javascript
+  activate :minify_javascript
 
   # Enable cache buster
-  # activate :asset_hash
+  activate :asset_hash
 
   # Use relative URLs
-  # activate :relative_assets
+  activate :relative_assets
 
   # Or use a different image path
   # set :http_prefix, "/Content/images/"
 end
 
-# Assets
-ready do
-  sprockets.import_asset 'bootstrap-sass'
-end
+## Assets
+#ready do
+  #sprockets.import_asset 'bootstrap-sass'
+#end

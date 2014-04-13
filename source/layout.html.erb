@@ -13,29 +13,14 @@
   <body>
     <div class="container">
       <div id="main" role="main" class="col-sm-9">
+        <ol class="breadcrumb">
+          <li><a href="/">Home</a></li>
+        </ol>
+
         <%= yield %>
       </div>
       <aside class="col-sm-3">
-        <h2>Recent Articles</h2>
-        <ol>
-          <% blog.articles[0...10].each do |article| %>
-            <li><%= link_to article.title, article %> <span><%= article.date.strftime('%b %e') %></span></li>
-          <% end %>
-        </ol>
-
-        <h2>Tags</h2>
-        <ol>
-          <% blog.tags.each do |tag, articles| %>
-            <li><%= link_to "#{tag} (#{articles.size})", tag_path(tag) %></li>
-          <% end %>
-        </ol>
-
-        <h2>By Year</h2>
-        <ol>
-          <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
-            <li><%= link_to "#{year} (#{articles.size})", blog_year_path(year) %></li>
-          <% end %>
-        </ol>
+        <%= partial 'partials/sidebar' %>
       </aside>
     </div>
   </body>
