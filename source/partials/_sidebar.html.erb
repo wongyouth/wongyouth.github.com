@@ -12,15 +12,14 @@
 
 <ul class="list-group">
   <li class="list-group-item list-group-item-success">
-    标签
+    标签云
   </li>
 
-  <% blog.tags.each do |tag, articles| %>
-    <li class="list-group-item">
-      <span class="badge"><%= articles.size %></span>
-      <%= link_to tag, tag_path(tag) %>
-    </li>
-  <% end %>
+  <li class="list-group-item" id="tagcloud">
+    <% blog.tags.each do |tag, articles| %>
+      <%= link_to tag, tag_path(tag), rel: articles.size %>
+    <% end %>
+  </li>
 </ul>
 
 <ul class="list-group">
