@@ -1,14 +1,12 @@
-article.post
-  padding: 30px 0
-  border-bottom: 1px solid #ddd
+@import mixin
 
+article
   h2
     margin-top: 0
 
   .meta
     float: right
-    icon
-      color: #999
+    color: #999
 
   .more-link
     color: #3FB322
@@ -23,12 +21,16 @@ article.post
       content: '\e127'
       font-family: 'Glyphicons Halflings'
 
-.post-title
-  margin-bottom: 30px
-  padding: 5px
-  border-bottom: 2px solid #ddd
-  i
-    color: #DFF0D8
-.post-content
-  line-height: 2
-  margin-bottom: 30px
+
+  .post-title
+    margin-bottom: 30px
+    padding: 5px
+    border-bottom: 2px solid #ddd
+    i
+      color: #DFF0D8
+  .post-content
+    line-height: 2
+
+span.article-date
+  color: #999
+

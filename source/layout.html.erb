@@ -8,7 +8,6 @@
     <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "Atom Feed" %>
 
     <%= stylesheet_link_tag "all" %>
-    <%= javascript_include_tag  "all" %>
   </head>
   <body>
     <header class="navbar navbar-default" role="navigation">
@@ -49,5 +48,8 @@
         <span class="credit">Powered by <a href="http://middlemanapp.com">Middleman</a></span>
       </div>
     </footer>
+
+    <%= javascript_include_tag  "all" %>
+    <%= yield_content :js_block %>
   </body>
 </html>
