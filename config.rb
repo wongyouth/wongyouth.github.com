@@ -51,6 +51,7 @@ page "/feed.xml", layout: false
 # Page options, layouts, aliases and proxies
 ###
 
+page "/aboutme.html"
 # Per-page layout changes:
 #
 # With no layout
@@ -76,6 +77,8 @@ page "/feed.xml", layout: false
 # activate :automatic_image_sizes
 
 # Reload the browser automatically whenever files change
+
+activate :directory_indexes
 
 configure :development do
   set :debug_assets, true
