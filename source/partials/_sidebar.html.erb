@@ -5,7 +5,7 @@
 
   <% blog.articles[0...5].each do |article| %>
     <li class="list-group-item">
-      <%= link_to article.title, article %> <span class="article-date"><%= article.date.strftime('%m-%d') %></span>
+      <%= link_to article.title, article %> <span class="text-muted"><%= article.date.strftime('%m-%d') %></span>
     </li>
   <% end %>
 </ul>
