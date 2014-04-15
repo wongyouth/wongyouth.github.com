@@ -121,3 +121,5 @@ end
 #ready do
   #sprockets.import_asset 'bootstrap-sass'
 #end
+
+set :frontmatter_extensions, %w(.html .slim)
