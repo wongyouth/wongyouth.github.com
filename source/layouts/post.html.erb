@@ -1,4 +1,4 @@
-<% wrap_layout :layout do %>
+<% wrap_layout :blog do %>
   <article>
     <section class="shadow">
       <%= partial 'partials/meta', locals: {article: current_article} %>
@@ -9,7 +9,6 @@
 
       <div class="post-content">
         <%= yield %>
-
       </div>
     </section>
 
