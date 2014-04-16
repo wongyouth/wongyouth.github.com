@@ -1,32 +1,13 @@
----
-pageable: true
----
-<h1>
-  <% case page_type
-     when 'day' %>
-    <%= Date.new(year, month, day).strftime('%Y-%m-%d') %>
-  <% when 'month' %>
-    <%= Date.new(year, month, 1).strftime('%Y-%m') %>
-  <% when 'year' %>
-    <%= year %>年
-  <% end -%>
-博文
-</h1>
+<%
+title = case page_type
+  when 'day'
+    Date.new(year, month, day).strftime('%Y-%m-%d')
+  when 'month'
+    Date.new(year, month, 1).strftime('%Y-%m')
+  when 'year'
+    year
+end
+%>
 
-<ul>
-  <% page_articles.each_with_index do |article, i| %>
-    <li><%= link_to article.title, article %> <span><%= article.date.strftime('%m-%d') %></span></li>
-  <% end %>
-</ul>
+<%= partial 'partials/archive', locals: {title: title, articles: page_articles} %>
 
-<% if paginate && num_pages > 1 %>
-  <ul class="pager">
-    <li class="<%= 'disabled' unless prev_page %>">
-      <%= link_to '&laquo;', prev_page %>
-    </li>
-    <%= link_to "#{page_number} / #{num_pages}", nil, class: 'btn' %>
-    <li class="<%= 'disabled' unless next_page %>">
-      <%= link_to '&raquo;', next_page %>
-    </li>
-  </ul>
-<% end %>

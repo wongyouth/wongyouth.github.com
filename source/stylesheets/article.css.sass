@@ -1,12 +1,6 @@
-@import mixin
-
 article
   h2
     margin-top: 0
-
-  .meta
-    float: right
-    color: #999
 
   .more-link
     color: #3FB322
@@ -21,9 +15,11 @@ article
       content: '\e127'
       font-family: 'Glyphicons Halflings'
 
+  .post
+    padding-bottom: 30px
+    border-bottom: 1px solid #ddd
 
   .post-title
-    margin-bottom: 30px
     padding: 5px
     border-bottom: 2px solid #ddd
     i
@@ -31,3 +27,13 @@ article
   .post-content
     line-height: 2
 
+.meta
+  padding: 15px 0
+  color: #999
+  div
+    display: inline-block
+    margin-right: 20px
+  a
+    color: #999
+  i
+    margin-right: 2px

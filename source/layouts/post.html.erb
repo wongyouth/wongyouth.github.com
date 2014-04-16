@@ -1,11 +1,11 @@
 <% wrap_layout :blog do %>
   <article>
-    <section class="shadow">
-      <%= partial 'partials/meta', locals: {article: current_article} %>
+    <section class="post">
       <h1 class="post-title">
         <i class="glyphicon glyphicon-info-sign"></i>
         <%= current_article.title %>
       </h1>
+      <%= partial 'partials/meta', locals: {article: current_article} %>
 
       <div class="post-content">
         <%= yield %>

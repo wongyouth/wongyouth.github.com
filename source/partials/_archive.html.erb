@@ -1,0 +1,15 @@
+<dl class="archive">
+  <dt><h1><%= title %></h1></dt>
+  <dd>
+    <ul class='nav'>
+      <% articles.each_with_index do |article, i| %>
+        <li>
+          <div class="article">
+            <%= link_to article.title, article %>
+          </div>
+          <%= partial 'partials/meta', locals: {article: article} %>
+        </li>
+      <% end %>
+    </ul>
+  </dd>
+</dl>
