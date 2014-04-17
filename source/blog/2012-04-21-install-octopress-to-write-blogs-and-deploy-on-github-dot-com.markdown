@@ -19,11 +19,12 @@ tags: [github, octopress]
 
 ## 安装
 
-``` sh Install octopress
-    git clone git://github.com/imathis/octopress.git octopress
-    cd octopress
-    bundler install
-    rake install
+``` sh
+#Install octopress
+git clone git://github.com/imathis/octopress.git octopress
+cd octopress
+bundler install
+rake install
 ```
 
 ## 配置
@@ -32,7 +33,7 @@ tags: [github, octopress]
 注册好后新建一个软件仓库 <https://github.com/new> ，注意仓库名称要以下这种格式哦`yourname.github.com`，这样代码发布后自动这个url就可以访问了。
 
 ``` sh
-    rake setup_github_pages
+rake setup_github_pages
 ```
 
 这个命令主要做以下的操作
@@ -48,23 +49,26 @@ tags: [github, octopress]
 
 ## 发布
 
-``` sh Deploy blog
-    rake generate
-    rake deploy
+``` sh
+# Deploy blog
+rake generate
+rake deploy
 ```
 
 当你发布之后，你就可以到 <http://yourname.github.com> 上看到你的博客了，是不是很酷呢。
 
 ## 写第一个博文
 
-``` sh Create first post
-    rake new_post['first post']
+``` sh
+# Create first post
+rake new_post['first post']
 ```
 
 引号里面是博文的标题，这个命令会在`source/_posts`下面生成一个markdown为后缀的文件，我们要做的就是编辑这个文件的内容，然后
 
-``` sh Start a local server for preview
-    rake preview
+``` sh
+#Start a local server for preview
+rake preview
 ```
 
 会在本地启动sinatra服务，用浏览器打开 <http://localhost:4000> 就可以看到效果了。如果都没有问题就可以发布了。

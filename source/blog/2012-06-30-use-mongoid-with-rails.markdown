@@ -18,26 +18,26 @@ Mongodb可使用的ruby adapter 常用的有Mongoid, Mongo Ruby Driver, Mongo ma
 目前Ubuntu官方库里的mongodb还没有升级到2.0版，我们用mongodb官方提供[步骤][2]来安装。
 
 ```sh
-    # 添加mongodb公司10gen的pgp键
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+# 添加mongodb公司10gen的pgp键
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
-    # 增加源到apt
-    sudo sh -c "echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' > /etc/apt/sources.list.d/10gen.list"
+# 增加源到apt
+sudo sh -c "echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' > /etc/apt/sources.list.d/10gen.list"
 
-    # 更新源
-    sudo apt-get update
+# 更新源
+sudo apt-get update
 
-    # 安装mongodb
-    sudo apt-get install mongodb-10gen
+# 安装mongodb
+sudo apt-get install mongodb-10gen
 
-    # 启动mongodb
-    sudo service mongodb start
+# 启动mongodb
+sudo service mongodb start
 
-    # test mongo client
-    mongo
+# test mongo client
+mongo
 
-    # db.test.save( {a: 1} )
-    # db.test.find()
+# db.test.save( {a: 1} )
+# db.test.find()
 ```
 
 ## Step 2: Setup Gemfile to install mongoid
