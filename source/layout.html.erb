@@ -33,19 +33,21 @@
     </header>
 
     <div class="container">
-      <div id="main" role="main" class="col-sm-9">
-        <%= yield %>
+      <div class="row">
+        <div id="main" role="main" class="col-sm-8 col-md-9">
+          <%= yield %>
+        </div>
+        <aside class="col-sm-4 col-md-3">
+          <%= partial 'partials/sidebar' %>
+        </aside>
       </div>
-      <aside class="col-sm-3">
-        <%= partial 'partials/sidebar' %>
-      </aside>
     </div>
 
     <footer id="footer" class="text-center">
       <div>
-        ©2014 - <a href="http://wongyouth.com">http://wongyouth.com</a>
-        <span class="credit">Powered by <a href="http://middlemanapp.com">Middleman</a></span>
+        ©2014 <a href="http://wongyouth.com">http://wongyouth.com</a>
       </div>
+      <div class="credit">Powered by <a href="http://middlemanapp.com">Middleman</a></div>
     </footer>
 
     <%= javascript_include_tag  "all" %>
