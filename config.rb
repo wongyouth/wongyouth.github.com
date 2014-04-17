@@ -1,9 +1,13 @@
+$: << File.expand_path('../extensions', __FILE__)
+require 'include_code'
+
+activate :include_code
 ###
 # Syntax
 ###
 activate :syntax#, :line_numbers => true
 set :markdown_engine, :redcarpet
-set :markdown, :fenced_code_blocks => true, :smartypants => true
+set :markdown, :fenced_code_blocks => true, :smartypants => true, :no_intra_emphasis => true, :autolink => true
 
 ###
 # Blog settings

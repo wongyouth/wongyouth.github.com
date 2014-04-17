@@ -1,0 +1,24 @@
+@import "compass/css3/border-radius"
+@import "compass/css3/images"
+
+figure
+
+  figcaption
+    text-align: center
+    position: relative
+    +border-top-left-radius(5px)
+    +border-top-right-radius(5px)
+    +background-image( linear-gradient(#FFF,#F0F0F0 6%,#E5E5E5 90%,#DDD) )
+    border: 1px solid #c5c5c5
+    border-bottom: 0
+
+    a
+      position: absolute
+      right: 5px
+
+
+    & + p
+      margin: 0
+  .highlight
+    +border-top-left-radius(0)
+    +border-top-right-radius(0)
