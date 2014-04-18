@@ -3,7 +3,12 @@
 
   <% content_for :js_block do %>
     <script type="text/javascript" charset="utf-8">
+      var disqus_shortname = '<%= data.site.disqus_short_name %>';
+      // var disqus_developer = 1;
+
       <% if current_article %>
+        var disqus_identifier = '<%= current_article.url %>';
+        var disqus_url = '<%= "http://wongyouth.com" %><%= current_article.url %>';
         var disqus_script = 'embed.js';
       <% else %>
         var disqus_script = 'count.js';
@@ -11,10 +16,9 @@
       
       (function () {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://<%= data.site.disqus_short_name %>.disqus.com/' + disqus_script;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
       }());
     </script>
   <% end %>
-  
 <% end %>
