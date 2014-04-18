@@ -1,0 +1,20 @@
+- wrap_layout :blog do
+  article
+    section.post
+      h1.post-title
+        i.glyphicon.glyphicon-info-sign
+        = current_article.title
+
+      = partial 'partials/meta', locals: {article: current_article}
+
+      .post-content
+        = yield
+
+      ul.pager
+        li class = ('disabled' unless current_article.previous_article)
+          = link_to '&laquo; 上一篇 &laquo;', current_article.previous_article
+        li class = ('disabled' unless current_article.next_article)
+          = link_to '&raquo; 下一篇 &raquo;', current_article.next_article
+
+    = partial 'partials/sharing'
+    = partial 'partials/comments'
