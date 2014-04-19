@@ -1,15 +1,17 @@
-<dl class="archive">
-  <dt><h1><%= title %></h1></dt>
-  <dd>
+<div class="row">
+  <div class="col-sm-3"><h1><%= title %></h1></div>
+  <div class="col-sm-9">
     <ul class='nav'>
       <% articles.each_with_index do |article, i| %>
-        <li>
-          <div class="article">
-            <%= link_to article.title, article %>
-          </div>
-          <%= partial 'partials/meta', locals: {article: article} %>
-        </li>
+      <li>
+      <div class="article">
+        <%= link_to article.title, article %>
+      </div>
+      <%= partial 'partials/meta', locals: {article: article} %>
+      </li>
       <% end %>
     </ul>
-  </dd>
-</dl>
+  </div>
+</div>
+
+<hr>
