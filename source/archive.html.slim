@@ -1,0 +1,7 @@
+---
+layout: blog
+---
+
+- blog.articles.group_by{|p| p.date.year}.each do |year, articles|
+  = partial 'partials/archive', locals: {title: year, articles: articles}
+
