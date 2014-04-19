@@ -37,7 +37,7 @@ activate :blog do |blog|
   # Enable pagination
   blog.paginate = true
   # blog.per_page = 10
-  blog.page_link = "blog/page/{num}"
+  blog.page_link = "page/{num}"
 end
 
 page "/atom.xml", layout: false
