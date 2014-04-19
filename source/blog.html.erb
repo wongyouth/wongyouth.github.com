@@ -19,7 +19,7 @@ layout: blog
     <li class="<%= 'disabled' unless prev_page %>">
       <%= link_to '&laquo;', prev_page %>
     </li>
-    <%= link_to "#{page_number} / #{num_pages}", nil, class: 'btn' %>
+    <%= link_to "#{page_number} / #{num_pages}", nil, class: 'btn disabled' %>
     <li class="<%= 'disabled' unless next_page %>">
       <%= link_to '&raquo;', next_page %>
     </li>
