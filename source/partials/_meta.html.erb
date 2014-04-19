@@ -3,17 +3,17 @@
     <i class="glyphicon glyphicon-calendar"></i>
     <%= article.date.strftime("%Y-%m-%d") %>
   </div>
-  <div class="tags">
-    <i class="glyphicon glyphicon-tags"></i>
-    <% article.tags.each do |tag| %>
-      <%= link_to tag, tag_path(tag) %>
-    <% end %>
-  </div>
   <% if  data.site.disqus_short_name and data.site.disqus_show_comment_count == true and !current_article %>
     <div class="comments">
       <i class="glyphicon glyphicon-comment"></i>
       <a href="<%= data.site.url + article.url %>#disqus_thread">评论</a>
     </div>
   <% end %>
+  <div class="tags">
+    <i class="glyphicon glyphicon-tags"></i>
+    <% article.tags.each do |tag| %>
+      <%= link_to tag, tag_path(tag) %>
+    <% end %>
+  </div>
 </div>
 
