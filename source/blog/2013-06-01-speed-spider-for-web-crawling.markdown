@@ -3,8 +3,8 @@ layout: post
 title: "Speed spider for web crawling"
 date: 2013-06-01 22:30
 comments: true
-categories: [ruby, rails]
-tags: [ruby, rails]
+categories: [Ruby, Rails]
+tags: [Ruby, Rails]
 ---
 
 ## background

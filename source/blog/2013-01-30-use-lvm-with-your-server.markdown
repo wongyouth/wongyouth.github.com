@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Use lvm with your server"
+title: "Use LVM with your server"
 date: 2013-01-30 11:22
 comments: true
-categories: [server]
-tags: [ubuntu, lvm]
+categories: [Server]
+tags: [Server, LVM, 运维]
 ---
 
 我们在使用服务器的时候会遇到各种各样的问题，比如今天要说的硬盘管理。

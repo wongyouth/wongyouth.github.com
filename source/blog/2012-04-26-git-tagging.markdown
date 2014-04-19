@@ -3,8 +3,8 @@ layout: post
 title: "Git标签常用操作"
 date: 2012-04-26 10:51
 comments: true
-categories: [git]
-tags: [git, tag]
+categories: [Git]
+tags: [Git]
 ---
 
 在这里我列举了一些日常Git操作时用到的`tag`标签命令。

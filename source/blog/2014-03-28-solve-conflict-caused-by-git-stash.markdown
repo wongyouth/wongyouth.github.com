@@ -3,8 +3,8 @@ layout: post
 title: "解决Git stash冲突问题"
 date: 2014-03-28 15:39
 comments: true
-categories: git
-tags: [git]
+categories: [Git, 工具]
+tags: [Git]
 ---
 
 本篇博文分享一下`git stash`以及他的实际使用技巧

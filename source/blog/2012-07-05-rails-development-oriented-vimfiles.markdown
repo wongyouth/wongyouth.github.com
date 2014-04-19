@@ -3,8 +3,8 @@ layout: post
 title: "Rails开发用 vimfiles 配置"
 date: 2012-07-05 09:41
 comments: true
-categories: [rails]
-tags: [vim, rails]
+categories: [Rails]
+tags: [Vim, Rails]
 ---
 
 看到很多朋友在烦编辑器的事，就像自己刚开始的时候一样。 我还是选择了vim, 就是喜欢他可以配置到自己喜欢的样子， 不知道你喜欢不喜欢我的配置，但是如果你着急上手，试试我的。

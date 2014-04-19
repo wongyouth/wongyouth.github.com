@@ -3,8 +3,8 @@ layout: post
 title: "Git分支常用操作"
 date: 2012-04-26 10:55
 comments: true
-categories: [git]
-tags: [git, branch]
+categories: [Git]
+tags: [Git]
 ---
 
 在这里我列举了一些日常Git操作时用到的`branch`分支命令。

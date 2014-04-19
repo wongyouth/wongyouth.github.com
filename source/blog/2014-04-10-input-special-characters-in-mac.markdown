@@ -3,8 +3,8 @@ layout: post
 title: "Mac里快速输入特殊字符"
 date: 2014-04-10 08:42
 comments: true
-categories: mac
-tags: [mac]
+categories: Mac
+tags: [Mac]
 ---
 
 无意中发现的在Mac特殊字符输入方法。按住Option键的同时输入=，就会变成不等号(≠)了。

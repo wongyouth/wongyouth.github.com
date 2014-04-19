@@ -3,8 +3,8 @@ layout: post
 title: "配置一个新的Ubuntu开发环境"
 date: 2012-06-20 14:09
 comments: true
-categories: [ server ]
-tags: [ubuntu, ruby, rbenv]
+categories: [ Server ]
+tags: [Server, Ruby, 运维]
 ---
 
 今天刚申请到[linode](http://linode.com)的`vps`主机，就迫不及待的安装了ubuntu，于是有要配置安装一大堆东西，

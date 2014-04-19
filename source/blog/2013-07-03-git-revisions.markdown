@@ -3,8 +3,8 @@ layout: post
 title: "Git revisions"
 date: 2013-07-03 16:01
 comments: true
-categories: git
-tags: [git]
+categories: Git
+tags: [Git]
 ---
 
 这篇博文将使用一些代码来讲述Git使用中比较中级的技巧。
