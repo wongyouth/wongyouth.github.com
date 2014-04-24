@@ -53,6 +53,19 @@
 </ul>
 
 <ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    年份
+  </li>
+
+  <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
+    <li class="list-group-item">
+      <span class="badge"><%= articles.size %></span>
+      <%= link_to year, blog_year_path(year) %>
+    </li>
+  <% end %>
+</ul>
+
+<ul class="list-group">
   <li class="list-group-item">
     <div id="qrcode"></div>
     <div>使用手机阅读或分享至微信朋友圈</div>
