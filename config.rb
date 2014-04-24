@@ -121,6 +121,15 @@ configure :build do
   # set :http_prefix, "/Content/images/"
 end
 
+helpers do
+  def page_title
+    title = current_article.title if current_article
+    title = current_page.data.title if title.nil?
+    " - #{title}" if title
+  end
+end
+
+
 ## Assets
 #ready do
   #sprockets.import_asset 'bootstrap-sass'
