@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Ubuntu环境下在Rails项目中使用postgresql时的初始配置"
+title: "Ubuntu环境下在Rails项目中使用Postgresql时的初始配置"
 date: 2012-06-25 14:28
 comments: true
 categories: [Database, Rails, Server]

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Config dns server for development"
+title: "Config DNS server for development"
 date: 2013-04-22 19:28
 comments: true
 categories: [Server]

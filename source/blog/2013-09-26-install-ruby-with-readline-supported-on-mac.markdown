@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Install ruby with readline supported on Mac"
+title: "Install Ruby with readline supported on Mac"
 date: 2013-09-26 22:17
 comments: true
 categories: [Ruby, Mac]

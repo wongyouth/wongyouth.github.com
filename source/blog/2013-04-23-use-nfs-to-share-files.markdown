@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Use nfs to share files"
+title: "Use NFS to share files"
 date: 2013-04-23 14:33
 comments: true
 categories: [Server]

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "用octopress来写博客并发布到Github上"
+title: "用Octopress来写博客并发布到Github上"
 date: 2012-04-21 20:54
 comments: true
 categories: [Blog, Server]
