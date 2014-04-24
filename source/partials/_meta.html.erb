@@ -11,9 +11,7 @@
   <% end %>
   <div class="tags">
     <i class="glyphicon glyphicon-tags"></i>
-    <% article.tags.each do |tag| %>
-      <%= link_to tag, tag_path(tag) %>
-    <% end %>
+    <%= article.tags.map {|tag| link_to tag, tag_path(tag) }.join(', ') %>
   </div>
 </div>
 
