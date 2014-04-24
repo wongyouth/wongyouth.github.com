@@ -1,7 +1,7 @@
 <div class="meta text-muted">
   <div class="date">
     <i class="glyphicon glyphicon-calendar"></i>
-    <%= article.date.strftime("%Y-%m-%d") %>
+    <abbr class="timeago" title="<%= article.date.iso8601 %>"><%= article.date.strftime("%F %R") %></abbr>
   </div>
   <% if  data.site.disqus_short_name and data.site.disqus_show_comment_count == true and !current_article %>
     <div class="comments">

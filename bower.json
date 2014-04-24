@@ -17,6 +17,7 @@
     "jquery": "~2.1.0",
     "tagcloud": "http://github.com/addywaddy/jquery.tagcloud.js.git",
     "qrcodejs": "https://github.com/davidshimjs/qrcodejs.git",
-    "facebox": "*"
+    "facebox": "*",
+    "jquery-timeago": "~1.4.0"
   }
 }
