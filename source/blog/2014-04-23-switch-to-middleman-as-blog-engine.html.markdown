@@ -78,6 +78,8 @@ tags: [博客]
 
 在尝试使用 `Jekyll` 之后，最终决定使用 `Middleman`。Nodejs是个方向以后会关注Assemble。
 
+![Middleman](../images/blog/middleman.png)
+
 -   使用 `middleman-blog` 作为博客引擎;
 -   使用 `middleman-syntax` 高亮语法;
 -   使用 `middleman-deploy` 快速部署，增强国内用户体验部署移到 [Gitcafe][];
