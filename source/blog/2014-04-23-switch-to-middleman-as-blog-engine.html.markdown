@@ -37,7 +37,7 @@ tags: [博客]
 
 -   缺点
 
-    Octopress 对Sass不支持，而且对livereload不友好
+    Octopress 对Sass不支持，而且对livereload不友好，需要单独启动一个guard来运行，并且我尝试过仍然有问题。
 
 ### Octopress
 
@@ -52,19 +52,23 @@ tags: [博客]
 
 ### Yeoman
 
+比较有名的是 [Assemble][]，她集成了 Yeoman, Grunt, Nodejs 等后端JS技术，可以生成静态网站。
+她有一些增强插件如果整合less，bootstrap等能快速开发一个站点。
+
 -   优点
 
-    轻量，方便，可配置度高
+    轻量，方便，可配置度高。
 
 -   缺点
 
-    没有集成可以的blog系统
+    没有集成可以马上使用的blog系统
 
 ### Middleman
 
 -   优点
 
     与 Rails 目录架构相似，很多方法名字用法都相同，很容易以后改成 Rails 框架的动态页面。
+    可以方便的使用别的Gem，内置了haml, slim, liquid等多种模板语言的支持。
 
 -   缺点
 
@@ -72,7 +76,7 @@ tags: [博客]
 
 ## 最终方案
 
-在尝试使用 `Jekyll` 之后，最终决定使用 `Middleman`。
+在尝试使用 `Jekyll` 之后，最终决定使用 `Middleman`。Nodejs是个方向以后会关注Assemble。
 
 -   使用 `middleman-blog` 作为博客引擎;
 -   使用 `middleman-syntax` 高亮语法;
@@ -138,3 +142,4 @@ end
 [Gitcafe]:    http://gitcafe.com
 [Bootstrap]:  http://getbootstrap.com
 [baidushare]: http://share.baidu.com
+[Assemble]:   http://assemble.io
