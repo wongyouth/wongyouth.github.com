@@ -158,3 +158,6 @@ else
   end
 end
 
+# site map
+set :url_root, data.site.url
+activate :search_engine_sitemap

@@ -87,6 +87,9 @@ GEM
       em-websocket (~> 0.5.0)
       middleman-core (~> 3.2)
       rack-livereload (~> 0.3.15)
+    middleman-search_engine_sitemap (1.0.1)
+      builder
+      middleman-core (~> 3.2)
     middleman-sprockets (3.3.2)
       middleman-core (>= 3.2)
       sprockets (~> 2.2)
@@ -163,6 +166,7 @@ DEPENDENCIES
   middleman-blog (~> 3.5.2)
   middleman-deploy
   middleman-livereload (~> 3.3.2)
+  middleman-search_engine_sitemap
   middleman-syntax
   nokogiri
   pry
