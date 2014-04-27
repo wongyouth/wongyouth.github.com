@@ -123,9 +123,17 @@ end
 
 helpers do
   def page_title
-    title = current_article.title if current_article
-    title = current_page.data.title if title.nil?
-    " - #{title}" if title
+    title = data.site.name
+    subtitle = current_page.data.title || current_article.try(:title) || data.site.slogon
+    title += " - #{subtitle}"
+  end
+
+  def page_keywords
+    current_page.data.keywords || current_article.try(:keywords) || data.site.keywords
+  end
+
+  def page_description
+    current_article.try(:description) || current_page.data.description || data.site.description
   end
 end
 
