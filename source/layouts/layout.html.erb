@@ -54,13 +54,28 @@
       <div>
         ©2014 <%= link_to data.site.url, data.site.url %>
         <%= partial 'partials/cnzz' %>
+        <%= partial 'partials/baidu_analytics' %>
       </div>
       <div class="credit">Powered by <a href="http://middlemanapp.com">Middleman</a></div>
     </div>
 
-    <%= partial 'partials/baidu_analytics' %>
     <%= partial 'partials/google_analytics' %>
     <%= javascript_include_tag  "all" %>
+    <% content_for :js_block do %>
+      <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"<%= data.site.duoshuo_subdomain %>"};
+        (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0] 
+           || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+        </script>
+      <!-- 多说公共JS代码 end -->
+    <% end %>
     <%= yield_content :js_block %>
     <!--[if lt IE 9]>
       <%= javascript_include_tag '//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js' %>

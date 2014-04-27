@@ -1,6 +1,6 @@
-name: "不破不立"
-slogon: "破而后立"
-domain: wongyouth.com
+name: "破而后立"
+slogon: "王永志的中文博客"
+domain: 'wongyouth.com'
 url: 'http://wongyouth.com'
 keywords: "wongyouth, Ryan Wang, 王永志, Rails, Javascript, Web, 移动, 产品, 创业"
 description: "王永志(Ryan Wang)的个人博客，关注Web，移动，产品，创业。"
@@ -8,6 +8,8 @@ description: "王永志(Ryan Wang)的个人博客，关注Web，移动，产品�
 # ----------------------- #
 #   3rd Party Settings    #
 # ----------------------- #
+
+duoshuo_subdomain: wongyouth
 
 # Github repositories
 github_user: wongyouth
