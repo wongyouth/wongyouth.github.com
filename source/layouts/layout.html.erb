@@ -6,12 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="keywords" content="<%= page_keywords %>">
     <meta name="description" content="<%= data.site.description %>">
+    <meta name="baidu-site-verification" content="whKGC9t0PW" />
     <title><%= page_title %></title>
     <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "Atom Feed" %>
 
     <%= stylesheet_link_tag "all" %>
   </head>
   <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">你的浏览器版本过于<strong>陈旧</strong>。请<a href="http://browsehappy.com/">更新你的浏览器</a> 以提升访问体验。</p>
+    <![endif]-->
     <header class="navbar navbar-default" role="navigation">
       <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -40,21 +44,24 @@
         <div id="main" role="main" class="col-sm-8 col-md-9">
           <%= yield %>
         </div>
-        <aside class="col-sm-4 col-md-3">
+        <div class="col-sm-4 col-md-3">
           <%= partial 'partials/sidebar' %>
-        </aside>
+        </div>
       </div>
     </div>
 
-    <footer id="footer" class="text-center">
+    <div id="footer" class="text-center">
       <div>
         ©2014 <%= link_to data.site.url, data.site.url %>
       </div>
       <div class="credit">Powered by <a href="http://middlemanapp.com">Middleman</a></div>
-    </footer>
+    </div>
 
     <%= partial 'partials/google_analytics' %>
     <%= javascript_include_tag  "all" %>
     <%= yield_content :js_block %>
+    <!--[if lt IE 9]>
+      <%= javascript_include_tag '//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js' %>
+    <![endif]-->
   </body>
 </html>
