@@ -53,12 +53,12 @@
     <div id="footer" class="text-center">
       <div>
         ©2014 <%= link_to data.site.url, data.site.url %>
+        <%= partial 'partials/cnzz' %>
       </div>
       <div class="credit">Powered by <a href="http://middlemanapp.com">Middleman</a></div>
     </div>
 
     <%= partial 'partials/google_analytics' %>
-    <%= partial 'partials/cnzz' %>
     <%= javascript_include_tag  "all" %>
     <%= yield_content :js_block %>
     <!--[if lt IE 9]>
