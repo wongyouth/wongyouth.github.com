@@ -10,6 +10,12 @@
       .post-content
         = yield
 
+      .post-copyright
+        - url = data.site.url + current_article.url
+
+        = "除非注明，文章均为 #{link_to 'wongyouth', data.site.url} 原创，转载请注明本文地址："
+        = link_to url, url
+
       ul.pager
         li class = ('disabled' unless current_article.previous_article)
           = link_to '&laquo; 上一篇 &laquo;', current_article.previous_article
