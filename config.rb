@@ -124,7 +124,7 @@ end
 helpers do
   def page_title
     title = data.site.name
-    subtitle = current_page.data.title || current_article.try(:title) || data.site.slogon
+    subtitle = yield_content(:title) || current_page.data.title || current_article.try(:title) || data.site.slogon
     title += " - #{subtitle}"
   end
 

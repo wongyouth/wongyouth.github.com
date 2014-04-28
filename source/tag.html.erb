@@ -5,6 +5,11 @@ per_page: 12
 layout: blog
 change_frequency: daily
 ---
+
+<% content_for :title do %>
+标签 <%= tagname %>
+<% end %>
+
 <h1>含有 <code><%= tagname %></code> 标签的博文</h1>
 
 <% page_articles.group_by{|p| p.date.year}.each do |year, articles| %>
