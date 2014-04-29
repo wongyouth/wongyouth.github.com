@@ -1,5 +1,4 @@
 ---
-title: 标签
 pageable: true
 per_page: 12
 layout: blog
@@ -7,10 +6,13 @@ change_frequency: daily
 ---
 
 <% content_for :title do %>
-标签 <%= tagname %>
+<%= topic -%>
 <% end %>
 
-<h1>含有 <code><%= tagname %></code> 的文章</h1>
+<ol class="breadcrumb">
+  <li><a href="#">主页</a></li>
+  <li class="active"><%= topic %></li>
+</ol>
 
 <% page_articles.group_by{|p| p.date.year}.each do |year, articles| %>
   <%= partial 'partials/archive', locals: {title: year, articles: articles} %>

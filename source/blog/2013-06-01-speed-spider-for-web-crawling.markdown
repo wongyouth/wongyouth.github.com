@@ -5,6 +5,7 @@ date: 2013-06-01 22:30
 comments: true
 categories: [Ruby, Rails]
 tags: [Ruby, Rails]
+topic: 技术
 ---
 
 ## background

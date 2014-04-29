@@ -5,6 +5,7 @@ date: 2012-06-25 14:28
 comments: true
 categories: [Database, Rails, Server]
 tags: [DB, Postgresql, Server, 运维]
+topic: 技术
 ---
 
 在我们的rails服务器配置中经常用的是 MySQL，

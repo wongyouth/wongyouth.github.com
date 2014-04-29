@@ -3,6 +3,7 @@ title: 独立博客，自媒体第一步
 date: 2014-04-28 00:27 +0800
 tags: [博客, 自媒体]
 keywords: 独立博客, 个人博客搭建, 自媒体第一步
+topic: 运营
 ---
 
 ![自媒体](../images/blog/we-media.jpg)

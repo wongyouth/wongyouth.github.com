@@ -5,6 +5,7 @@ date: 2013-09-26 22:17
 comments: true
 categories: [Ruby, Mac]
 tags: [Ruby, Mac]
+topic: 技术
 ---
 
 Just a memo for installing ruby on Mac OSX with the feature of typing Chinese under ruby console.

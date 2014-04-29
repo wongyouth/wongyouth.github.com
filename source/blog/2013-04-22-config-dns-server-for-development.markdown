@@ -5,6 +5,7 @@ date: 2013-04-22 19:28
 comments: true
 categories: [Server]
 tags: [运维, DNS, Bind9]
+topic: 技术
 ---
 
 开发的时候我们很多时候需要配置一个与线上相同的环境来做测试。

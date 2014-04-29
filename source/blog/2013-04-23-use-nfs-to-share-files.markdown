@@ -5,6 +5,7 @@ date: 2013-04-23 14:33
 comments: true
 categories: [Server]
 tags: [NFS, 运维]
+topic: 技术
 ---
 
 当一个服务器不能负载的时候，就需要增加一个服务器来做负载均衡，这个时候就需要做文件共享。

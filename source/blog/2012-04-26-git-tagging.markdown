@@ -5,6 +5,7 @@ date: 2012-04-26 10:51
 comments: true
 categories: [Git]
 tags: [Git]
+topic: 技术
 ---
 
 在这里我列举了一些日常Git操作时用到的`tag`标签命令。

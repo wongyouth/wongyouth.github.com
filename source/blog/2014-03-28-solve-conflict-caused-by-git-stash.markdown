@@ -5,6 +5,7 @@ date: 2014-03-28 15:39
 comments: true
 categories: [Git, 工具]
 tags: [Git]
+topic: 技术
 ---
 
 本篇博文分享一下`git stash`以及他的实际使用技巧

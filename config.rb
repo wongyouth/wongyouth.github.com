@@ -38,6 +38,13 @@ activate :blog do |blog|
   blog.paginate = true
   # blog.per_page = 10
   blog.page_link = "page/{num}"
+
+  blog.custom_collections = {
+    topic: {
+      link: "/topics/:topic.html",
+      template: "/topic.html"
+    }
+  }
 end
 
 page "/atom.xml", layout: false
@@ -123,9 +130,8 @@ end
 
 helpers do
   def page_title
-    title = data.site.name
-    subtitle = yield_content(:title) || current_page.data.title || current_article.try(:title) || data.site.slogon
-    title += " - #{subtitle}"
+    title = yield_content(:title) || current_page.data.title || current_article.try(:title) || data.site.slogon
+    "#{title} - #{data.site.name}"
   end
 
   def page_keywords

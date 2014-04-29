@@ -5,6 +5,7 @@ date: 2013-01-05 20:46
 comments: true
 categories: [Server]
 tags: [SSL, 运维]
+topic: 技术
 ---
 ssl是什么，ssl就是你在网址里面看到的https。区别于http，如果是ssl的，那么他所传输的数据是保密的，
 别人无法根据监听网络偷取你的信用卡数据，登录密码。现在国内的银行等大型网站基本上都支持ssl了。

@@ -5,6 +5,7 @@ date: 2013-01-30 11:22
 comments: true
 categories: [Server]
 tags: [Server, LVM, 运维]
+topic: 技术
 ---
 
 我们在使用服务器的时候会遇到各种各样的问题，比如今天要说的硬盘管理。
