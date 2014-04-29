@@ -36,7 +36,14 @@
             <li><a href="/blog/topics/技术">技术</a></li>
             <li><a href="/blog/topics/运营">运营</a></li>
           </ul>
+          <form class="navbar-form navbar-left" role="search" action='http://www.google.com.hk/search' id="search">
+            <div class="form-group">
+              <input type="hidden" name='sitesearch' value='<%= data.site.domain %>'>
+              <input type="text" name='q' class="form-control" placeholder='搜索'>
+            </div>
+          </form>
         </div><!-- /.navbar-collapse -->
+
       </div><!-- /.container -->
     </header>
 
