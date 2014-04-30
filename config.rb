@@ -47,7 +47,7 @@ activate :blog do |blog|
   }
 end
 
-page "/atom.xml", layout: false
+page "/feed.xml", layout: false
 
 ###
 # Compass

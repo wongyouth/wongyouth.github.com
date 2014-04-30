@@ -8,7 +8,7 @@
     <meta name="description" content="<%= data.site.description %>">
     <meta name="baidu-site-verification" content="whKGC9t0PW" />
     <title><%= page_title %></title>
-    <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "Atom Feed" %>
+    <%= feed_tag :atom, "/feed.xml", title: "Atom Feed" %>
 
     <%= stylesheet_link_tag "all" %>
   </head>
