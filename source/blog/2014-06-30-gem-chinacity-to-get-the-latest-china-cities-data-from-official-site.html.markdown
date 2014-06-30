@@ -1,9 +1,8 @@
 ---
 title: 使用 chinacity 从国家统计局官网取最新城市数据
-date: 2014-06-30 20:09 CST
-comments: true
-categories: [Ruby]
+date: 2014-06-30 20:09 +0800
 tags: [Ruby, 数据, 中国城市]
+keywords: 中国城市数据, chinacity
 topic: 技术
 ---
 
