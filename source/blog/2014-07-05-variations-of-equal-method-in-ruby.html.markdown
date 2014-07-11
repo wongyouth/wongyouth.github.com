@@ -40,6 +40,8 @@ Ruby里面有4种比较方法，`equal?`, `eql?`, `==`, `===`，而且在不同�
 case some_object
 when /a regex/
   # The regex matches
+when String
+  # some_object is kind of String
 when 2..4
   # some_object is in the range 2..4
 when lambda {|x| some_crazy_custom_predicate }
@@ -52,6 +54,8 @@ end
 ```ruby
 if /a regex/ === some_object
   # The regex matches
+elsif String === some_object
+  # some_object is kind of object
 elsif (2..4) === some_object
   # some_object is in the range 2..4
 elsif lambda {|x| some_crazy_custom_predicate } === some_object
