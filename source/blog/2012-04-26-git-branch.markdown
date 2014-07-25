@@ -40,6 +40,10 @@ topic: 技术
 
     git push origin issue1
 
+## 递交master到远程分支issue1
+
+    git push origin master:issue1
+
 ## 复制远程分支到本地
 
     git checkout -b issue1 origin/issue1
