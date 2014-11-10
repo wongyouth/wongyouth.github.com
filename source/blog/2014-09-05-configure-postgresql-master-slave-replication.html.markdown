@@ -47,12 +47,12 @@ archive_mode = on
 archive_command = 'cd .'
 max_wal_senders = 1
 hot_standby = on
-wal_keep_segments = 64
+wal_keep_segments = 32
 checkpoint_segments = 8
 EOF
 ```
 
-wal_keep_segments 1个16MB 64 就是1G，这个参数用来配置保存wal日志的大小。如果备份期间有很多数据库操作导致旧日志失效时，就需要配置更大的数字才能保证同步数据文件。
+wal_keep_segments 1个16MB 32 就是512M，这个参数用来配置保存wal日志的大小。如果备份期间有很多数据库操作导致旧日志失效时，就需要配置更大的数字才能保证同步数据文件。
 
 允许从数据库连接到主数据库
 
@@ -90,12 +90,12 @@ EOF
 在主数据库机器执行
 
 ```
-psql -c "select pg_stop_backup();"sql -c "select pg_start_backup('initial_backup');"
+psql -c "select pg_start_backup('initial_backup');"
 rsync -cva -P --inplace --exclude=*pg_xlog* /var/lib/postgresql/9.1/main/ slave_IP_address:/var/lib/postgresql/9.1/main/
 psql -c "select pg_stop_backup();"
 ```
 
-20G 的数据文件大概复制了30个多小时，要看网络状况好不好。
+20G 的数据文件大概复制了3个多小时，要看网络状况好不好。
 
 ## 启动从数据库
 
