@@ -1,5 +1,5 @@
 ---
-title: Advanced Arel When ActiveRecord is not Enough
+title: 当 ActiveRecord 不够用时还有 Arel
 date: 2014-07-16 09:31 +0800
 tags: ["Ruby", "数据库"]
 keywords: ["ActiveRecord", "Arel", "Rails", "Ruby"]
@@ -204,7 +204,7 @@ Post.where(
 ```
 
 
-## JOIN 语句
+## 9. JOIN 语句
 
 假设 3 个类的关系是
 
