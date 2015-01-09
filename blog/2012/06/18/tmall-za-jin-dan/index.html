@@ -1,0 +1,332 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>tmall砸金蛋活动脚本 - Ryan's blog</title>
+	<meta name="author" content="Wongyouth / 自由鱼">
+
+	
+	<meta name="description" content="Tmall砸金蛋活动脚本 今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。
+于是乎写个脚本砸&#8230; 今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。
+于是就写个脚本砸，虽然机会太微妙，不过看着自动砸挺开心哈。
+现在活动都过去了，放出来应该不会危害什么了吧。 &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Ryan's blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://wongyouth.com/blog/2012/06/18/tmall-za-jin-dan/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="/javascripts/jiathis.js" type="text/javascript"></script>
+<meta property="wb:webmaster" content="7f133defa7956d35" />
+<meta property="qc:admins" content="544531077671754067140526375" />
+
+</head>
+
+
+<body>
+  <div class="content-container">
+    
+      
+    
+    <div id="content">
+      <div> <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Tmall砸金蛋活动脚本</h1>
+	<div class="entry-content" itemprop="articleBody"><p>今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。<br>
+于是乎写个脚本砸&#8230;</p>
+
+<!-- more -->
+
+<p>今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。<br>
+于是就写个脚本砸，虽然机会太微妙，不过看着自动砸挺开心哈。<br>
+现在活动都过去了，放出来应该不会危害什么了吧。</p>
+
+<p>运行环境 ruby</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">gem install capybara # install capybara
+ruby brick.rb
+</code></pre></div>
+<figure class='code'><figcaption><span> (brick.rb)</span> <a href='/downloads/code/brick.rb'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="c1"># encoding: utf-8</span>
+</span><span class='line'><span class="c1">#</span>
+</span><span class='line'><span class="c1"># 淘宝砸金蛋脚本</span>
+</span><span class='line'><span class="c1"># 当前目录建立 tmall 文件放入帐号:密码，分号隔开</span>
+</span><span class='line'><span class="c1">#</span>
+</span><span class='line'><span class="c1"># mailto wongyouth@gmail.com</span>
+</span><span class='line'><span class="c1"># blog http://wongyouth.github.com</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;rubygems&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;capybara&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;capybara/dsl&#39;</span>
+</span><span class='line'><span class="kp">include</span> <span class="ss">Capybara</span><span class="p">:</span><span class="ss">:DSL</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Capybara</span><span class="o">.</span><span class="n">default_driver</span> <span class="o">=</span> <span class="ss">:selenium</span>
+</span><span class='line'><span class="no">Capybara</span><span class="o">.</span><span class="n">app_host</span> <span class="o">=</span> <span class="s1">&#39;http://www.tmall.com&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">login</span>
+</span><span class='line'>  <span class="n">username</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="no">IO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;tmall&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">visit</span><span class="p">(</span><span class="s1">&#39;http://login.tmall.com&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">setup_frame</span><span class="p">(</span><span class="s1">&#39;loginframe&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">within_frame</span><span class="p">(</span><span class="s1">&#39;loginframe&#39;</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">fill_in</span> <span class="s1">&#39;TPL_username&#39;</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="n">username</span>
+</span><span class='line'>    <span class="n">fill_in</span> <span class="s1">&#39;TPL_password&#39;</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="n">password</span>
+</span><span class='line'>    <span class="n">click_button</span> <span class="s1">&#39;登录&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">rescue</span> <span class="o">=&gt;</span> <span class="n">e</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">e</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">setup_frame</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">jquerify</span>
+</span><span class='line'>  <span class="n">page</span><span class="o">.</span><span class="n">execute_script</span> <span class="sx">%Q{</span>
+</span><span class='line'><span class="sx">    jQuery(&#39;iframe&#39;).attr(&#39;name&#39;, &#39;</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="sx">&#39;);</span>
+</span><span class='line'><span class="sx">  }</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">jquerify</span>
+</span><span class='line'>  <span class="n">page</span><span class="o">.</span><span class="n">execute_script</span> <span class="sx">%Q{</span>
+</span><span class='line'><span class="sx">    var jq = document.createElement(&#39;script&#39;);</span>
+</span><span class='line'><span class="sx">    jq.src = &quot;http://code.jquery.com/jquery-latest.min.js&quot;;</span>
+</span><span class='line'><span class="sx">    document.getElementsByTagName(&#39;head&#39;)[0].appendChild(jq);</span>
+</span><span class='line'><span class="sx">  }</span>
+</span><span class='line'>  <span class="c1"># wait to load jquery</span>
+</span><span class='line'>  <span class="nb">sleep</span> <span class="mi">2</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">brick</span>
+</span><span class='line'>  <span class="n">visit</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="mi">10000</span><span class="o">.</span><span class="n">downto</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">find</span><span class="p">(</span><span class="s1">&#39;#J_Vol_Brick_Btn&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span>
+</span><span class='line'>    <span class="nb">sleep</span> <span class="mi">1</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">rescue</span>
+</span><span class='line'>  <span class="nb">sleep</span> <span class="mi">5</span>
+</span><span class='line'>  <span class="k">retry</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">login</span>
+</span><span class='line'><span class="n">brick</span>
+</span></code></pre></td></tr></table></div></figure>
+</div>
+
+</article>
+
+  <div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+ </div>
+    </div>
+    <aside class="sidebar">
+      
+        <section>
+  <h1>近期博文</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/28/solve-conflict-caused-by-git-stash/">解决Git stash冲突问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/">使用chef来自动化部署</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/26/install-ruby-with-readline-supported-on-mac/">install ruby with readline supported on Mac</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/03/git-revisions/">git revisions</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/01/speed-spider-for-web-crawling/">speed spider for web crawling</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>分类</h1>
+    <ul id="category-list"><li><a href='/blog/categories/blog'>blog (1)</a></li><li><a href='/blog/categories/chef'>chef (1)</a></li><li><a href='/blog/categories/database'>database (2)</a></li><li><a href='/blog/categories/git'>git (6)</a></li><li><a href='/blog/categories/mac'>mac (1)</a></li><li><a href='/blog/categories/programming-language'>programming language (2)</a></li><li><a href='/blog/categories/rails'>rails (4)</a></li><li><a href='/blog/categories/ruby'>ruby (3)</a></li><li><a href='/blog/categories/server'>server (8)</a></li></ul>
+</section>
+<section>
+  <h1>近期评论</h1>
+  <script type="text/javascript" src="http://wongyouth.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=32&excerpt_length=200"></script>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/wongyouth">@wongyouth</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'wongyouth',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+      
+    </aside>
+    <span class="toggle-sidebar"></span>
+  </div>
+  <footer id="footer" class="content"><p>
+Copyright &copy; 2014 - <a href="http://wongyouth.com">http://wongyouth.com</a> - Wongyouth / 自由鱼 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+  <script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wongyouth';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://wongyouth.com/blog/2012/06/18/tmall-za-jin-dan/';
+        var disqus_url = 'http://wongyouth.com/blog/2012/06/18/tmall-za-jin-dan/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-30466888-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+
+</body>
+</html>

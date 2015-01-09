@@ -1,0 +1,293 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>用octopress来写博客并发布到Github上 - Ryan's blog</title>
+	<meta name="author" content="Wongyouth / 自由鱼">
+
+	
+	<meta name="description" content="用octopress来写博客并发布到Github上 用过不少博客，MSN spaces，blogger.com，myspace, wordpress，搜狐，总是觉得少了点自由发挥的空间。直到现有有了octopress，就像我这个博客一样，这才是咱程序猿该有的！ 安装
+配置
+发布
+写第一个博文 &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Ryan's blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://wongyouth.com/blog/2012/04/21/install-octopress-to-write-blogs-and-deploy-on-github-dot-com/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="/javascripts/jiathis.js" type="text/javascript"></script>
+<meta property="wb:webmaster" content="7f133defa7956d35" />
+<meta property="qc:admins" content="544531077671754067140526375" />
+
+</head>
+
+
+<body>
+  <div class="content-container">
+    
+      
+    
+    <div id="content">
+      <div> <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">用octopress来写博客并发布到Github上</h1>
+	<div class="entry-content" itemprop="articleBody"><p>用过不少博客，MSN spaces，blogger.com，myspace, wordpress，搜狐，总是觉得少了点自由发挥的空间。直到现有有了<a href="http://octopress.org/">octopress</a>，就像我这个博客一样，这才是咱程序猿该有的！</p>
+
+<!-- more -->
+
+<ol>
+<li>安装</li>
+<li>配置</li>
+<li>发布</li>
+<li>写第一个博文</li>
+</ol>
+
+<h2>安装</h2>
+
+<figure class='code'><figcaption><span>Install octopress</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>git clone git://github.com/imathis/octopress.git octopress
+</span><span class='line'><span class="nb">cd </span>octopress
+</span><span class='line'>bundler install
+</span><span class='line'>rake install
+</span></code></pre></td></tr></table></div></figure>
+
+<h2>配置</h2>
+
+<p>你要先有个github.com的帐号，如果没有赶快注册吧。<br>
+注册好后新建一个软件仓库 <a href="https://github.com/new">https://github.com/new</a> ，注意仓库名称要以下这种格式哦<code>yourname.github.com</code>，这样代码发布后自动这个url就可以访问了。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake setup_github_pages
+</span></code></pre></td></tr></table></div></figure>
+
+<p>这个命令主要做以下的操作</p>
+
+<ol>
+<li>问你github上的url。 我的是 <a href="mailto:git@github.com">git@github.com</a>:wongyouth/wongyouth.github.com.git</li>
+<li>将原始的<code>imathis/octopress</code>远端仓库<code>origin</code>名称改为<code>octopress</code></li>
+<li>把你输入的url作为远端仓库名<code>origin</code></li>
+<li>把当前目录从分支<code>master</code>切换到<code>source</code></li>
+<li>把当前目录与<code>origin</code>的仓库关联，能默认push到github中</li>
+<li>配置<code>_deploy</code>目录作为github仓库的<code>master</code>分支</li>
+</ol>
+
+<p>要做的就是把原始的blog代码放在<code>source</code>分支中，当要发布时会自动生成发布代码到<code>_deploy</code>目录下以<code>master</code>分支更新到github上。github会以<code>master</code>中的代码作为blog的原始代码。</p>
+
+<h2>发布</h2>
+
+<figure class='code'><figcaption><span>Deploy blog</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake generate
+</span><span class='line'>rake deploy
+</span></code></pre></td></tr></table></div></figure>
+
+<p>当你发布之后，你就可以到 <a href="http://yourname.github.com">http://yourname.github.com</a> 上看到你的博客了，是不是很酷呢。</p>
+
+<h2>写第一个博文</h2>
+
+<figure class='code'><figcaption><span>Create first post</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake new_post<span class="o">[</span><span class="s1">&#39;first post&#39;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+<p>引号里面是博文的标题，这个命令会在<code>source/_posts</code>下面生成一个markdown为后缀的文件，我们要做的就是编辑这个文件的内容，然后</p>
+
+<figure class='code'><figcaption><span>Start a local server for preview</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake preview
+</span></code></pre></td></tr></table></div></figure>
+
+<p>会在本地启动sinatra服务，用浏览器打开 <a href="http://localhost:4000">http://localhost:4000</a> 就可以看到效果了。如果都没有问题就可以发布了。</p>
+
+<p>有时候写了一半的博文想要先留为草稿放到服务器但是不发布这样情况。<br>
+我们可以在单独的这篇博文开头的yaml里面追加设置</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">published: false
+</code></pre></div>
+<p>这样deploy的时候就不会发布了。</p>
+
+<h2>其他</h2>
+
+<p>你可以仔细查看以下三个文件，如果觉得有必要就按照自己的配置修改。</p>
+
+<ol>
+<li> _config.yml</li>
+<li> config.rb</li>
+<li> config.ru</li>
+</ol>
+
+<p>_config.yml中有关联其他一些社区的配置，比如github.com帐号，facebook帐号等。我认为比较有用的是<a href="http://disqus.com/">disqus</a>的评论帐号。到disqus注册一下，然后设置好<code>disqus_short_name</code>这样你的博客就有了评论功能了，而不是你一个人在唱独角戏了。</p>
+
+<h2>在其他电脑里面同步时的操作</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git clone git@github.com:wongyouth/wongyouth.github.com.git
+cd wongyouth.github.com
+git checkout source
+git clone git@github.com:wongyouth/wongyouth.github.com.git _deploy
+</code></pre></div>
+<p><code>_deploy</code>目录是用来与远程代码库同步的目录，所以我们要把它checkout出来预先做好关联</p>
+
+<p>make a new post and something else &#8230;</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">rake generate
+rake deploy
+</code></pre></div></div>
+
+</article>
+
+  <div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+ </div>
+    </div>
+    <aside class="sidebar">
+      
+        <section>
+  <h1>近期博文</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/28/solve-conflict-caused-by-git-stash/">解决Git stash冲突问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/">使用chef来自动化部署</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/26/install-ruby-with-readline-supported-on-mac/">install ruby with readline supported on Mac</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/03/git-revisions/">git revisions</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/01/speed-spider-for-web-crawling/">speed spider for web crawling</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>分类</h1>
+    <ul id="category-list"><li><a href='/blog/categories/blog'>blog (1)</a></li><li><a href='/blog/categories/chef'>chef (1)</a></li><li><a href='/blog/categories/database'>database (2)</a></li><li><a href='/blog/categories/git'>git (6)</a></li><li><a href='/blog/categories/mac'>mac (1)</a></li><li><a href='/blog/categories/programming-language'>programming language (2)</a></li><li><a href='/blog/categories/rails'>rails (4)</a></li><li><a href='/blog/categories/ruby'>ruby (3)</a></li><li><a href='/blog/categories/server'>server (8)</a></li></ul>
+</section>
+<section>
+  <h1>近期评论</h1>
+  <script type="text/javascript" src="http://wongyouth.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=32&excerpt_length=200"></script>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/wongyouth">@wongyouth</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'wongyouth',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+      
+    </aside>
+    <span class="toggle-sidebar"></span>
+  </div>
+  <footer id="footer" class="content"><p>
+Copyright &copy; 2014 - <a href="http://wongyouth.com">http://wongyouth.com</a> - Wongyouth / 自由鱼 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+  <script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wongyouth';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://wongyouth.com/blog/2012/04/21/install-octopress-to-write-blogs-and-deploy-on-github-dot-com/';
+        var disqus_url = 'http://wongyouth.com/blog/2012/04/21/install-octopress-to-write-blogs-and-deploy-on-github-dot-com/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-30466888-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+
+</body>
+</html>

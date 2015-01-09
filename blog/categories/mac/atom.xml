@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: mac | Ryan's blog]]></title>
+  <link href="http://wongyouth.com/blog/categories/mac/atom.xml" rel="self"/>
+  <link href="http://wongyouth.com/"/>
+  <updated>2014-04-09T23:24:07+08:00</updated>
+  <id>http://wongyouth.com/</id>
+  <author>
+    <name><![CDATA[Wongyouth / 自由鱼]]></name>
+    <email><![CDATA[wongyouth@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[install ruby with readline supported on Mac]]></title>
+    <link href="http://wongyouth.com/blog/2013/09/26/install-ruby-with-readline-supported-on-mac/"/>
+    <updated>2013-09-26T22:17:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/09/26/install-ruby-with-readline-supported-on-mac</id>
+    <content type="html"><![CDATA[<p>Just a memo for installing ruby on Mac OSX with the feature of typing Chinese under ruby console.</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">brew install readline ruby-build
+RUBY_CONFIGURE_OPTS=--with-readline-dir=`brew --prefix readline` rbenv install 1.9.3-p286
+</code></pre></div>
+<p>or to use pure Ruby readline</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">group :development do
+  gem &#39;rb_readline&#39;
+end
+</code></pre></div>
+<p>ref: <a href="https://github.com/guard/guard/wiki/Add-Readline-support-to-Ruby-on-Mac-OS-X">https://github.com/guard/guard/wiki/Add-Readline-support-to-Ruby-on-Mac-OS-X</a></p>
+]]></content>
+  </entry>
+  
+</feed>

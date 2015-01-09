@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: git | Ryan's blog]]></title>
+  <link href="http://wongyouth.com/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://wongyouth.com/"/>
+  <updated>2014-04-09T23:24:07+08:00</updated>
+  <id>http://wongyouth.com/</id>
+  <author>
+    <name><![CDATA[Wongyouth / 自由鱼]]></name>
+    <email><![CDATA[wongyouth@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[解决Git stash冲突问题]]></title>
+    <link href="http://wongyouth.com/blog/2014/03/28/solve-conflict-caused-by-git-stash/"/>
+    <updated>2014-03-28T15:39:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2014/03/28/solve-conflict-caused-by-git-stash</id>
+    <content type="html"><![CDATA[<p>本篇博文分享一下<code>git stash</code>以及他的实际使用技巧</p>
+
+<ul>
+<li>Git stash 是什么，他的使用场景，以及如何来使用</li>
+<li>Git stash pop 时冲突的解决方法</li>
+</ul>
+
+<!-- more -->
+
+<h2>首先了解下什么是 Git stash</h2>
+
+<p>考虑这么一个场景，我修改了一些代码用来支持新功能，因为还在进行中所以暂时不想递交代码。<br>
+此时发现线上版本出了问题需要在本地查错。这样我需要临时保存修改的文件，然后取出线上版本到工作目录。<br>
+此时我们有几种方法可以做</p>
+
+<ol>
+<li>复制修改的代码到备份目录，<code>reset</code> 旧代码，<code>check out</code>出线上版本。</li>
+</ol>
+<div class="highlight"><pre><code class="sh language-sh" data-lang="sh">cp file /backup/dir
+git reset --hard head # 恢复head代码，抛弃工作区的修改
+git checkout master
+
+# do your job
+
+# when your job&#39;s done
+git checkout feature_branch
+cp /backup/dir file
+</code></pre></div>
+<ol>
+<li>递交现在的代码（即使还没有做完），取出线上版本，完工后回退临时递交</li>
+</ol>
+<div class="highlight"><pre><code class="sh language-sh" data-lang="sh">git commit -am &#39;work in process&#39;
+git checkout master
+
+# do your job
+
+# when your job&#39;s done
+git checkout feature_branch
+git reset head~
+</code></pre></div>
+<p>Git 自带了对于前一种方案的支持，这就是<code>stash</code>命令。我们来看下用stash怎么做。</p>
+<div class="highlight"><pre><code class="sh language-sh" data-lang="sh">git stash
+git checkout master
+
+# do your job
+
+# when your job&#39;s done
+git checkout feature_branch
+git stash pop
+</code></pre></div>
+<h2>Git stash 冲突的解决办法</h2>
+
+<p>比较一下之后看起来好像没有改变多少，我这里是假设只有修改过一个文件的情况，如果修改的文件比较多，<br>
+就需要你找出哪些文件是要备份的，每次来罗列这些文件名是个很吃力的事情，还是让机器来做这些枯燥的工作吧。</p>
+
+<p>说完<code>stash</code>的功用，回到正题看看如何解决使用stash时会碰到的冲突问题。<br>
+现在考虑另一个场景，假设在工作区修改了一些代码用来支持新功能，因为还在完善中所以暂时不想递交代码。<br>
+此时发现同事递交了新功能的代码，而我需要并入他的代码来完成工作。</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git stash
+git pull --all
+git rebase college_branch
+git stash pop
+</code></pre></div>
+<p>如果同事递交的代码与我修改临时保存到stash中的没有冲突，那么事情完美完工，<br>
+如果同事与我修改的代码有冲突，最后一个命令将报 <code>Merge conflict</code> 错。<br>
+Git 没有提供强制pop出来的功能。我们看下这个时候能做什么。</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git stash show -p | git apply &amp;&amp; git stash drop
+</code></pre></div>
+<p>因为经常会要碰到这种情况，我们把它设置为别名来用</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git config --global alias.unstash &#39;!git stash show -p | git apply &amp;&amp; git stash drop&#39;
+</code></pre></div>
+<p>这样就可以调用 <code>git unstash</code> 来使用了。这算是git的一个高级用法，Git可以自定义命令。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[git revisions]]></title>
+    <link href="http://wongyouth.com/blog/2013/07/03/git-revisions/"/>
+    <updated>2013-07-03T16:01:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/07/03/git-revisions</id>
+    <content type="html"><![CDATA[<p>这篇博文将使用一些代码来讲述Git使用中比较中级的技巧。</p>
+
+<ul>
+<li>Git中 ^ 与 ~ 的区别</li>
+<li>假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表</li>
+</ul>
+
+<!-- more -->
+
+<h2>Git中 ^ 与 ~ 的区别</h2>
+
+<p>我们看Git履历会用到<code>git log head~2</code>，<code>git log head^2</code>，可能搞不清楚这两者之间有什么区别。<br>
+先来看一段代码：</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text"># Dummy repository
+$ git log --oneline
+77bc990 Third commit
+25d4fc4 Second commit
+f0faab6 First commit
+
+$ git log --oneline HEAD~
+25d4fc4 Second commit
+f0faab6 First commit
+
+$ git log --oneline HEAD^
+25d4fc4 Second commit
+f0faab6 First commit
+
+$ git log --oneline HEAD^^
+f0faab6 First commit
+
+$ git log --oneline HEAD^2
+fatal: ambiguous argument &#39;HEAD^2&#39;: unknown revision or path not in the working tree.
+</code></pre></div>
+<p>从这里可以看出来<code>^</code> 与 <code>~</code> 是有区别的</p>
+
+<p><code>HEAD^2</code> 与 <code>HEAD~2</code> 的区别</p>
+
+<p><code>HEAD^2</code> 表示的是当前HEAD的第二个父节点<br>
+<code>HEAD~2</code> 表示的是当前HEAD的第一个父节点的第一个父节点</p>
+
+<p>记住<code>~</code>永远在第一个父节点上回溯。</p>
+
+<p>什么是第二个父节点？通过命令<code>git log --graph</code>我们看下有代码Merge后的日志</p>
+
+<pre>
+* abe6b95 add post for speed-spider (Ryan Wang, 10 months ago)
+* ad57324 add copyright for seo (Ryan Wang, 11 months ago)
+*   302f545 update octopress (Ryan Wang, 11 months ago)
+|\
+| * 09558c6 Sinatra now correctly returns code 404 when a page is not found. Closes #1198 (Brandon Mathis, 12 months ago)
+| * 1bd2b62 Added support for deploying to github.io (Brandon Mathis, 12 months ago)
+* 9c80295 move CNAME to source/ (Ryan Wang, 11 months ago)
+</pre>
+
+<ul>
+<li>HEAD 是最后一个递交，也就是<code>abe6b95</code></li>
+<li>HEAD的父节点只有一个，所以也就是 <code>ad57324</code>，记为 HEAD~ 或者 HEAD^</li>
+<li><code>ad57324</code>的父节点也只有一个，<code>302f545</code>，记为 HEAD~2, HEAD~~ 或者 HEAD^^</li>
+<li><code>302f545</code>有两个父节点, 第一个为 <code>9c80295</code>, 记为 HEAD~3，第二个父节点 <code>09558c6</code>，记为 HEAD~2^2</li>
+<li><code>09558c6</code>有一个父节点 ``，记为 HEAD~2^2~，或者 HEAD~2^2^</li>
+</ul>
+
+<p>那么如果要表示第二代父节点的第10代祖先的第2个父节点如何表示呢</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">HEAD^2~10^2
+</code></pre></div>
+<h2>假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">$ git checkout -b other f0faab6
+Switched to a new branch &#39;other&#39;
+
+$ #touch file
+$ git add file
+$ git commit -m &quot;Adding file&quot; file
+
+$ git log --oneline
+1762164 Adding file
+f0faab6 First commit
+
+$ git log --oneline other..master
+77bc990 Third commit
+25d4fc4 Second commit
+
+$ git log --oneline master..other
+1762164 Adding file
+</code></pre></div>
+<p>可以看出 <code>..</code> 前后分支对换，结果是不一样的<br>
+这段代码的意思是找出在一个分支上有，但是在另一个分支上没有的递交。<br>
+其原理是先回溯到两者的共同祖先，然后用这个祖先比较分支，这样就得出来只属于那个分支的递交履历。</p>
+
+<p>再看第三段代码：</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">$ git log master...other
+1762164 Adding file
+77bc990 Third commit
+25d4fc4 Second commit
+
+$ git log other...master
+1762164 Adding file
+77bc990 Third commit
+25d4fc4 Second commit
+</code></pre></div>
+<p>比较之前的代码，可以看出来结果与前后关系相同，两者的履历都会显示。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[redmine用Git repo镜像脚本]]></title>
+    <link href="http://wongyouth.com/blog/2012/11/05/make-a-git-repo-mirror-for-redmine/"/>
+    <updated>2012-11-05T14:11:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/11/05/make-a-git-repo-mirror-for-redmine</id>
+    <content type="html"><![CDATA[<p>一般我用<a href="http://git-scm.com">git</a>来管理代码，后台用<a href="https://github.com/sitaramc/gitolite">gitolite</a>，<a href="http://redmine.org">redmine</a>来管理项目，redmine中可以结合git来参看git提交信息时，非常有用。</p>
+
+<!-- more -->
+
+<p>以下代码参照了<a href="http://blog.buginception.com/blog/2012/04/02/redmine-use-git-code-review">http://blog.buginception.com/blog/2012/04/02/redmine-use-git-code-review</a><br>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (make-mirror.sh)</span> <a href='/downloads/code/make-mirror.sh'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">set</span> -x
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$1&quot;</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Usage: $0 [repo]&quot;</span>
+</span><span class='line'>  <span class="nb">exit </span>1
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">REPO</span><span class="o">=</span><span class="nv">$1</span>.git
+</span><span class='line'><span class="nv">GIT_BASE</span><span class="o">=</span>/home/git/repositories
+</span><span class='line'><span class="nv">MIRROR_PATH</span><span class="o">=</span>/home/jxb/git-mirrors
+</span><span class='line'><span class="nv">REPO_PATH</span><span class="o">=</span><span class="nv">$MIRROR_PATH</span>/<span class="nv">$REPO</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 我們要使用 git clone --mirror 建立一個原始 repo 的鏡像：</span>
+</span><span class='line'><span class="nb">cd</span> <span class="nv">$MIRROR_PATH</span> <span class="o">&amp;&amp;</span> git clone --mirror <span class="nv">$GIT_BASE</span>/<span class="nv">$REPO</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 接下來下一步，由於之後 git 使用者會透過 post-receive hook 來同步兩個 repository，</span>
+</span><span class='line'><span class="c"># 我們直接修改這個境像 repository 的 owner / group 為 git 來讓它有讀寫權限。</span>
+</span><span class='line'>chown -R git:git <span class="nv">$REPO_PATH</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 再來我們要設定原本 repo 的 hooks ：</span>
+</span><span class='line'><span class="nb">cd</span> <span class="nv">$GIT_BASE</span>/<span class="nv">$REPO</span>/hooks
+</span><span class='line'>
+</span><span class='line'>cat &gt; post-receive <span class="s">&lt;&lt;EOS</span>
+</span><span class='line'><span class="s">#!/bin/bash</span>
+</span><span class='line'><span class="s">/usr/bin/git push --mirror $REPO_PATH</span>
+</span><span class='line'><span class="s">EOS</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 建立完 post-receive 檔案後修改權限：</span>
+</span><span class='line'>chown git:git post-receive
+</span><span class='line'>chmod 700 post-receive
+</span><span class='line'>
+</span><span class='line'><span class="c"># 由於 Git 在做 mirror push 的時候，會保留原始的檔案與資料夾存取權限，</span>
+</span><span class='line'><span class="c"># 在 gitolite 控管下，只有 owner 有讀寫權限，所以一做 mirror push 這個鏡像的 repository 就沒辦法被其他 process 讀取到了，</span>
+</span><span class='line'><span class="c"># 所以我們一開始就要告訴這個 mirror repository 它是被分享的，並且設定它應該要有的存取權限：</span>
+</span><span class='line'>sudo -u git sh <span class="s">&lt;&lt;EOS</span>
+</span><span class='line'><span class="s">set -x</span>
+</span><span class='line'><span class="s">cd $REPO_PATH</span>
+</span><span class='line'><span class="s">chmod a+rX -R ./</span>
+</span><span class='line'><span class="s">git config --add core.sharedRepository 644</span>
+</span><span class='line'><span class="s">EOS</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>使用时需要用root权限</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo sh make-mirror.sh &lt;REPO-NAME&gt; # REPO-NAME 中不带.git后缀
+</code></pre></div>
+<p>如果不需要特别强大的项目管理功能，可以用<a href="https://github.com/gitlabhq/gitlabhq">gitlabhq</a>，这是一个类似<a href="https://github.com">github</a>的代码管理应用，支持fork，pull request功能，非常实用，选择哪个用来管理也就见仁见智了。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git中如何退回到旧版本]]></title>
+    <link href="http://wongyouth.com/blog/2012/10/25/return-to-old-revision-on-git-repo/"/>
+    <updated>2012-10-25T09:34:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/10/25/return-to-old-revision-on-git-repo</id>
+    <content type="html"><![CDATA[<p>使用Git用来管理版本时，有时候会有不小心递交了错误的代码，想回退到旧的版本中的场景。让我们看看在Git中应该如何正确操作。</p>
+
+<!-- more -->
+
+<p>先来说一下如何保存当前工作区的修改。</p>
+
+<h2>保留当前修改</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git stash                 # 保留当前工作区的修改
+git stash pop             # 恢复保存的修改到工作区
+</code></pre></div>
+<h2>递交的代码没有push到远程的仓库时</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git reset --mixed REVISION # 返回到旧版本REVISION，版本间的差异会到工作区
+git reset --soft REVISION  # 返回到旧版本REVISION，版本间的差异会到index
+git reset --hard REVISION  # 返回到旧版本REVISION，包括当前工作区里的修改
+</code></pre></div>
+<h2>递交的代码已经push到远程的仓库，协同者未同步时</h2>
+
+<p>如果递交的代码已经push到了远程，我们不能用上面的方法，因为上面的方法只是让你的本地状态变成一个没有同步远程的协同者的状态相似。你下次pull远程时会把远程代码库的更新取回来。<br>
+所以我们必须要把远程的代码也返回到旧版。</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">remote$ git config receive.denyCurrentBranch ignore # 登录到远程代码库，设置取消拒绝当前分支，否则以下的操作无法删除远程master分支
+
+local$ git push origin :master       # 删除远程master分支
+local$ git reset --hard REVISION     # return to old revision
+local$ git push origin master:master # 递交旧版到远程master分支
+</code></pre></div>
+<p>或者回到旧版再强制推到远程</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">local$ git reset --hard REVISION
+local$ git push --force
+</code></pre></div>
+<h2>递交的代码已经更新到协同者的代码库时</h2>
+
+<p>这个时候让每个协同者返回旧版不是一个好的选择项时，我们只有把旧代码取出，加到当前版之上，push到远程，再让协同者同步。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git分支常用操作]]></title>
+    <link href="http://wongyouth.com/blog/2012/04/26/git-branch/"/>
+    <updated>2012-04-26T10:55:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/04/26/git-branch</id>
+    <content type="html"><![CDATA[<p>在这里我列举了一些日常Git操作时用到的<code>branch</code>分支命令。<br>
+&lt;!-- more --&gt;</p>
+
+<h2>生成一个分支，名字为issue1</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git branch issue1
+</code></pre></div>
+<h2>切换到一个分支issue1</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git checkout issue1
+</code></pre></div>
+<h2>生成一个本地分支并切换到它</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git checkout -b issue1
+</code></pre></div>
+<h2>修改后提交</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git commit -am &#39;fix issue1&#39;
+</code></pre></div>
+<h2>切换到主分支</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git checkout master
+</code></pre></div>
+<h2>合并issue1到主分支</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git merge issue1
+</code></pre></div>
+<h2>递交到远程</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git push origin issue1
+</code></pre></div>
+<h2>复制远程分支到本地</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git checkout -b issue1 origin/issue1
+</code></pre></div>
+<h2>删除远程分支</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git push origin :issue1
+</code></pre></div>
+<h2>删除本地分支</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git branch -d issue1
+</code></pre></div>]]></content>
+  </entry>
+  
+</feed>

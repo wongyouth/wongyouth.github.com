@@ -1,0 +1,641 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Ryan's blog</title>
+	<meta name="author" content="Wongyouth / 自由鱼">
+
+	
+	<meta name="description" content="git Comments Git中如何退回到旧版本 使用Git用来管理版本时，有时候会有不小心递交了错误的代码，想回退到旧的版本中的场景。让我们看看在Git中应该如何正确操作。 Read more rails Comments Rails开发用 Vimfiles 配置 看到很多朋友在烦编辑器的事 &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Ryan's blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://wongyouth.com/blog/page/2/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="/javascripts/jiathis.js" type="text/javascript"></script>
+<meta property="wb:webmaster" content="7f133defa7956d35" />
+<meta property="qc:admins" content="544531077671754067140526375" />
+
+</head>
+
+
+<body>
+  <div class="container">
+    <div class="left-col">
+      <div class="intrude-less">
+      <header id="header" class="inner"><div class="profilepic">	
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("wongyouth@gmail.com") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+</div>
+<hgroup>
+  <h1><a href="/">Ryan's blog</a></h1>
+</hgroup>
+
+<p class="subtitle">Do things the hard way.</p>
+
+<p class="bro">Hi buddy, my name is Wang Yongzhi from Shanghai China. I am a Rails programmer, and have a passion for Web Technology.</p>
+
+<nav id="main-nav"><ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		
+		
+		<a class="twitter" href="http://twitter.com/wongyouth" title="Twitter">Twitter</a>
+		
+		
+		<a class="github" href="https://github.com/wongyouth" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+</header>
+      </div>
+    </div>
+    <div class="mid-col">
+      
+        
+      
+      <div class="mid-col-container">
+        <div id="content">
+          <div> 
+
+<div class="blog-list" itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-25T09:34:00+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/git/'>git</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/10/25/return-to-old-revision-on-git-repo/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/10/25/return-to-old-revision-on-git-repo/" itemprop="url">Git中如何退回到旧版本</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>使用Git用来管理版本时，有时候会有不小心递交了错误的代码，想回退到旧的版本中的场景。让我们看看在Git中应该如何正确操作。</p>
+
+
+		
+		<a href="/blog/2012/10/25/return-to-old-revision-on-git-repo/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-05T09:41:00+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/rails/'>rails</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/07/05/rails-development-oriented-vimfiles/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/07/05/rails-development-oriented-vimfiles/" itemprop="url">Rails开发用 Vimfiles 配置</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>看到很多朋友在烦编辑器的事，就像自己刚开始的时候一样。 我还是选择了vim, 就是喜欢他可以配置到自己喜欢的样子， 不知道你喜欢不喜欢我的配置，但是如果你着急上手，试试我的。</p>
+
+
+		
+		<a href="/blog/2012/07/05/rails-development-oriented-vimfiles/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-30T12:54:00+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/database/'>database</a>, <a class='category' href='/blog/categories/rails/'>rails</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/06/30/use-mongoid-with-rails/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/06/30/use-mongoid-with-rails/" itemprop="url">在rails中使用mongoid</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>在我看来noSQL解决方案有一个最大的优点就是可以方便的scale out, Oracle等大型数据库也可以支持Grid，支持集群但是就是配置起来的繁琐而已，可以写一本厚厚的书啦。而今天要使用的mongodb只是简单的一个配置文件就能搞定，简单易用容易让人理解，只就是生产力的极大提升啊。</p>
+
+
+		
+		<a href="/blog/2012/06/30/use-mongoid-with-rails/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-25T14:28:00+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/database/'>database</a>, <a class='category' href='/blog/categories/rails/'>rails</a>, <a class='category' href='/blog/categories/server/'>server</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/06/25/use-postgresql-with-rails/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/06/25/use-postgresql-with-rails/" itemprop="url">Ubuntu环境下在Rails项目中使用postgresql时的初始配置</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>在我们的rails服务器配置中经常用的是 MySQL，<br>
+今天使用开源社区的另一款数据库软件 postgresql 来做一个实验。</p>
+
+<p>测试环境： ubuntu 12.04</p>
+
+
+		
+		<a href="/blog/2012/06/25/use-postgresql-with-rails/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-20T14:09:00+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/server/'>server</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/06/20/setup-new-ubuntu-environment/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/06/20/setup-new-ubuntu-environment/" itemprop="url">配置一个新的Ubuntu开发环境</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>今天刚申请到<a href="http://linode.com">linode</a>的<code>vps</code>主机，就迫不及待的安装了ubuntu，于是有要配置安装一大堆东西，<br>
+在这里给总结一下。</p>
+
+
+		
+		<a href="/blog/2012/06/20/setup-new-ubuntu-environment/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-18T19:32:00+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming-language/'>programming language</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/06/18/tmall-za-jin-dan/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/06/18/tmall-za-jin-dan/" itemprop="url">Tmall砸金蛋活动脚本</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>今天淘宝在砸猫猫，砸金蛋对抗京东店庆日。砸金蛋让人砸到手酸啊。<br>
+于是乎写个脚本砸&#8230;</p>
+
+
+		
+		<a href="/blog/2012/06/18/tmall-za-jin-dan/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-26T10:55:00+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/git/'>git</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/04/26/git-branch/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/04/26/git-branch/" itemprop="url">Git分支常用操作</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>在这里我列举了一些日常Git操作时用到的<code>branch</code>分支命令。<br>
+&lt;!&#8211; more &#8211;&gt;</p>
+
+<h2>生成一个分支，名字为issue1</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git branch issue1
+</code></pre></div>
+<h2>切换到一个分支issue1</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git checkout issue1
+</code></pre></div>
+<h2>生成一个本地分支并切换到它</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git checkout -b issue1
+</code></pre></div>
+<h2>修改后提交</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git commit -am &#39;fix issue1&#39;
+</code></pre></div>
+<h2>切换到主分支</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git checkout master
+</code></pre></div>
+<h2>合并issue1到主分支</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git merge issue1
+</code></pre></div>
+<h2>递交到远程</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git push origin issue1
+</code></pre></div>
+<h2>复制远程分支到本地</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git checkout -b issue1 origin/issue1
+</code></pre></div>
+<h2>删除远程分支</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git push origin :issue1
+</code></pre></div>
+<h2>删除本地分支</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git branch -d issue1
+</code></pre></div>
+		
+		
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-26T10:51:00+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/git/'>git</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/04/26/git-tagging/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/04/26/git-tagging/" itemprop="url">Git标签常用操作</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>在这里我列举了一些日常Git操作时用到的<code>tag</code>标签命令。</p>
+
+
+		
+		<a href="/blog/2012/04/26/git-tagging/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-21T20:54:00+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/blog/'>blog</a>, <a class='category' href='/blog/categories/server/'>server</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/04/21/install-octopress-to-write-blogs-and-deploy-on-github-dot-com/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/04/21/install-octopress-to-write-blogs-and-deploy-on-github-dot-com/" itemprop="url">用octopress来写博客并发布到Github上</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>用过不少博客，MSN spaces，blogger.com，myspace, wordpress，搜狐，总是觉得少了点自由发挥的空间。直到现有有了<a href="http://octopress.org/">octopress</a>，就像我这个博客一样，这才是咱程序猿该有的！</p>
+
+
+		
+		<a href="/blog/2012/04/21/install-octopress-to-write-blogs-and-deploy-on-github-dot-com/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-21T14:41:00+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/programming-language/'>programming language</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2012/04/21/install-ruby-environment-on-ubuntu/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2012/04/21/install-ruby-environment-on-ubuntu/" itemprop="url">Ubuntu下安装ruby开发环境</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>要使用rails开发Web应用服务时，在Windows环境下会遇到各种各样的问题，有些Gem也会工作不正常。<br>
+有些人会用MacOS作为开发环境，这当然好，但是我们在也可用免费的Ubuntu来开发，这里就介绍下安装步骤。</p>
+
+
+		
+		<a href="/blog/2012/04/21/install-ruby-environment-on-ubuntu/" class="more-link">Read more</a>
+	</div>
+
+</article>
+
+</div>
+<nav id="pagenavi">
+    
+        <a href="/index.html" class="prev">Prev</a>
+    
+    
+    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
+</nav>
+ </div>
+          <aside class="sidebar">
+            
+              <section>
+  <h1>近期博文</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/28/solve-conflict-caused-by-git-stash/">解决Git stash冲突问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/">使用chef来自动化部署</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/26/install-ruby-with-readline-supported-on-mac/">install ruby with readline supported on Mac</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/03/git-revisions/">git revisions</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/01/speed-spider-for-web-crawling/">speed spider for web crawling</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>分类</h1>
+    <ul id="category-list"><li><a href='/blog/categories/blog'>blog (1)</a></li><li><a href='/blog/categories/chef'>chef (1)</a></li><li><a href='/blog/categories/database'>database (2)</a></li><li><a href='/blog/categories/git'>git (6)</a></li><li><a href='/blog/categories/mac'>mac (1)</a></li><li><a href='/blog/categories/programming-language'>programming language (2)</a></li><li><a href='/blog/categories/rails'>rails (4)</a></li><li><a href='/blog/categories/ruby'>ruby (3)</a></li><li><a href='/blog/categories/server'>server (8)</a></li></ul>
+</section>
+<section>
+  <h1>近期评论</h1>
+  <script type="text/javascript" src="http://wongyouth.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=32&excerpt_length=200"></script>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/wongyouth">@wongyouth</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'wongyouth',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+            
+          </aside>
+        </div>
+      </div>
+      <footer id="footer" class="inner"><p>
+Copyright &copy; 2014 - <a href="http://wongyouth.com">http://wongyouth.com</a> - Wongyouth / 自由鱼 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+      <script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wongyouth';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-30466888-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+
+    </div>
+  </div>
+</body>
+</html>
+

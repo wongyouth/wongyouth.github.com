@@ -1,0 +1,252 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>config dns server for development - Ryan's blog</title>
+	<meta name="author" content="Wongyouth / 自由鱼">
+
+	
+	<meta name="description" content="Config Dns Server for Development 开发的时候我们很多时候需要配置一个与线上相同的环境来做测试。
+其中一项就是我们需要用线上相同的域名在做测试，这样就需要在开发环境里面配置域名映射。
+最为简单的情况就是使用/etc/hosts，但是如果是有一团队来做测试， &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Ryan's blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://wongyouth.com/blog/2013/04/22/config-dns-server-for-development/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="/javascripts/jiathis.js" type="text/javascript"></script>
+<meta property="wb:webmaster" content="7f133defa7956d35" />
+<meta property="qc:admins" content="544531077671754067140526375" />
+
+</head>
+
+
+<body>
+  <div class="content-container">
+    
+      
+    
+    <div id="content">
+      <div> <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Config Dns Server for Development</h1>
+	<div class="entry-content" itemprop="articleBody"><p>开发的时候我们很多时候需要配置一个与线上相同的环境来做测试。<br>
+其中一项就是我们需要用线上相同的域名在做测试，这样就需要在开发环境里面配置域名映射。<br>
+最为简单的情况就是使用/etc/hosts，但是如果是有一团队来做测试，需要所有的人有相同的配置，<br>
+特别是有新成员来的时候，相同的工作要不厌其烦的重复做重复说明。</p>
+
+<p>还有一种办法就是找一台机器来做域名解析服务，其实配置起来也不是很麻烦，下面就让我来讲一个简单的例子。</p>
+
+<!-- more -->
+
+<p>Step 1. 安装bind9</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo apt-get install bind9
+</code></pre></div>
+<p>Step 2. 配置bind</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">#sudo vi /etc/bind/named.conf.options
+
+# 本DNS不知道的域名会到8.8.8.8服务器问
+forwarders {
+  8.8.8.8;
+};
+
+# 允许递归访问
+recursion yes;
+
+# 允许外部访问
+allow-query {anry;};
+</code></pre></div>
+<p>step 3. 配置本地DNS</p>
+
+<p>假如我们要配置一个 taobao.com 的DNS</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">#sudo vi /etc/bind/named.conf.local
+
+zone &quot;taobao.com&quot; {
+  type master;
+  file &quot;/etc/bind/db.taobao.com&quot;;
+};
+
+#sudo vi /etc/bind/db.taobao.com
+
+;
+;$TTL    604800
+$TTL    7d
+@       IN      SOA     taobao.com. admin.taobao.com. (           # admin.taobao.com 表示 admin@taobao.com 管理员email
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+        IN      NS      ns.taobao.com.                            # 设置域名DNSip 最后有个.结尾表示一个全的URL
+@       IN      A       192.168.0.100
+ns      IN      A       192.168.0.100
+mx      IN      MX      192.168.0.100
+www     IN      A       192.168.0.100
+m       IN      CNAME   www                                       # 设置别名
+*       IN      A       192.168.0.100                             # 没有设置过的子域名都转到这个IP
+</code></pre></div>
+<p>通过以上的配置，只要在系统里面把DNS设置好，在浏览器里面输入 <code>taobao.com</code> 就会解析到 192.168.0.100这个IP，而不是真正的淘宝网了。<br>
+如果有路由器的配置权限，只要把路由器的DHCP地址设为这个DNS服务器的IP，这样系统里面设置DNS这一步也可以省略，真正即插即用。</p>
+</div>
+
+</article>
+
+  <div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+ </div>
+    </div>
+    <aside class="sidebar">
+      
+        <section>
+  <h1>近期博文</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/28/solve-conflict-caused-by-git-stash/">解决Git stash冲突问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/">使用chef来自动化部署</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/26/install-ruby-with-readline-supported-on-mac/">install ruby with readline supported on Mac</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/03/git-revisions/">git revisions</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/01/speed-spider-for-web-crawling/">speed spider for web crawling</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>分类</h1>
+    <ul id="category-list"><li><a href='/blog/categories/blog'>blog (1)</a></li><li><a href='/blog/categories/chef'>chef (1)</a></li><li><a href='/blog/categories/database'>database (2)</a></li><li><a href='/blog/categories/git'>git (6)</a></li><li><a href='/blog/categories/mac'>mac (1)</a></li><li><a href='/blog/categories/programming-language'>programming language (2)</a></li><li><a href='/blog/categories/rails'>rails (4)</a></li><li><a href='/blog/categories/ruby'>ruby (3)</a></li><li><a href='/blog/categories/server'>server (8)</a></li></ul>
+</section>
+<section>
+  <h1>近期评论</h1>
+  <script type="text/javascript" src="http://wongyouth.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=32&excerpt_length=200"></script>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/wongyouth">@wongyouth</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'wongyouth',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+      
+    </aside>
+    <span class="toggle-sidebar"></span>
+  </div>
+  <footer id="footer" class="content"><p>
+Copyright &copy; 2014 - <a href="http://wongyouth.com">http://wongyouth.com</a> - Wongyouth / 自由鱼 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+  <script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wongyouth';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://wongyouth.com/blog/2013/04/22/config-dns-server-for-development/';
+        var disqus_url = 'http://wongyouth.com/blog/2013/04/22/config-dns-server-for-development/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-30466888-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+
+</body>
+</html>

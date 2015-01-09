@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: server | Ryan's blog]]></title>
+  <link href="http://wongyouth.com/blog/categories/server/atom.xml" rel="self"/>
+  <link href="http://wongyouth.com/"/>
+  <updated>2014-04-09T23:24:07+08:00</updated>
+  <id>http://wongyouth.com/</id>
+  <author>
+    <name><![CDATA[Wongyouth / 自由鱼]]></name>
+    <email><![CDATA[wongyouth@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[use nfs to share files]]></title>
+    <link href="http://wongyouth.com/blog/2013/04/23/use-nfs-to-share-files/"/>
+    <updated>2013-04-23T14:33:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/04/23/use-nfs-to-share-files</id>
+    <content type="html"><![CDATA[<p>当一个服务器不能负载的时候，就需要增加一个服务器来做负载均衡，这个时候就需要做文件共享。<br>
+这一次我们来看看如何在ubuntu12.04上用nfs来做文件共享</p>
+
+<!-- more -->
+
+<h2>服务器端配置</h2>
+
+<p>Step 1. 安装nfs服务</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo apt-get install nfs-kernel-server
+</code></pre></div>
+<p>Step 2. 设置共享文件夹</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo mkdir -p /exports/files
+#sudo vi /etc/exports
+/exports/files *(rw,async,anonuid=1000,anongid=1000)
+</code></pre></div>
+<p>为什么要做一个映射，而不直接使用实际的文件夹，是因为不需要暴露太多的信息给客户端。<br>
+这里我们把默认的权限设置为uid为1000的用户帐号，这样如果客户端新加一个文件的时候就能自动设置文件所有者属性</p>
+
+<p>Step 3. 映射共享文件夹到实际的文件夹</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo mount --bind /path/to/files /exports/files
+
+# 为了不要每次重复手动设置，可以配置fstab让开机后自动mount该目录
+# sudo vi /etc/fstab
+/path/to/files /exports/files none bind 0 0 # 这里的/path/to/files是实际你要共享的文件夹
+</code></pre></div>
+<p>Step 4. 启动服务</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo exportfs  -ra
+sudo service nfs-kernel-server restart
+</code></pre></div>
+<h2>客户端配置</h2>
+
+<p>Step 1. 安装nfs客户端</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo apt-get install nfs-common
+</code></pre></div>
+<p>Step 2. 做文件映射</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo mkdir -p /data/files
+#sudo vi /etc/fstab
+server:/exports/files /data/files nfs proto=tcp,port=2049
+</code></pre></div>
+<p>在/etc/fstab写的好处是下次系统自启动后会自动加载该配置</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo mount /data/files
+</code></pre></div>
+<p>最后要说的是现在的配置是没有做安全设置的，还需要用防火墙做ip过滤，这个设置方法本片就略过了。</p>
+
+<p>该篇博文参考： <a href="https://help.ubuntu.com/community/SettingUpNFSHowTo">https://help.ubuntu.com/community/SettingUpNFSHowTo</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[config dns server for development]]></title>
+    <link href="http://wongyouth.com/blog/2013/04/22/config-dns-server-for-development/"/>
+    <updated>2013-04-22T19:28:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/04/22/config-dns-server-for-development</id>
+    <content type="html"><![CDATA[<p>开发的时候我们很多时候需要配置一个与线上相同的环境来做测试。<br>
+其中一项就是我们需要用线上相同的域名在做测试，这样就需要在开发环境里面配置域名映射。<br>
+最为简单的情况就是使用/etc/hosts，但是如果是有一团队来做测试，需要所有的人有相同的配置，<br>
+特别是有新成员来的时候，相同的工作要不厌其烦的重复做重复说明。</p>
+
+<p>还有一种办法就是找一台机器来做域名解析服务，其实配置起来也不是很麻烦，下面就让我来讲一个简单的例子。</p>
+
+<!-- more -->
+
+<p>Step 1. 安装bind9</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo apt-get install bind9
+</code></pre></div>
+<p>Step 2. 配置bind</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">#sudo vi /etc/bind/named.conf.options
+
+# 本DNS不知道的域名会到8.8.8.8服务器问
+forwarders {
+  8.8.8.8;
+};
+
+# 允许递归访问
+recursion yes;
+
+# 允许外部访问
+allow-query {anry;};
+</code></pre></div>
+<p>step 3. 配置本地DNS</p>
+
+<p>假如我们要配置一个 taobao.com 的DNS</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">#sudo vi /etc/bind/named.conf.local
+
+zone &quot;taobao.com&quot; {
+  type master;
+  file &quot;/etc/bind/db.taobao.com&quot;;
+};
+
+#sudo vi /etc/bind/db.taobao.com
+
+;
+;$TTL    604800
+$TTL    7d
+@       IN      SOA     taobao.com. admin.taobao.com. (           # admin.taobao.com 表示 admin@taobao.com 管理员email
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+        IN      NS      ns.taobao.com.                            # 设置域名DNSip 最后有个.结尾表示一个全的URL
+@       IN      A       192.168.0.100
+ns      IN      A       192.168.0.100
+mx      IN      MX      192.168.0.100
+www     IN      A       192.168.0.100
+m       IN      CNAME   www                                       # 设置别名
+*       IN      A       192.168.0.100                             # 没有设置过的子域名都转到这个IP
+</code></pre></div>
+<p>通过以上的配置，只要在系统里面把DNS设置好，在浏览器里面输入 <code>taobao.com</code> 就会解析到 192.168.0.100这个IP，而不是真正的淘宝网了。<br>
+如果有路由器的配置权限，只要把路由器的DHCP地址设为这个DNS服务器的IP，这样系统里面设置DNS这一步也可以省略，真正即插即用。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[use lvm with your server]]></title>
+    <link href="http://wongyouth.com/blog/2013/01/30/use-lvm-with-your-server/"/>
+    <updated>2013-01-30T11:22:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/01/30/use-lvm-with-your-server</id>
+    <content type="html"><![CDATA[<p>我们在使用服务器的时候会遇到各种各样的问题，比如今天要说的硬盘管理。</p>
+
+<p>在服务器刚开始使用的时候一般只装配了现阶段要使用的容量，究其原因</p>
+
+<ol>
+<li>资金有限，不能一步到位</li>
+<li>前期无法得知需要多大容量，需要使用一段时间才能评估</li>
+<li>类似需要时增加配额的策略</li>
+</ol>
+
+<p>而如果当发现硬盘容量不够需要增加时，如果安装普通mount方法，需要准备一个更大的硬盘，把原始盘的内容复制过来。<br>
+这个操作会带来一定的风险：</p>
+
+<ol>
+<li>复制需要一定的时间，在复制过程中原始盘内容可能又会增加</li>
+<li>使用新盘后，原始盘多了出来，不能重复使用。</li>
+<li>无法使用多盘来有效分散IO读写压力</li>
+</ol>
+
+<p>使用LVM就可以克服以上的问题。</p>
+
+<!-- more -->
+
+<p>LVM(Logical Volume Manager) 是逻辑卷管理的简写。LVM是建立在硬盘和分区之上的一个逻辑层，来提高磁盘分区管理的灵活性。<br>
+这里涉及到几个概念</p>
+
+<ul>
+<li>物理介质</li>
+<li>物理卷</li>
+<li>卷组</li>
+<li>逻辑卷</li>
+</ul>
+
+<p>朴素的原理是：物理卷建立在物理介质上，一个或者几个物理卷组成一个卷组，从卷组里分割出一个或者几个逻辑卷。<br>
+通过这种方式，可以动态增加物理介质从而增加逻辑卷的大小。</p>
+
+<p>based on:<br>
+  * a disk /dev/xvdd more than 50G<br>
+  * ubuntu 12.04 LTS</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text"># install lvm2
+sudo apt-get install lvm2
+
+# create a pysical volume
+sudo pvcreate /dev/xvdd
+
+# create a volume group with name `yun`
+sudo vgcreate yun /dev/xvdd
+
+# create a logical volume named `gp` from vg yun with 50 giga bytes
+sudo lvcreate -L 50G -n pg yun
+# use max size of vg to create a lv
+sudo lvcreate -l 100%FREE -n pg yun #
+
+# format the logical volume
+sudo mkfs.ext4 /dev/mapper/yun-pg
+
+# mount the lv
+sudo mount /dev/mapper/yun-pg /mnt
+
+# add new device
+sudo pvcreate /dev/xvde
+
+# extend vg
+sudo vgextend yun /dev/mapper/yun-pg
+
+# extend lv to 8G
+sudo lvextend -L8G yun-pg
+
+# extend lv with extra 8G
+sudo lvextend -L+8G /dev/mapper/yun-pg
+</code></pre></div>
+<h2>References</h2>
+
+<ul>
+<li><a href="http://www.howtogeek.com/howto/40702/how-to-manage-and-use-lvm-logical-volume-management-in-ubuntu/">http://www.howtogeek.com/howto/40702/how-to-manage-and-use-lvm-logical-volume-management-in-ubuntu/</a></li>
+<li><a href="http://docstore.mik.ua/manuals/hp-ux/en/5992-4589/ch03s03.html">http://docstore.mik.ua/manuals/hp-ux/en/5992-4589/ch03s03.html</a></li>
+<li><a href="http://www.cclove.me/Create_Extend_and_Reduce_LVM_on_Ubuntu1204.html">http://www.cclove.me/Create_Extend_and_Reduce_LVM_on_Ubuntu1204.html</a></li>
+</ul>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[让你的网站支持SSL]]></title>
+    <link href="http://wongyouth.com/blog/2013/01/05/make-your-site-ssl-enabled/"/>
+    <updated>2013-01-05T20:46:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2013/01/05/make-your-site-ssl-enabled</id>
+    <content type="html"><![CDATA[<p>ssl是什么，ssl就是你在网址里面看到的https。区别于http，如果是ssl的，那么他所传输的数据是保密的，<br>
+别人无法根据监听网络偷取你的信用卡数据，登录密码。现在国内的银行等大型网站基本上都支持ssl了。</p>
+
+<p>我们在用apache作为web服务器来配置一个网站的时候，往往自动忽略掉配置ssl，原因是ssl的CA一把都是收费的。<br>
+而且费用也都不低。现在终于好了，startssl.com支持免费的单域名了。</p>
+
+<!-- more -->
+
+<p>startssl.com支持class1级别的ssl服务，如果你的网站没有多个子域名，那就完全可以使用了。<br>
+如果的你的网站有多个子域名，那么就无法支持全站的ssl。</p>
+
+<p>当然有个折中的方案就是只让登录的处理支持ssl，别的页面不需要ssl，<br>
+下面就是我这个折中方案的做法步骤。</p>
+
+<ul>
+<li>首先需要到startssl.com注册</li>
+<li>验证你的email，domain，30天有效，之后需要重新验证</li>
+<li><p>生成csr文件，当然你可以根据网站向导上的工具来生成</p>
+
+<p>openssl genrsa -des3 -out domain.key 2048        # create key<br>
+  openssl req -new -key domain.key -out domain.csr # create certificate sign request<br>
+  cat domain.csr # 把输出整个复制到startssl.com生成ssl的输入框内</p></li>
+<li><p>复制网站生成的crt内容，保存到文件 domain.crt</p></li>
+<li><p>下载 <a href="http://www.startssl.com/certs/sub.class1.server.ca.pem">chain</a>文件，root <a href="http://www.startssl.com/certs/ca.pem">CA</a> 文件</p></li>
+<li><p>设置apache</p>
+
+<ul>
+<li>a2enmod ssl</li>
+<li>a2enmod rewrite</li>
+<li>修改virtual host配置，当login处理是跳转到ssl，当其他处理时从https跳回到普通的http</li>
+</ul></li>
+</ul>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">    &lt;VirtualHost _default_:80&gt;
+      ServerName example.com
+      ServerAlias *.example.com
+      DocumentRoot /home/httpd/private
+
+      ErrorLog /var/log/apache2/example_errors.log
+      LogLevel warn
+      CustomLog /var/log/apache2/example_ssl_access.log combined
+
+      RewriteEngine On
+      RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+      RewriteCond %{REQUEST_URI} ^/login
+      RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L]
+    &lt;/VirtualHost&gt;
+
+    &lt;VirtualHost _default_:443&gt;
+      ServerName example.com
+      ServerAlias *.example.com
+      DocumentRoot /home/httpd/private
+
+      ErrorLog /var/log/apache2/example_errors.log
+      LogLevel warn
+      CustomLog /var/log/apache2/example_ssl_access.log combined
+
+      SSLEngine on
+      SSLCertificateFile /usr/local/apache/conf/ssl.crt
+      SSLCertificateKeyFile /usr/local/apache/conf/ssl.key
+      SSLCertificateChainFile /usr/local/apache/conf/sub.class1.server.ca.pem
+      SSLCACertificateFile /usr/local/apache/conf/ca.pem
+      RewriteEngine On
+
+      # assets files should not be redirected.
+      RewriteRule \.(css|js|gif|jpe?g|png)(\?[0-9]*)?$ - [NC,L]
+
+      RewriteCond %{HTTP:X-Forwarded-Proto} !=http
+      RewriteCond %{REQUEST_URI} !^/login
+      RewriteRule (.*) http://%{HTTP_HOST}%{REQUEST_URI} [L]
+    &lt;/VirtualHost&gt;
+</code></pre></div>]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[redmine用Git repo镜像脚本]]></title>
+    <link href="http://wongyouth.com/blog/2012/11/05/make-a-git-repo-mirror-for-redmine/"/>
+    <updated>2012-11-05T14:11:00+08:00</updated>
+    <id>http://wongyouth.com/blog/2012/11/05/make-a-git-repo-mirror-for-redmine</id>
+    <content type="html"><![CDATA[<p>一般我用<a href="http://git-scm.com">git</a>来管理代码，后台用<a href="https://github.com/sitaramc/gitolite">gitolite</a>，<a href="http://redmine.org">redmine</a>来管理项目，redmine中可以结合git来参看git提交信息时，非常有用。</p>
+
+<!-- more -->
+
+<p>以下代码参照了<a href="http://blog.buginception.com/blog/2012/04/02/redmine-use-git-code-review">http://blog.buginception.com/blog/2012/04/02/redmine-use-git-code-review</a><br>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (make-mirror.sh)</span> <a href='/downloads/code/make-mirror.sh'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">set</span> -x
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$1&quot;</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Usage: $0 [repo]&quot;</span>
+</span><span class='line'>  <span class="nb">exit </span>1
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">REPO</span><span class="o">=</span><span class="nv">$1</span>.git
+</span><span class='line'><span class="nv">GIT_BASE</span><span class="o">=</span>/home/git/repositories
+</span><span class='line'><span class="nv">MIRROR_PATH</span><span class="o">=</span>/home/jxb/git-mirrors
+</span><span class='line'><span class="nv">REPO_PATH</span><span class="o">=</span><span class="nv">$MIRROR_PATH</span>/<span class="nv">$REPO</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 我們要使用 git clone --mirror 建立一個原始 repo 的鏡像：</span>
+</span><span class='line'><span class="nb">cd</span> <span class="nv">$MIRROR_PATH</span> <span class="o">&amp;&amp;</span> git clone --mirror <span class="nv">$GIT_BASE</span>/<span class="nv">$REPO</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 接下來下一步，由於之後 git 使用者會透過 post-receive hook 來同步兩個 repository，</span>
+</span><span class='line'><span class="c"># 我們直接修改這個境像 repository 的 owner / group 為 git 來讓它有讀寫權限。</span>
+</span><span class='line'>chown -R git:git <span class="nv">$REPO_PATH</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 再來我們要設定原本 repo 的 hooks ：</span>
+</span><span class='line'><span class="nb">cd</span> <span class="nv">$GIT_BASE</span>/<span class="nv">$REPO</span>/hooks
+</span><span class='line'>
+</span><span class='line'>cat &gt; post-receive <span class="s">&lt;&lt;EOS</span>
+</span><span class='line'><span class="s">#!/bin/bash</span>
+</span><span class='line'><span class="s">/usr/bin/git push --mirror $REPO_PATH</span>
+</span><span class='line'><span class="s">EOS</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># 建立完 post-receive 檔案後修改權限：</span>
+</span><span class='line'>chown git:git post-receive
+</span><span class='line'>chmod 700 post-receive
+</span><span class='line'>
+</span><span class='line'><span class="c"># 由於 Git 在做 mirror push 的時候，會保留原始的檔案與資料夾存取權限，</span>
+</span><span class='line'><span class="c"># 在 gitolite 控管下，只有 owner 有讀寫權限，所以一做 mirror push 這個鏡像的 repository 就沒辦法被其他 process 讀取到了，</span>
+</span><span class='line'><span class="c"># 所以我們一開始就要告訴這個 mirror repository 它是被分享的，並且設定它應該要有的存取權限：</span>
+</span><span class='line'>sudo -u git sh <span class="s">&lt;&lt;EOS</span>
+</span><span class='line'><span class="s">set -x</span>
+</span><span class='line'><span class="s">cd $REPO_PATH</span>
+</span><span class='line'><span class="s">chmod a+rX -R ./</span>
+</span><span class='line'><span class="s">git config --add core.sharedRepository 644</span>
+</span><span class='line'><span class="s">EOS</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>使用时需要用root权限</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo sh make-mirror.sh &lt;REPO-NAME&gt; # REPO-NAME 中不带.git后缀
+</code></pre></div>
+<p>如果不需要特别强大的项目管理功能，可以用<a href="https://github.com/gitlabhq/gitlabhq">gitlabhq</a>，这是一个类似<a href="https://github.com">github</a>的代码管理应用，支持fork，pull request功能，非常实用，选择哪个用来管理也就见仁见智了。</p>
+]]></content>
+  </entry>
+  
+</feed>

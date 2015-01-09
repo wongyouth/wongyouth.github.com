@@ -1,0 +1,293 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>git revisions - Ryan's blog</title>
+	<meta name="author" content="Wongyouth / 自由鱼">
+
+	
+	<meta name="description" content="Git Revisions 这篇博文将使用一些代码来讲述Git使用中比较中级的技巧。 Git中 ^ 与 ~ 的区别
+假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表 Git中 ^ 与 ~ 的区别 我们看Git履历会用到git log head~2，git log head^2， &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Ryan's blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://wongyouth.com/blog/2013/07/03/git-revisions/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script src="/javascripts/jiathis.js" type="text/javascript"></script>
+<meta property="wb:webmaster" content="7f133defa7956d35" />
+<meta property="qc:admins" content="544531077671754067140526375" />
+
+</head>
+
+
+<body>
+  <div class="content-container">
+    
+      
+    
+    <div id="content">
+      <div> <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Git Revisions</h1>
+	<div class="entry-content" itemprop="articleBody"><p>这篇博文将使用一些代码来讲述Git使用中比较中级的技巧。</p>
+
+<ul>
+<li>Git中 ^ 与 ~ 的区别</li>
+<li>假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表</li>
+</ul>
+
+<!-- more -->
+
+<h2>Git中 ^ 与 ~ 的区别</h2>
+
+<p>我们看Git履历会用到<code>git log head~2</code>，<code>git log head^2</code>，可能搞不清楚这两者之间有什么区别。<br>
+先来看一段代码：</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text"># Dummy repository
+$ git log --oneline
+77bc990 Third commit
+25d4fc4 Second commit
+f0faab6 First commit
+
+$ git log --oneline HEAD~
+25d4fc4 Second commit
+f0faab6 First commit
+
+$ git log --oneline HEAD^
+25d4fc4 Second commit
+f0faab6 First commit
+
+$ git log --oneline HEAD^^
+f0faab6 First commit
+
+$ git log --oneline HEAD^2
+fatal: ambiguous argument &#39;HEAD^2&#39;: unknown revision or path not in the working tree.
+</code></pre></div>
+<p>从这里可以看出来<code>^</code> 与 <code>~</code> 是有区别的</p>
+
+<p><code>HEAD^2</code> 与 <code>HEAD~2</code> 的区别</p>
+
+<p><code>HEAD^2</code> 表示的是当前HEAD的第二个父节点<br>
+<code>HEAD~2</code> 表示的是当前HEAD的第一个父节点的第一个父节点</p>
+
+<p>记住<code>~</code>永远在第一个父节点上回溯。</p>
+
+<p>什么是第二个父节点？通过命令<code>git log --graph</code>我们看下有代码Merge后的日志</p>
+
+<pre>
+* abe6b95 add post for speed-spider (Ryan Wang, 10 months ago)
+* ad57324 add copyright for seo (Ryan Wang, 11 months ago)
+*   302f545 update octopress (Ryan Wang, 11 months ago)
+|\
+| * 09558c6 Sinatra now correctly returns code 404 when a page is not found. Closes #1198 (Brandon Mathis, 12 months ago)
+| * 1bd2b62 Added support for deploying to github.io (Brandon Mathis, 12 months ago)
+* 9c80295 move CNAME to source/ (Ryan Wang, 11 months ago)
+</pre>
+
+<ul>
+<li>HEAD 是最后一个递交，也就是<code>abe6b95</code></li>
+<li>HEAD的父节点只有一个，所以也就是 <code>ad57324</code>，记为 HEAD~ 或者 HEAD^</li>
+<li><code>ad57324</code>的父节点也只有一个，<code>302f545</code>，记为 HEAD~2, HEAD~~ 或者 HEAD^^</li>
+<li><code>302f545</code>有两个父节点, 第一个为 <code>9c80295</code>, 记为 HEAD~3，第二个父节点 <code>09558c6</code>，记为 HEAD~2^2</li>
+<li><code>09558c6</code>有一个父节点 &#8220;，记为 HEAD~2^2~，或者 HEAD~2^2^</li>
+</ul>
+
+<p>那么如果要表示第二代父节点的第10代祖先的第2个父节点如何表示呢</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">HEAD^2~10^2
+</code></pre></div>
+<h2>假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">$ git checkout -b other f0faab6
+Switched to a new branch &#39;other&#39;
+
+$ #touch file
+$ git add file
+$ git commit -m &quot;Adding file&quot; file
+
+$ git log --oneline
+1762164 Adding file
+f0faab6 First commit
+
+$ git log --oneline other..master
+77bc990 Third commit
+25d4fc4 Second commit
+
+$ git log --oneline master..other
+1762164 Adding file
+</code></pre></div>
+<p>可以看出 <code>..</code> 前后分支对换，结果是不一样的<br>
+这段代码的意思是找出在一个分支上有，但是在另一个分支上没有的递交。<br>
+其原理是先回溯到两者的共同祖先，然后用这个祖先比较分支，这样就得出来只属于那个分支的递交履历。</p>
+
+<p>再看第三段代码：</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">$ git log master...other
+1762164 Adding file
+77bc990 Third commit
+25d4fc4 Second commit
+
+$ git log other...master
+1762164 Adding file
+77bc990 Third commit
+25d4fc4 Second commit
+</code></pre></div>
+<p>比较之前的代码，可以看出来结果与前后关系相同，两者的履历都会显示。</p>
+</div>
+
+</article>
+
+  <div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+ </div>
+    </div>
+    <aside class="sidebar">
+      
+        <section>
+  <h1>近期博文</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/28/solve-conflict-caused-by-git-stash/">解决Git stash冲突问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/">使用chef来自动化部署</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/26/install-ruby-with-readline-supported-on-mac/">install ruby with readline supported on Mac</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/03/git-revisions/">git revisions</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/01/speed-spider-for-web-crawling/">speed spider for web crawling</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>分类</h1>
+    <ul id="category-list"><li><a href='/blog/categories/blog'>blog (1)</a></li><li><a href='/blog/categories/chef'>chef (1)</a></li><li><a href='/blog/categories/database'>database (2)</a></li><li><a href='/blog/categories/git'>git (6)</a></li><li><a href='/blog/categories/mac'>mac (1)</a></li><li><a href='/blog/categories/programming-language'>programming language (2)</a></li><li><a href='/blog/categories/rails'>rails (4)</a></li><li><a href='/blog/categories/ruby'>ruby (3)</a></li><li><a href='/blog/categories/server'>server (8)</a></li></ul>
+</section>
+<section>
+  <h1>近期评论</h1>
+  <script type="text/javascript" src="http://wongyouth.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=32&excerpt_length=200"></script>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/wongyouth">@wongyouth</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'wongyouth',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+      
+    </aside>
+    <span class="toggle-sidebar"></span>
+  </div>
+  <footer id="footer" class="content"><p>
+Copyright &copy; 2014 - <a href="http://wongyouth.com">http://wongyouth.com</a> - Wongyouth / 自由鱼 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
+  <script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'wongyouth';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://wongyouth.com/blog/2013/07/03/git-revisions/';
+        var disqus_url = 'http://wongyouth.com/blog/2013/07/03/git-revisions/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-30466888-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+
+
+</body>
+</html>
