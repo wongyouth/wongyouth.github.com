@@ -271,5 +271,7 @@ Post
 
 `Post[:id]` 写法默认不支持，是使用了 `arel-helpers` 后 `Post.arel_table[:id]` 的缩写方式。
 
-https://github.com/camertron/arel-helpers
-http://www.slideshare.net/camerondutro/advanced-arel-when-activerecord-just-isnt-enough
+### 延伸阅读
+
+* https://github.com/camertron/arel-helpers
+* http://www.slideshare.net/camerondutro/advanced-arel-when-activerecord-just-isnt-enough
