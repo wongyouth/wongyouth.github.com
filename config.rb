@@ -152,22 +152,22 @@ end
 set :frontmatter_extensions, %w(.html .slim)
 
 case ENV['TARGET'].to_s.downcase
-when 'gitcafe'
-  activate :deploy do |deploy|
-    deploy.build_before = true
-    deploy.method = :git
-    # Optional Settings
-    deploy.remote   = "gitcafe" # remote name or git url, default: origin
-    deploy.branch   = "gitcafe-pages" # default: gh-pages
-    # deploy.strategy = :force_push      # commit strategy: can be :force_push or :submodule, default: :force_push
-  end
-else
+when 'github'
   activate :deploy do |deploy|
     deploy.build_before = true
     deploy.method = :git
     # Optional Settings
     # deploy.remote   = "custom-remote" # remote name or git url, default: origin
     # deploy.branch   = "custom-branch" # default: gh-pages
+    # deploy.strategy = :force_push      # commit strategy: can be :force_push or :submodule, default: :force_push
+  end
+else 'gitcafe'
+  activate :deploy do |deploy|
+    deploy.build_before = true
+    deploy.method = :git
+    # Optional Settings
+    deploy.remote   = "gitcafe" # remote name or git url, default: origin
+    deploy.branch   = "gitcafe-pages" # default: gh-pages
     # deploy.strategy = :force_push      # commit strategy: can be :force_push or :submodule, default: :force_push
   end
 end
