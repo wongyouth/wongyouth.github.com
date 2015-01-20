@@ -1,5 +1,5 @@
 <% if current_article %>
   <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="<%= current_article.url %>" data-title="<%= current_article.title %>" data-url="<%= current_article.url %>"></div>
+    <div class="ds-thread" data-thread-key="<%= current_article.url %>" data-title="<%= current_article.title %>" data-url="<%= article_url current_article %>"></div>
   <!-- 多说评论框 end -->
 <% end %>

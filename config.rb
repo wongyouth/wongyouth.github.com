@@ -9,6 +9,8 @@ activate :syntax#, :line_numbers => true
 set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true, :smartypants => true, :no_intra_emphasis => true, :autolink => true
 
+@domain = 'wongyouth.com'.freeze
+
 ###
 # Blog settings
 ###
@@ -140,6 +142,14 @@ helpers do
 
   def page_description
     current_article.try(:description) || current_page.data.description || data.site.description
+  end
+
+  def article_url(article)
+    if environment == :build
+      "http://#{@domain}#{article.url}"
+    else
+      article.url
+    end
   end
 end
 
