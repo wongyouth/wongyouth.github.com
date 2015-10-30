@@ -17,7 +17,7 @@ topic: "技术"
 - 迁移老数据到新的服务里
 - Redmine 服务自启动
 
-<!-- readmore -->
+<!-- more -->
 
 ### Install gitolite
 
@@ -71,7 +71,7 @@ redmine:
 这样 docker 内的 redmine 的 uid,gid 就与git的一致，解决了权限问题。
 - `restart: always` 让这个 container 自启动
 
-## Docker for Postgres
+### Docker for Postgres
 
 上面的样例中数据库使用的是被定制化过的 Postgres ，但是我觉得官方的版本完全够用了。
 迁移的策略是这样的，
