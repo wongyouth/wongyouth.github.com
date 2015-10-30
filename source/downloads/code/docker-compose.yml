@@ -19,11 +19,11 @@ redmine:
     - TZ=Asia/Beijing
     - REDMINE_PORT=3000
     - SMTP_ENABLED=true
-    - SMTP_DOMAIN=jiaoxuebang.com
+    - SMTP_DOMAIN=example.com
     - SMTP_HOST=smtp.exmail.qq.com
     - SMTP_PORT=25
-    - SMTP_USER=red@jiaoxuebang.com
-    - SMTP_PASS=redmine123456
+    - SMTP_USER=redmine@example.com
+    - SMTP_PASS=redminepass
     #- SMTP_STARTTLS=true
     - SMTP_AUTHENTICATION=:login
     - IMAP_ENABLED=false
