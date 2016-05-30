@@ -1,1 +1,0 @@
-(function(){$(function(){return new QRCode($("#qrcode").get(0),window.location.href)})}).call(this);

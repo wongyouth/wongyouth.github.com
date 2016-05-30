@@ -1,1 +1,0 @@
-(function(){$.facebox.settings.loadingImage="/images/facebox/loading-bd54db91.gif",$.facebox.settings.closeImage="/images/facebox/closelabel-b128b128.png",$(function(){return $("a[rel*=facebox]").facebox()})}).call(this);
