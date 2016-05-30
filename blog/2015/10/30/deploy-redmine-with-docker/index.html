@@ -1,0 +1,390 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge;chrome=1' />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="keywords" content="["Redmine", "gitolite", "服务器 Server", "部署 Deployment"]">
+    <meta name="description" content="王永志(Ryan Wang)的个人博客，关注Web，移动，产品，创业。">
+    <meta name="baidu-site-verification" content="whKGC9t0PW" />
+    <title>使用 Docker 来安装 Redmine 并结合 gitolite 使用 - 王永志的独立博客</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+
+    <link href="../../../../../stylesheets/all-6c32d234.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">你的浏览器版本过于<strong>陈旧</strong>。请<a href="http://browsehappy.com/">更新你的浏览器</a> 以提升访问体验。</p>
+    <![endif]-->
+    <header class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">王永志的独立博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/blog/archives">归档</a></li>
+            <li><a href="/blog/topics/技术">技术</a></li>
+            <li><a href="/blog/topics/运营">运营</a></li>
+          </ul>
+          <form class="navbar-form navbar-left" role="search" action='http://www.google.com.hk/search' id="search">
+            <div class="form-group">
+              <input type="hidden" name='sitesearch' value='wongyouth.com'>
+              <input type="text" name='q' class="form-control" placeholder='搜索'>
+            </div>
+          </form>
+        </div><!-- /.navbar-collapse -->
+
+      </div><!-- /.container -->
+    </header>
+
+    <div class="container">
+      <div class="row">
+        <div id="main" role="main" class="col-sm-8 col-md-9">
+            <article><section class="post"><h1 class="post-title"><i class="glyphicon glyphicon-info-sign"></i>使用 Docker 来安装 Redmine 并结合 gitolite 使用</h1><div class="meta text-muted">
+  <div class="date">
+    <i class="glyphicon glyphicon-calendar"></i>
+    <abbr class="timeago" title="2015-10-30T11:16:00+08:00">2015-10-30 11:16</abbr>
+  </div>
+  <div class="comments">
+    <i class="glyphicon glyphicon-comment"></i>
+    <span class="ds-thread-count" data-thread-key="/blog/2015/10/30/deploy-redmine-with-docker/" data-count-type="comments"></span>
+  </div>
+  <div class="tags">
+    <i class="glyphicon glyphicon-tags"></i>
+    <a href="/blog/tags/docker/">Docker</a>
+  </div>
+</div>
+
+<div class="post-content"><p><a href="http://wongyouth.com/blog/2015/07/02/use-docker-with-rails/">上一篇</a>介绍了 Docker 之后，仅仅过了3个月时间，Docker又增加了很多变化:
+比如 <a href="https://docs.docker.com/machine/install-machine/">Docker Machine</a>, <a href="https://docs.docker.com/compose/install/">Docker Compose</a>。</p>
+
+<p>最近项目里要把 Redmine 从盛大云到阿里云，正好可以发挥 Docker 的强项。这里分析一下需要实现的功能：</p>
+
+<ul>
+<li>Redmine 服务</li>
+<li>Postgres 数据库服务</li>
+<li><a href="https://github.com/sitaramc/gitolite">gitolite</a> Git repo 服务</li>
+<li>迁移老数据到新的服务里</li>
+<li>Redmine 服务自启动</li>
+</ul>
+
+
+
+<h3>Install gitolite</h3>
+
+<p>虽然 gitolite 也有docker 提供，但是 redmine 需要访问 git 下面的 repo 文件，所以会有权限问题。
+Docker 现在对 权限映射 这方面的支持还不是很好。所以我决定把 gitolite 安装在宿主机器内部。
+所以 gitolite 按照官网的安装步骤安装。旧的 repo 数据只要复制覆盖 /home/git/repositories 就可以了。</p>
+
+<h3>Docker for Redmine</h3>
+
+<p>在 <a href="https://hub.docker.com">Docker hub</a> 里搜了一下可用的 Redmine 之后，
+发现 <a href="https://hub.docker.com/r/sameersbn/redmine/">sameersbn/redmine 版本</a> 比<a href="https://hub.docker.com/_/redmine/">官方版本</a> 多了很多星，
+连下载量也比官方多了一倍不止。比较了下内容之后发现官方版无法支持外发邮件，所以只有选择 <code>sameersbn</code> 版了。</p>
+
+<p>如果是完全新安装不需要迁移数据的话，可以直接使用提供的样例 <a href="https://raw.githubusercontent.com/sameersbn/docker-redmine/master/docker-compose.yml">docker-compose.yml</a> 文件了。
+所以 Redmine 这部分还是比较简单，使用了</p>
+<pre class="highlight plaintext"><code>redmine:
+  image: quay.io/sameersbn/redmine:latest
+  links:
+    - postgresql:postgresql
+  environment:
+    - USERMAP_UID=1001
+    - USERMAP_GID=1001
+    - TZ=Asia/Beijing
+    - REDMINE_PORT=3000
+    - SMTP_ENABLED=true
+    - SMTP_DOMAIN=example.com
+    - SMTP_HOST=smtp.exmail.qq.com
+    - SMTP_PORT=25
+    - SMTP_USER=user@example.com
+    - SMTP_PASS=exampass
+    - SMTP_AUTHENTICATION=:login
+    - IMAP_ENABLED=false
+    - IMAP_USER=mailer@example.com
+    - IMAP_PASS=password
+    - IMAP_HOST=imap.gmail.com
+    - IMAP_PORT=993
+    - IMAP_SSL=true
+    - IMAP_INTERVAL=30
+  ports:
+    - "80:80"
+  volumes:
+    - /data/redmine:/home/redmine/data
+    - /home/git/repositories:/home/redmine/repositories
+  restart: always
+</code></pre>
+
+<ul>
+<li>其中老服务器中用户上传的文件需要迁移到 /data/redmine/files 文件夹中就可以了。</li>
+<li><code>USERMAP_UID=1001 USERMAP_GID=1001</code> 1001 是 git 用户的 uid, gid。
+这样 docker 内的 redmine 的 uid,gid 就与git的一致，解决了权限问题。</li>
+<li><code>restart: always</code> 让这个 container 自启动</li>
+</ul>
+
+<h3>Docker for Postgres</h3>
+
+<p>上面的样例中数据库使用的是被定制化过的 Postgres ，但是我觉得官方的版本完全够用了。
+迁移的策略是这样的，</p>
+
+<ol>
+<li><p>先用 docker 启动一个最基本的 postgres image: <code>docker-compose up -f /data/pg.yml</code></p>
+<pre class="highlight plaintext"><code>postgresql:
+  image: postgres
+  environment:
+    - POSTGRES_USER=redmine
+    - POSTGRES_PASSWORD=secret
+    - PGDATA=/data
+  volumes:
+    - /data/pg:/data
+</code></pre></li>
+<li><p>开启一个 postgres client 导入数据库旧数据，默认数据库名字是redmine</p>
+<pre class="highlight plaintext"><code>$ docker run --link data_postgresql_1:db -v /data:/data -it postgres bash
+$ psql -h $DB_PORT_5432_TCP_ADDR -U redmine redmine &lt; /data/pg_old_data.sql
+</code></pre></li>
+<li><p>链接 Redmine docker 到 postgresql docker 就可以完工了。</p></li>
+</ol>
+
+<p>完整的 docker-compose.yml 文件</p>
+
+<p><figure class='code'><figcaption><span>docker-compose.yml</span> <a href='/downloads/code/docker-compose.yml'>源码</a></figcaption></p>
+<pre class="highlight yaml"><code><span class="s">postgresql</span><span class="pi">:</span>
+  <span class="s">image</span><span class="pi">:</span> <span class="s">postgres</span>
+  <span class="s">environment</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">POSTGRES_USER=redmine</span>
+    <span class="pi">-</span> <span class="s">POSTGRES_PASSWORD=redmine</span>
+    <span class="pi">-</span> <span class="s">PGDATA=/data</span>
+  <span class="s">volumes</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">/data/pg:/data</span>
+  <span class="s">restart</span><span class="pi">:</span> <span class="s">always</span>
+
+<span class="s">redmine</span><span class="pi">:</span>
+  <span class="s">image</span><span class="pi">:</span> <span class="s">quay.io/sameersbn/redmine:latest</span>
+  <span class="s">links</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">postgresql:postgresql</span>
+  <span class="s">environment</span><span class="pi">:</span>
+    <span class="c1">#- REDMINE_VERSION=3.0.1</span>
+    <span class="pi">-</span> <span class="s">USERMAP_UID=1001</span>
+    <span class="pi">-</span> <span class="s">USERMAP_GID=1001</span>
+    <span class="pi">-</span> <span class="s">TZ=Asia/Beijing</span>
+    <span class="pi">-</span> <span class="s">REDMINE_PORT=3000</span>
+    <span class="pi">-</span> <span class="s">SMTP_ENABLED=true</span>
+    <span class="pi">-</span> <span class="s">SMTP_DOMAIN=example.com</span>
+    <span class="pi">-</span> <span class="s">SMTP_HOST=smtp.exmail.qq.com</span>
+    <span class="pi">-</span> <span class="s">SMTP_PORT=25</span>
+    <span class="pi">-</span> <span class="s">SMTP_USER=redmine@example.com</span>
+    <span class="pi">-</span> <span class="s">SMTP_PASS=redminepass</span>
+    <span class="c1">#- SMTP_STARTTLS=true</span>
+    <span class="pi">-</span> <span class="s">SMTP_AUTHENTICATION=:login</span>
+    <span class="pi">-</span> <span class="s">IMAP_ENABLED=false</span>
+    <span class="pi">-</span> <span class="s">IMAP_USER=mailer@example.com</span>
+    <span class="pi">-</span> <span class="s">IMAP_PASS=password</span>
+    <span class="pi">-</span> <span class="s">IMAP_HOST=imap.gmail.com</span>
+    <span class="pi">-</span> <span class="s">IMAP_PORT=993</span>
+    <span class="pi">-</span> <span class="s">IMAP_SSL=true</span>
+    <span class="pi">-</span> <span class="s">IMAP_INTERVAL=30</span>
+    <span class="pi">-</span> <span class="s">UNICORN_TIMEOUT=300</span>
+    <span class="pi">-</span> <span class="s">NGINX_MAX_UPLOAD_SIZE=100m</span>
+  <span class="s">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s2">"</span><span class="s">80:80"</span>
+  <span class="s">volumes</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">/data/redmine:/home/redmine/data</span>
+    <span class="pi">-</span> <span class="s">/home/git/repositories:/home/redmine/repositories</span>
+  <span class="s">restart</span><span class="pi">:</span> <span class="s">always</span>
+
+</code></pre>
+
+<p></firgure></p>
+</div><div class="post-copyright">除非注明，文章均为 <a href="http://wongyouth.com">wongyouth</a> 原创，转载请注明本文地址：<a href="http://wongyouth.com/blog/2015/10/30/deploy-redmine-with-docker/">http://wongyouth.com/blog/2015/10/30/deploy-redmine-with-docker/</a></div><ul class="pager"><li><a href="/blog/2015/07/02/use-docker-with-rails/">&laquo; 上一篇 &laquo;</a></li><li><a href="/blog/2016/02/24/elk-with-rails-log-analytics/">&raquo; 下一篇 &raquo;</a></li></ul></section>  <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="/blog/2015/10/30/deploy-redmine-with-docker/" data-title="使用 Docker 来安装 Redmine 并结合 gitolite 使用" data-url="http://wongyouth.com/blog/2015/10/30/deploy-redmine-with-docker/"></div>
+  <!-- 多说评论框 end -->
+
+</article>
+
+
+        </div>
+        <div class="col-sm-4 col-md-3">
+          <ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    关于我
+  </li>
+
+  <li class="list-group-item profile">
+    <img src="http://tp1.sinaimg.cn/1429798952/50/5627311745/1" alt="破而后立">
+    系统架构师<br>
+    全栈式 Rails 开发者<br>
+    最近折腾了一些前端框架<br>
+    关注 Web，移动，创业<br>
+    <div class="social">
+      <a class="wechat" href="/images/social/my_wechat-bcc4527b.png" rel='facebox' title="Wechat">微信</a>
+      <a class="github" href="https://github.com/wongyouth" title="GitHub">GitHub</a>
+      <a class="twitter" href="http://twitter.com/wongyouth" title="Twitter">Twitter</a>
+      <a class="rss" href="/atom.xml" title="RSS">RSS</a>
+    </div>
+  </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    近期文章
+  </li>
+
+    <li class="list-group-item">
+      <a href="/blog/2016/02/24/elk-with-rails-log-analytics/">ELK 套件分析Rails日志</a> <span class="text-muted">02-24</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2015/10/30/deploy-redmine-with-docker/">使用 Docker 来安装 Redmine 并结合 gitolite 使用</a> <span class="text-muted">10-30</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2015/07/02/use-docker-with-rails/">与 Docker 一起使用 Rails</a> <span class="text-muted">07-02</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2015/01/09/use-gpg-to-encrypt-your-data/">使用 GPG 加密数据</a> <span class="text-muted">01-09</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2014/10/15/postgresql-tips/">PostgreSQL Tips</a> <span class="text-muted">10-15</span>
+    </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    近期评论
+  </li>
+  <li class="list-group-item recent-comments">
+    <ul class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-admin="1" data-excerpt-length="70"></ul>
+  </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    标签云
+  </li>
+
+  <li class="list-group-item" id="tagcloud">
+      <a rel="3" href="/blog/tags/博客/">博客</a>
+      <a rel="9" href="/blog/tags/ruby/">Ruby</a>
+      <a rel="5" href="/blog/tags/rails/">Rails</a>
+      <a rel="6" href="/blog/tags/server/">Server</a>
+      <a rel="6" href="/blog/tags/git/">Git</a>
+      <a rel="1" href="/blog/tags/淘宝/">淘宝</a>
+      <a rel="9" href="/blog/tags/运维/">运维</a>
+      <a rel="4" href="/blog/tags/db/">DB</a>
+      <a rel="2" href="/blog/tags/postgresql/">Postgresql</a>
+      <a rel="1" href="/blog/tags/mongodb/">Mongodb</a>
+      <a rel="1" href="/blog/tags/nosql/">Nosql</a>
+      <a rel="1" href="/blog/tags/vim/">Vim</a>
+      <a rel="1" href="/blog/tags/redmine/">Redmine</a>
+      <a rel="1" href="/blog/tags/项目管理/">项目管理</a>
+      <a rel="1" href="/blog/tags/ssl/">SSL</a>
+      <a rel="2" href="/blog/tags/lvm/">LVM</a>
+      <a rel="1" href="/blog/tags/dns/">DNS</a>
+      <a rel="1" href="/blog/tags/bind9/">Bind9</a>
+      <a rel="1" href="/blog/tags/nfs/">NFS</a>
+      <a rel="2" href="/blog/tags/mac/">Mac</a>
+      <a rel="1" href="/blog/tags/chef/">Chef</a>
+      <a rel="1" href="/blog/tags/自媒体/">自媒体</a>
+      <a rel="2" href="/blog/tags/数据/">数据</a>
+      <a rel="1" href="/blog/tags/中国城市/">中国城市</a>
+      <a rel="3" href="/blog/tags/数据库/">数据库</a>
+      <a rel="1" href="/blog/tags/postgresql/">PostgreSQL</a>
+      <a rel="1" href="/blog/tags/安全/">安全</a>
+      <a rel="2" href="/blog/tags/docker/">Docker</a>
+      <a rel="1" href="/blog/tags/logstash/">Logstash</a>
+  </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    年份
+  </li>
+
+    <li class="list-group-item">
+      <span class="badge">1</span>
+      <a href="/blog/2016/">2016</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">3</span>
+      <a href="/blog/2015/">2015</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">10</span>
+      <a href="/blog/2014/">2014</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">8</span>
+      <a href="/blog/2013/">2013</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">11</span>
+      <a href="/blog/2012/">2012</a>
+    </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item">
+    <div id="qrcode"></div>
+    <div>使用手机阅读或分享至微信朋友圈</div>
+  </li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="footer" class="text-center">
+      <div>
+        ©2014 <a href="http://wongyouth.com">http://wongyouth.com</a>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1000394755'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/z_stat.php%3Fid%3D1000394755%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        <script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F84b5475b333b745a8ca4850a4852fe67' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+      </div>
+      <div class="credit">Powered by <a href="http://middlemanapp.com">Middleman</a></div>
+    </div>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+    e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+    e.src='//www.google-analytics.com/analytics.js';
+    r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-30466888-1');ga('send','pageview');
+</script>
+
+
+    <script src="../../../../../javascripts/all-7bcf5a86.js" type="text/javascript"></script>
+        <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":["mshare","weixin","tsina","qzone","tqq","renren","kaixin001"],"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"2","bdPos":"right","bdTop":"150"},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+      <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wongyouth"};
+        (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0] 
+           || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+        </script>
+      <!-- 多说公共JS代码 end -->
+
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js" type="text/javascript"></script>
+    <![endif]-->
+  </body>
+</html>

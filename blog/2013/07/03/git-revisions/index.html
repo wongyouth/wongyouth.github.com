@@ -1,0 +1,354 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge;chrome=1' />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="keywords" content="wongyouth, Ryan Wang, 王永志, Rails, Javascript, Web, 移动, 产品, 创业">
+    <meta name="description" content="王永志(Ryan Wang)的个人博客，关注Web，移动，产品，创业。">
+    <meta name="baidu-site-verification" content="whKGC9t0PW" />
+    <title>Git revisions - 王永志的独立博客</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+
+    <link href="../../../../../stylesheets/all-6c32d234.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">你的浏览器版本过于<strong>陈旧</strong>。请<a href="http://browsehappy.com/">更新你的浏览器</a> 以提升访问体验。</p>
+    <![endif]-->
+    <header class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">王永志的独立博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/blog/archives">归档</a></li>
+            <li><a href="/blog/topics/技术">技术</a></li>
+            <li><a href="/blog/topics/运营">运营</a></li>
+          </ul>
+          <form class="navbar-form navbar-left" role="search" action='http://www.google.com.hk/search' id="search">
+            <div class="form-group">
+              <input type="hidden" name='sitesearch' value='wongyouth.com'>
+              <input type="text" name='q' class="form-control" placeholder='搜索'>
+            </div>
+          </form>
+        </div><!-- /.navbar-collapse -->
+
+      </div><!-- /.container -->
+    </header>
+
+    <div class="container">
+      <div class="row">
+        <div id="main" role="main" class="col-sm-8 col-md-9">
+            <article><section class="post"><h1 class="post-title"><i class="glyphicon glyphicon-info-sign"></i>Git revisions</h1><div class="meta text-muted">
+  <div class="date">
+    <i class="glyphicon glyphicon-calendar"></i>
+    <abbr class="timeago" title="2013-07-03T16:01:00+08:00">2013-07-03 16:01</abbr>
+  </div>
+  <div class="comments">
+    <i class="glyphicon glyphicon-comment"></i>
+    <span class="ds-thread-count" data-thread-key="/blog/2013/07/03/git-revisions/" data-count-type="comments"></span>
+  </div>
+  <div class="tags">
+    <i class="glyphicon glyphicon-tags"></i>
+    <a href="/blog/tags/git/">Git</a>
+  </div>
+</div>
+
+<div class="post-content"><p>这篇博文将使用一些代码来讲述Git使用中比较中级的技巧。</p>
+
+<ul>
+<li>Git中 ^ 与 ~ 的区别</li>
+<li>假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表</li>
+</ul>
+
+
+
+<h2>Git中 ^ 与 ~ 的区别</h2>
+
+<p>我们看Git履历会用到<code>git log head~2</code>，<code>git log head^2</code>，可能搞不清楚这两者之间有什么区别。
+先来看一段代码：</p>
+<pre class="highlight plaintext"><code># Dummy repository
+$ git log --oneline
+77bc990 Third commit
+25d4fc4 Second commit
+f0faab6 First commit
+
+$ git log --oneline HEAD~
+25d4fc4 Second commit
+f0faab6 First commit
+
+$ git log --oneline HEAD^
+25d4fc4 Second commit
+f0faab6 First commit
+
+$ git log --oneline HEAD^^
+f0faab6 First commit
+
+$ git log --oneline HEAD^2
+fatal: ambiguous argument 'HEAD^2': unknown revision or path not in the working tree.
+</code></pre>
+
+<p>从这里可以看出来<code>^</code> 与 <code>~</code> 是有区别的</p>
+
+<p><code>HEAD^2</code> 与 <code>HEAD~2</code> 的区别</p>
+
+<p><code>HEAD^2</code> 表示的是当前HEAD的第二个父节点
+<code>HEAD~2</code> 表示的是当前HEAD的第一个父节点的第一个父节点</p>
+
+<p>记住<code>~</code>永远在第一个父节点上回溯。</p>
+
+<p>什么是第二个父节点？通过命令<code>git log --graph</code>我们看下有代码Merge后的日志</p>
+
+<pre>
+* abe6b95 add post for speed-spider (Ryan Wang, 10 months ago)
+* ad57324 add copyright for seo (Ryan Wang, 11 months ago)
+*   302f545 update octopress (Ryan Wang, 11 months ago)
+|\
+| * 09558c6 Sinatra now correctly returns code 404 when a page is not found. Closes #1198 (Brandon Mathis, 12 months ago)
+| * 1bd2b62 Added support for deploying to github.io (Brandon Mathis, 12 months ago)
+* 9c80295 move CNAME to source/ (Ryan Wang, 11 months ago)
+</pre>
+
+<ul>
+<li>HEAD 是最后一个递交，也就是<code>abe6b95</code></li>
+<li>HEAD的父节点只有一个，所以也就是 <code>ad57324</code>，记为 HEAD~ 或者 HEAD^</li>
+<li><code>ad57324</code>的父节点也只有一个，<code>302f545</code>，记为 HEAD~2, HEAD~~ 或者 HEAD^^</li>
+<li><code>302f545</code>有两个父节点, 第一个为 <code>9c80295</code>, 记为 HEAD~3，第二个父节点 <code>09558c6</code>，记为 HEAD~2^2</li>
+<li><code>09558c6</code>有一个父节点 &ldquo;，记为 HEAD~2^2~，或者 HEAD~2^2^</li>
+</ul>
+
+<p>那么如果要表示第二代父节点的第10代祖先的第2个父节点如何表示呢</p>
+<pre class="highlight plaintext"><code>HEAD^2~10^2
+</code></pre>
+
+<h2>假设从一个分支衍生出了另一个分支，如何取得该分支的所有递交列表</h2>
+<pre class="highlight plaintext"><code>$ git checkout -b other f0faab6
+Switched to a new branch 'other'
+
+$ #touch file
+$ git add file
+$ git commit -m "Adding file" file
+
+$ git log --oneline
+1762164 Adding file
+f0faab6 First commit
+
+$ git log --oneline other..master
+77bc990 Third commit
+25d4fc4 Second commit
+
+$ git log --oneline master..other
+1762164 Adding file
+</code></pre>
+
+<p>可以看出 <code>..</code> 前后分支对换，结果是不一样的
+这段代码的意思是找出在一个分支上有，但是在另一个分支上没有的递交。
+其原理是先回溯到两者的共同祖先，然后用这个祖先比较分支，这样就得出来只属于那个分支的递交履历。</p>
+
+<p>再看第三段代码：</p>
+<pre class="highlight plaintext"><code>$ git log master...other
+1762164 Adding file
+77bc990 Third commit
+25d4fc4 Second commit
+
+$ git log other...master
+1762164 Adding file
+77bc990 Third commit
+25d4fc4 Second commit
+</code></pre>
+
+<p>比较之前的代码，可以看出来结果与前后关系相同，两者的履历都会显示。</p>
+</div><div class="post-copyright">除非注明，文章均为 <a href="http://wongyouth.com">wongyouth</a> 原创，转载请注明本文地址：<a href="http://wongyouth.com/blog/2013/07/03/git-revisions/">http://wongyouth.com/blog/2013/07/03/git-revisions/</a></div><ul class="pager"><li><a href="/blog/2013/06/01/speed-spider-for-web-crawling/">&laquo; 上一篇 &laquo;</a></li><li><a href="/blog/2013/09/26/install-ruby-with-readline-supported-on-mac/">&raquo; 下一篇 &raquo;</a></li></ul></section>  <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="/blog/2013/07/03/git-revisions/" data-title="Git revisions" data-url="http://wongyouth.com/blog/2013/07/03/git-revisions/"></div>
+  <!-- 多说评论框 end -->
+
+</article>
+
+
+        </div>
+        <div class="col-sm-4 col-md-3">
+          <ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    关于我
+  </li>
+
+  <li class="list-group-item profile">
+    <img src="http://tp1.sinaimg.cn/1429798952/50/5627311745/1" alt="破而后立">
+    系统架构师<br>
+    全栈式 Rails 开发者<br>
+    最近折腾了一些前端框架<br>
+    关注 Web，移动，创业<br>
+    <div class="social">
+      <a class="wechat" href="/images/social/my_wechat-bcc4527b.png" rel='facebox' title="Wechat">微信</a>
+      <a class="github" href="https://github.com/wongyouth" title="GitHub">GitHub</a>
+      <a class="twitter" href="http://twitter.com/wongyouth" title="Twitter">Twitter</a>
+      <a class="rss" href="/atom.xml" title="RSS">RSS</a>
+    </div>
+  </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    近期文章
+  </li>
+
+    <li class="list-group-item">
+      <a href="/blog/2016/02/24/elk-with-rails-log-analytics/">ELK 套件分析Rails日志</a> <span class="text-muted">02-24</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2015/10/30/deploy-redmine-with-docker/">使用 Docker 来安装 Redmine 并结合 gitolite 使用</a> <span class="text-muted">10-30</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2015/07/02/use-docker-with-rails/">与 Docker 一起使用 Rails</a> <span class="text-muted">07-02</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2015/01/09/use-gpg-to-encrypt-your-data/">使用 GPG 加密数据</a> <span class="text-muted">01-09</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2014/10/15/postgresql-tips/">PostgreSQL Tips</a> <span class="text-muted">10-15</span>
+    </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    近期评论
+  </li>
+  <li class="list-group-item recent-comments">
+    <ul class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-admin="1" data-excerpt-length="70"></ul>
+  </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    标签云
+  </li>
+
+  <li class="list-group-item" id="tagcloud">
+      <a rel="3" href="/blog/tags/博客/">博客</a>
+      <a rel="9" href="/blog/tags/ruby/">Ruby</a>
+      <a rel="5" href="/blog/tags/rails/">Rails</a>
+      <a rel="6" href="/blog/tags/server/">Server</a>
+      <a rel="6" href="/blog/tags/git/">Git</a>
+      <a rel="1" href="/blog/tags/淘宝/">淘宝</a>
+      <a rel="9" href="/blog/tags/运维/">运维</a>
+      <a rel="4" href="/blog/tags/db/">DB</a>
+      <a rel="2" href="/blog/tags/postgresql/">Postgresql</a>
+      <a rel="1" href="/blog/tags/mongodb/">Mongodb</a>
+      <a rel="1" href="/blog/tags/nosql/">Nosql</a>
+      <a rel="1" href="/blog/tags/vim/">Vim</a>
+      <a rel="1" href="/blog/tags/redmine/">Redmine</a>
+      <a rel="1" href="/blog/tags/项目管理/">项目管理</a>
+      <a rel="1" href="/blog/tags/ssl/">SSL</a>
+      <a rel="2" href="/blog/tags/lvm/">LVM</a>
+      <a rel="1" href="/blog/tags/dns/">DNS</a>
+      <a rel="1" href="/blog/tags/bind9/">Bind9</a>
+      <a rel="1" href="/blog/tags/nfs/">NFS</a>
+      <a rel="2" href="/blog/tags/mac/">Mac</a>
+      <a rel="1" href="/blog/tags/chef/">Chef</a>
+      <a rel="1" href="/blog/tags/自媒体/">自媒体</a>
+      <a rel="2" href="/blog/tags/数据/">数据</a>
+      <a rel="1" href="/blog/tags/中国城市/">中国城市</a>
+      <a rel="3" href="/blog/tags/数据库/">数据库</a>
+      <a rel="1" href="/blog/tags/postgresql/">PostgreSQL</a>
+      <a rel="1" href="/blog/tags/安全/">安全</a>
+      <a rel="2" href="/blog/tags/docker/">Docker</a>
+      <a rel="1" href="/blog/tags/logstash/">Logstash</a>
+  </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    年份
+  </li>
+
+    <li class="list-group-item">
+      <span class="badge">1</span>
+      <a href="/blog/2016/">2016</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">3</span>
+      <a href="/blog/2015/">2015</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">10</span>
+      <a href="/blog/2014/">2014</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">8</span>
+      <a href="/blog/2013/">2013</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">11</span>
+      <a href="/blog/2012/">2012</a>
+    </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item">
+    <div id="qrcode"></div>
+    <div>使用手机阅读或分享至微信朋友圈</div>
+  </li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="footer" class="text-center">
+      <div>
+        ©2014 <a href="http://wongyouth.com">http://wongyouth.com</a>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1000394755'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/z_stat.php%3Fid%3D1000394755%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        <script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F84b5475b333b745a8ca4850a4852fe67' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+      </div>
+      <div class="credit">Powered by <a href="http://middlemanapp.com">Middleman</a></div>
+    </div>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+    e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+    e.src='//www.google-analytics.com/analytics.js';
+    r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-30466888-1');ga('send','pageview');
+</script>
+
+
+    <script src="../../../../../javascripts/all-7bcf5a86.js" type="text/javascript"></script>
+        <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":["mshare","weixin","tsina","qzone","tqq","renren","kaixin001"],"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"2","bdPos":"right","bdTop":"150"},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+      <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wongyouth"};
+        (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0] 
+           || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+        </script>
+      <!-- 多说公共JS代码 end -->
+
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js" type="text/javascript"></script>
+    <![endif]-->
+  </body>
+</html>

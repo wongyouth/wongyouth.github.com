@@ -1,0 +1,700 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>王永志的独立博客</title>
+  <id>http://wongyouth.com/blog</id>
+  <link href="http://wongyouth.com/blog"/>
+  <link href="http://wongyouth.com/feed.xml" rel="self"/>
+  <updated>2016-02-24T14:36:00+08:00</updated>
+  <author>
+    <name>wongyouth</name>
+  </author>
+  <entry>
+    <title>ELK 套件分析Rails日志</title>
+    <link rel="alternate" href="http://wongyouth.com/blog/2016/02/24/elk-with-rails-log-analytics/"/>
+    <id>http://wongyouth.com/blog/2016/02/24/elk-with-rails-log-analytics/</id>
+    <published>2016-02-24T14:36:00+08:00</published>
+    <updated>2016-02-24T15:58:26+08:00</updated>
+    <author>
+      <name>wongyouth</name>
+    </author>
+    <content type="html">&lt;p&gt;当系统访问很频繁，服务器日志增多到一定量时，仅靠 &lt;code&gt;tail -f&lt;/code&gt; 已经很难分析出有用信息了。
+可能就只能进行一些简单的排除工作，比如根据日志内的时间信息，查找该时间附近有什么特殊访问之类。&lt;/p&gt;
+
+&lt;p&gt;即使这样用有时候也会比较麻烦，因为当你的应用服务器增多时，每个服务器都是单独写到本机日志文件内，造成了分析日志的难度。
+这个时候就很需要一个工具来收集各个服务器日志来统一处理。&lt;/p&gt;
+
+&lt;p&gt;今天说的就是有关于这个问题的解法。&lt;/p&gt;
+
+
+
+&lt;p&gt;日志收集的工具也有不少 &lt;a href="https://flume.apache.org/"&gt;Flume&lt;/a&gt;，&lt;a href="http://storm.apache.org/"&gt;storm&lt;/a&gt;。 今天说的是 &lt;a href="https://www.elastic.co/webinars/introduction-elk-stack"&gt;ELK stack&lt;/a&gt; 这个套件。这个套件由 3 个部分组成：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.elastic.co/products/elasticsearch"&gt;ElasticSearch&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.elastic.co/products/logstash"&gt;Logstash&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.elastic.co/products/kibana"&gt;Kibana&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;简单地说: &lt;code&gt;Logstash&lt;/code&gt; 用来收集数据；&lt;code&gt;ElasticSearch&lt;/code&gt; 存储数据；&lt;code&gt;Kibana&lt;/code&gt; 是表现层，Web 接口用来对接用户UI。&lt;/p&gt;
+
+&lt;h3&gt;ElasticSearch&lt;/h3&gt;
+
+&lt;p&gt;相信 &lt;code&gt;ElasticSearch&lt;/code&gt; 大家可能听说的，是做全文搜索的，跟 &lt;code&gt;Solr&lt;/code&gt; 差不多是基于 &lt;code&gt;Lucene&lt;/code&gt; 来做的。他有几个特点：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;RESTful Web 接口&lt;/li&gt;
+&lt;li&gt;API 数据基于 JSON&lt;/li&gt;
+&lt;li&gt;分布式架构&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;当然 &lt;code&gt;Solr&lt;/code&gt; 现在也可以放到多台服务器上组成集群了，但是 &lt;code&gt;ElasticSearch&lt;/code&gt; 从一开始就是这么设计的，这种与生俱来的特性与后天修补出来的体验是否一样，你懂得。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ElasticSearch&lt;/code&gt; 在 &lt;code&gt;ELK&lt;/code&gt; 套件中处于数据存储的身份，无疑是最核心的。&lt;/p&gt;
+
+&lt;h3&gt;Logstash&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;Logstash&lt;/code&gt; 可以单独使用，比如把各个服务器的日志收集起来集成到一个日志文件内，这样只要看一个日志文件，就不需要费力到每个服务器查看日志了。
+当然结合今天介绍的套件使用无疑是最强大的。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Logstash&lt;/code&gt; 作为输入接口，他有很多插件可用，对接文件，对接网络接口，甚至对接 ElasticSearch 作为输入。
+比如在我们的例子中，要收集多台日志文件，Logstash 可以开 TCP 端口，各个日志服务器使用 &lt;a href="https://www.elastic.co/downloads/beats/filebeat"&gt;filebeat&lt;/a&gt; 代理来检查日志输出，一旦有新的日志输出到文件，
+&lt;code&gt;filebeat&lt;/code&gt; 就会把该内容发送到 &lt;code&gt;Logstash&lt;/code&gt; 配置的端口内，这样就完成了日志的收集工作。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Logstash&lt;/code&gt; 在收集了日志后，还可以对数据进行 分析，拆解成多个字段，再输出到 &lt;code&gt;ElasticSearch&lt;/code&gt; 中，这样就能使用 &lt;code&gt;ElasticSearch&lt;/code&gt; 强大的功能对这些字段进行搜索了。&lt;/p&gt;
+
+&lt;h3&gt;Kibana&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;Kibana&lt;/code&gt; 作为最后的用户 UI 接口，支持了很多分析的功能。比如分析每天的PV情况，一天内访问的高峰与低谷，异常攻击情况，瓶颈的处理等。&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Kibana截图" src="images/blog/kibana-3d23475b.png" /&gt;&lt;/p&gt;
+
+&lt;h2&gt;实际应用&lt;/h2&gt;
+
+&lt;p&gt;下面是配置的 Rails4 日志的分析结构&lt;/p&gt;
+
+&lt;p&gt;&lt;figure class='code'&gt;&lt;figcaption&gt;&lt;span&gt;logstash-pattern-rails4.conf&lt;/span&gt; &lt;a href='/downloads/code/logstash-pattern-rails4.conf'&gt;源码&lt;/a&gt;&lt;/figcaption&gt;&lt;/p&gt;
+&lt;pre class="highlight conf"&gt;&lt;code&gt;&lt;span class="c"&gt;# Rails4 log prefix
+&lt;/span&gt;&lt;span class="n"&gt;LOGLEVELSINGLE&lt;/span&gt; %{&lt;span class="n"&gt;WORD&lt;/span&gt;}
+&lt;span class="n"&gt;PROCESSNUM&lt;/span&gt; %{&lt;span class="n"&gt;NUMBER&lt;/span&gt;}
+&lt;span class="n"&gt;RAILS4PREFIX&lt;/span&gt; %{&lt;span class="n"&gt;LOGLEVELSINGLE&lt;/span&gt;}, \[%{&lt;span class="n"&gt;TIMESTAMP_ISO8601&lt;/span&gt;} &lt;span class="c"&gt;#%{PROCESSNUM}]  %{LOGLEVEL} -- : 
+&lt;/span&gt;
+&lt;span class="c"&gt;# This will often be the only line:
+&lt;/span&gt;&lt;span class="n"&gt;URIPATHPARAM2&lt;/span&gt; %{&lt;span class="n"&gt;URIPATH&lt;/span&gt;:&lt;span class="n"&gt;uripath&lt;/span&gt;}(?:%{&lt;span class="n"&gt;URIPARAM&lt;/span&gt;})?
+&lt;span class="n"&gt;RAILS4HEAD&lt;/span&gt; (?&lt;span class="n"&gt;m&lt;/span&gt;)%{&lt;span class="n"&gt;RAILS4PREFIX&lt;/span&gt;}&lt;span class="n"&gt;Started&lt;/span&gt; %{&lt;span class="n"&gt;WORD&lt;/span&gt;:&lt;span class="n"&gt;verb&lt;/span&gt;} &lt;span class="s2"&gt;"%{URIPATHPARAM2:request}"&lt;/span&gt; &lt;span class="n"&gt;for&lt;/span&gt; %{&lt;span class="n"&gt;IPORHOST&lt;/span&gt;:&lt;span class="n"&gt;clientip&lt;/span&gt;} &lt;span class="n"&gt;at&lt;/span&gt; (?&amp;lt;&lt;span class="n"&gt;timestamp&lt;/span&gt;&amp;gt;%{&lt;span class="n"&gt;YEAR&lt;/span&gt;}-%{&lt;span class="n"&gt;MONTHNUM&lt;/span&gt;}-%{&lt;span class="n"&gt;MONTHDAY&lt;/span&gt;} %{&lt;span class="n"&gt;HOUR&lt;/span&gt;}:%{&lt;span class="n"&gt;MINUTE&lt;/span&gt;}:%{&lt;span class="n"&gt;SECOND&lt;/span&gt;} %{&lt;span class="n"&gt;ISO8601_TIMEZONE&lt;/span&gt;})
+
+&lt;span class="c"&gt;# Output schema migration info right after started
+&lt;/span&gt;&lt;span class="n"&gt;RAILS4SCHEMAMIGRATION&lt;/span&gt; \&lt;span class="n"&gt;W&lt;/span&gt;*%{&lt;span class="n"&gt;RAILS4PREFIX&lt;/span&gt;}&lt;span class="n"&gt;ActiveRecord&lt;/span&gt;::&lt;span class="n"&gt;SchemaMigration&lt;/span&gt; &lt;span class="n"&gt;Load&lt;/span&gt; \(%{&lt;span class="n"&gt;NUMBER&lt;/span&gt;:&lt;span class="n"&gt;schemams&lt;/span&gt;}&lt;span class="n"&gt;ms&lt;/span&gt;\)  &lt;span class="n"&gt;SELECT&lt;/span&gt; &lt;span class="s2"&gt;"schema_migrations"&lt;/span&gt;.* &lt;span class="n"&gt;FROM&lt;/span&gt; &lt;span class="s2"&gt;"schema_migrations"&lt;/span&gt;
+&lt;span class="c"&gt;# For some strange reason, params are stripped of {} - not sure that's a good idea.
+&lt;/span&gt;&lt;span class="n"&gt;RAILS4PARAMETERS&lt;/span&gt; \&lt;span class="n"&gt;W&lt;/span&gt;*%{&lt;span class="n"&gt;RAILS4PREFIX&lt;/span&gt;}  &lt;span class="n"&gt;Parameters&lt;/span&gt;: {%{&lt;span class="n"&gt;DATA&lt;/span&gt;:&lt;span class="n"&gt;params&lt;/span&gt;}}
+&lt;span class="n"&gt;RAILS4RPROCESSING&lt;/span&gt; (?:%{&lt;span class="n"&gt;RAILS4SCHEMAMIGRATION&lt;/span&gt;})?\&lt;span class="n"&gt;W&lt;/span&gt;*%{&lt;span class="n"&gt;RAILS4PREFIX&lt;/span&gt;}&lt;span class="n"&gt;Processing&lt;/span&gt; &lt;span class="n"&gt;by&lt;/span&gt; %{&lt;span class="n"&gt;RCONTROLLER&lt;/span&gt;} &lt;span class="n"&gt;as&lt;/span&gt; (?&amp;lt;&lt;span class="n"&gt;format&lt;/span&gt;&amp;gt;\&lt;span class="n"&gt;S&lt;/span&gt;+)(?:%{&lt;span class="n"&gt;RAILS4PARAMETERS&lt;/span&gt;})?
+
+&lt;span class="n"&gt;RAILS4PROFILE&lt;/span&gt; (?:\(&lt;span class="n"&gt;Views&lt;/span&gt;: %{&lt;span class="n"&gt;NUMBER&lt;/span&gt;:&lt;span class="n"&gt;viewms&lt;/span&gt;:&lt;span class="n"&gt;float&lt;/span&gt;}&lt;span class="n"&gt;ms&lt;/span&gt; \| &lt;span class="n"&gt;ActiveRecord&lt;/span&gt;: %{&lt;span class="n"&gt;NUMBER&lt;/span&gt;:&lt;span class="n"&gt;activerecordms&lt;/span&gt;:&lt;span class="n"&gt;float&lt;/span&gt;}&lt;span class="n"&gt;ms&lt;/span&gt;|\(&lt;span class="n"&gt;ActiveRecord&lt;/span&gt;: %{&lt;span class="n"&gt;NUMBER&lt;/span&gt;:&lt;span class="n"&gt;activerecordms&lt;/span&gt;:&lt;span class="n"&gt;float&lt;/span&gt;}&lt;span class="n"&gt;ms&lt;/span&gt;)?
+&lt;span class="n"&gt;RAILS4FOOT&lt;/span&gt; %{&lt;span class="n"&gt;RAILS4PREFIX&lt;/span&gt;}&lt;span class="n"&gt;Completed&lt;/span&gt; %{&lt;span class="n"&gt;NUMBER&lt;/span&gt;:&lt;span class="n"&gt;response&lt;/span&gt;} %{&lt;span class="n"&gt;DATA&lt;/span&gt;} &lt;span class="n"&gt;in&lt;/span&gt; %{&lt;span class="n"&gt;NUMBER&lt;/span&gt;:&lt;span class="n"&gt;totalms&lt;/span&gt;:&lt;span class="n"&gt;int&lt;/span&gt;}&lt;span class="n"&gt;ms&lt;/span&gt; %{&lt;span class="n"&gt;RAILS4PROFILE&lt;/span&gt;}%{&lt;span class="n"&gt;GREEDYDATA&lt;/span&gt;}
+
+&lt;span class="c"&gt;# Put it all together
+&lt;/span&gt;&lt;span class="n"&gt;RAILS4&lt;/span&gt; %{&lt;span class="n"&gt;RAILS4HEAD&lt;/span&gt;}(?:%{&lt;span class="n"&gt;RAILS4RPROCESSING&lt;/span&gt;})?(?&amp;lt;&lt;span class="n"&gt;context&lt;/span&gt;&amp;gt;(?:%{&lt;span class="n"&gt;DATA&lt;/span&gt;}\&lt;span class="n"&gt;n&lt;/span&gt;)*)(?:%{&lt;span class="n"&gt;RAILS4FOOT&lt;/span&gt;})?
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;/firgure&gt;&lt;/p&gt;
+
+&lt;p&gt;补充要说的是，时间戳默认是以 &lt;code&gt;Logstash&lt;/code&gt; 收到的日志数据的系统时间为每条日志时间戳的，这与时间日志发生的时间并不一致，
+需要抽出日志内容里的时间为日志时间戳，这个需要在以下的处理：&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;data {
+  match =&amp;gt; ["timestamp", 'yyyy-MM-dd HH:mm:ss Z']
+  remove_field =&amp;gt; ['timestamp'] # 删除原来的时间戳
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;完整的&lt;code&gt;Logstash&lt;/code&gt; 配置文件例子&lt;/p&gt;
+
+&lt;p&gt;&lt;figure class='code'&gt;&lt;figcaption&gt;&lt;span&gt;logstash.conf&lt;/span&gt; &lt;a href='/downloads/code/logstash.conf'&gt;源码&lt;/a&gt;&lt;/figcaption&gt;&lt;/p&gt;
+&lt;pre class="highlight conf"&gt;&lt;code&gt;&lt;span class="n"&gt;input&lt;/span&gt; {
+  &lt;span class="c"&gt;#beats {
+&lt;/span&gt;  &lt;span class="c"&gt;#  port =&amp;gt; '5044'
+&lt;/span&gt;  &lt;span class="c"&gt;#}
+&lt;/span&gt;
+  &lt;span class="n"&gt;file&lt;/span&gt; {
+    &lt;span class="n"&gt;path&lt;/span&gt; =&amp;gt; &lt;span class="s1"&gt;'/path/to/log/production.log'&lt;/span&gt;
+    &lt;span class="n"&gt;codec&lt;/span&gt; =&amp;gt; &lt;span class="n"&gt;multiline&lt;/span&gt; {
+      &lt;span class="n"&gt;pattern&lt;/span&gt; =&amp;gt; &lt;span class="s2"&gt;"-- : Started "&lt;/span&gt;
+      &lt;span class="n"&gt;negate&lt;/span&gt; =&amp;gt; &lt;span class="n"&gt;true&lt;/span&gt;
+      &lt;span class="n"&gt;what&lt;/span&gt; =&amp;gt; &lt;span class="s1"&gt;'previous'&lt;/span&gt;
+    }
+  }
+}
+
+&lt;span class="n"&gt;filter&lt;/span&gt; {
+  &lt;span class="n"&gt;grok&lt;/span&gt; {
+    &lt;span class="n"&gt;patterns_dir&lt;/span&gt; =&amp;gt; &lt;span class="s1"&gt;'../grok-patterns'&lt;/span&gt;
+    &lt;span class="n"&gt;match&lt;/span&gt; =&amp;gt; { &lt;span class="s2"&gt;"message"&lt;/span&gt; =&amp;gt; &lt;span class="s2"&gt;"%{RAILS4}"&lt;/span&gt; }
+  }
+
+  &lt;span class="n"&gt;date&lt;/span&gt; {
+    &lt;span class="n"&gt;match&lt;/span&gt; =&amp;gt; [&lt;span class="s1"&gt;'timestamp'&lt;/span&gt;, &lt;span class="s1"&gt;'yyyy-MM-dd HH:mm:ss Z'&lt;/span&gt;]
+    &lt;span class="n"&gt;remove_field&lt;/span&gt; =&amp;gt; [&lt;span class="s1"&gt;'timestamp'&lt;/span&gt;]
+  }
+
+  &lt;span class="n"&gt;geoip&lt;/span&gt; {
+    &lt;span class="n"&gt;source&lt;/span&gt; =&amp;gt; &lt;span class="s1"&gt;'clientip'&lt;/span&gt;
+    &lt;span class="c"&gt;#fields =&amp;gt;  ["city_name", "country_code2", "country_name", "latitude", "longitude", "region_name"]
+&lt;/span&gt;  }
+}
+
+&lt;span class="n"&gt;output&lt;/span&gt; {
+  &lt;span class="n"&gt;stdout&lt;/span&gt; {
+    &lt;span class="n"&gt;codec&lt;/span&gt; =&amp;gt; &lt;span class="n"&gt;rubydebug&lt;/span&gt;
+  }
+
+  &lt;span class="n"&gt;elasticsearch&lt;/span&gt; {
+    &lt;span class="n"&gt;hosts&lt;/span&gt; =&amp;gt; [&lt;span class="s1"&gt;'127.0.0.1:9200'&lt;/span&gt;]
+  }
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;/firgure&gt;&lt;/p&gt;
+
+&lt;h2&gt;延伸阅读&lt;/h2&gt;
+
+&lt;p&gt;参考 &lt;a href="http://kibana.logstash.es/content/"&gt;ELKstack 中文指南&lt;/a&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>使用 Docker 来安装 Redmine 并结合 gitolite 使用</title>
+    <link rel="alternate" href="http://wongyouth.com/blog/2015/10/30/deploy-redmine-with-docker/"/>
+    <id>http://wongyouth.com/blog/2015/10/30/deploy-redmine-with-docker/</id>
+    <published>2015-10-30T11:16:00+08:00</published>
+    <updated>2015-10-30T13:36:01+08:00</updated>
+    <author>
+      <name>wongyouth</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://wongyouth.com/blog/2015/07/02/use-docker-with-rails/"&gt;上一篇&lt;/a&gt;介绍了 Docker 之后，仅仅过了3个月时间，Docker又增加了很多变化:
+比如 &lt;a href="https://docs.docker.com/machine/install-machine/"&gt;Docker Machine&lt;/a&gt;, &lt;a href="https://docs.docker.com/compose/install/"&gt;Docker Compose&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;最近项目里要把 Redmine 从盛大云到阿里云，正好可以发挥 Docker 的强项。这里分析一下需要实现的功能：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Redmine 服务&lt;/li&gt;
+&lt;li&gt;Postgres 数据库服务&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/sitaramc/gitolite"&gt;gitolite&lt;/a&gt; Git repo 服务&lt;/li&gt;
+&lt;li&gt;迁移老数据到新的服务里&lt;/li&gt;
+&lt;li&gt;Redmine 服务自启动&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;h3&gt;Install gitolite&lt;/h3&gt;
+
+&lt;p&gt;虽然 gitolite 也有docker 提供，但是 redmine 需要访问 git 下面的 repo 文件，所以会有权限问题。
+Docker 现在对 权限映射 这方面的支持还不是很好。所以我决定把 gitolite 安装在宿主机器内部。
+所以 gitolite 按照官网的安装步骤安装。旧的 repo 数据只要复制覆盖 /home/git/repositories 就可以了。&lt;/p&gt;
+
+&lt;h3&gt;Docker for Redmine&lt;/h3&gt;
+
+&lt;p&gt;在 &lt;a href="https://hub.docker.com"&gt;Docker hub&lt;/a&gt; 里搜了一下可用的 Redmine 之后，
+发现 &lt;a href="https://hub.docker.com/r/sameersbn/redmine/"&gt;sameersbn/redmine 版本&lt;/a&gt; 比&lt;a href="https://hub.docker.com/_/redmine/"&gt;官方版本&lt;/a&gt; 多了很多星，
+连下载量也比官方多了一倍不止。比较了下内容之后发现官方版无法支持外发邮件，所以只有选择 &lt;code&gt;sameersbn&lt;/code&gt; 版了。&lt;/p&gt;
+
+&lt;p&gt;如果是完全新安装不需要迁移数据的话，可以直接使用提供的样例 &lt;a href="https://raw.githubusercontent.com/sameersbn/docker-redmine/master/docker-compose.yml"&gt;docker-compose.yml&lt;/a&gt; 文件了。
+所以 Redmine 这部分还是比较简单，使用了&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;redmine:
+  image: quay.io/sameersbn/redmine:latest
+  links:
+    - postgresql:postgresql
+  environment:
+    - USERMAP_UID=1001
+    - USERMAP_GID=1001
+    - TZ=Asia/Beijing
+    - REDMINE_PORT=3000
+    - SMTP_ENABLED=true
+    - SMTP_DOMAIN=example.com
+    - SMTP_HOST=smtp.exmail.qq.com
+    - SMTP_PORT=25
+    - SMTP_USER=user@example.com
+    - SMTP_PASS=exampass
+    - SMTP_AUTHENTICATION=:login
+    - IMAP_ENABLED=false
+    - IMAP_USER=mailer@example.com
+    - IMAP_PASS=password
+    - IMAP_HOST=imap.gmail.com
+    - IMAP_PORT=993
+    - IMAP_SSL=true
+    - IMAP_INTERVAL=30
+  ports:
+    - "80:80"
+  volumes:
+    - /data/redmine:/home/redmine/data
+    - /home/git/repositories:/home/redmine/repositories
+  restart: always
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;其中老服务器中用户上传的文件需要迁移到 /data/redmine/files 文件夹中就可以了。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;USERMAP_UID=1001 USERMAP_GID=1001&lt;/code&gt; 1001 是 git 用户的 uid, gid。
+这样 docker 内的 redmine 的 uid,gid 就与git的一致，解决了权限问题。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;restart: always&lt;/code&gt; 让这个 container 自启动&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Docker for Postgres&lt;/h3&gt;
+
+&lt;p&gt;上面的样例中数据库使用的是被定制化过的 Postgres ，但是我觉得官方的版本完全够用了。
+迁移的策略是这样的，&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;先用 docker 启动一个最基本的 postgres image: &lt;code&gt;docker-compose up -f /data/pg.yml&lt;/code&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;postgresql:
+  image: postgres
+  environment:
+    - POSTGRES_USER=redmine
+    - POSTGRES_PASSWORD=secret
+    - PGDATA=/data
+  volumes:
+    - /data/pg:/data
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;开启一个 postgres client 导入数据库旧数据，默认数据库名字是redmine&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker run --link data_postgresql_1:db -v /data:/data -it postgres bash
+$ psql -h $DB_PORT_5432_TCP_ADDR -U redmine redmine &amp;lt; /data/pg_old_data.sql
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;链接 Redmine docker 到 postgresql docker 就可以完工了。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;完整的 docker-compose.yml 文件&lt;/p&gt;
+
+&lt;p&gt;&lt;figure class='code'&gt;&lt;figcaption&gt;&lt;span&gt;docker-compose.yml&lt;/span&gt; &lt;a href='/downloads/code/docker-compose.yml'&gt;源码&lt;/a&gt;&lt;/figcaption&gt;&lt;/p&gt;
+&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="s"&gt;postgresql&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="s"&gt;image&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;postgres&lt;/span&gt;
+  &lt;span class="s"&gt;environment&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;POSTGRES_USER=redmine&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;POSTGRES_PASSWORD=redmine&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;PGDATA=/data&lt;/span&gt;
+  &lt;span class="s"&gt;volumes&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;/data/pg:/data&lt;/span&gt;
+  &lt;span class="s"&gt;restart&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;always&lt;/span&gt;
+
+&lt;span class="s"&gt;redmine&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="s"&gt;image&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;quay.io/sameersbn/redmine:latest&lt;/span&gt;
+  &lt;span class="s"&gt;links&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;postgresql:postgresql&lt;/span&gt;
+  &lt;span class="s"&gt;environment&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="c1"&gt;#- REDMINE_VERSION=3.0.1&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;USERMAP_UID=1001&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;USERMAP_GID=1001&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;TZ=Asia/Beijing&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;REDMINE_PORT=3000&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;SMTP_ENABLED=true&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;SMTP_DOMAIN=example.com&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;SMTP_HOST=smtp.exmail.qq.com&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;SMTP_PORT=25&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;SMTP_USER=redmine@example.com&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;SMTP_PASS=redminepass&lt;/span&gt;
+    &lt;span class="c1"&gt;#- SMTP_STARTTLS=true&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;SMTP_AUTHENTICATION=:login&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;IMAP_ENABLED=false&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;IMAP_USER=mailer@example.com&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;IMAP_PASS=password&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;IMAP_HOST=imap.gmail.com&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;IMAP_PORT=993&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;IMAP_SSL=true&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;IMAP_INTERVAL=30&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;UNICORN_TIMEOUT=300&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;NGINX_MAX_UPLOAD_SIZE=100m&lt;/span&gt;
+  &lt;span class="s"&gt;ports&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;80:80"&lt;/span&gt;
+  &lt;span class="s"&gt;volumes&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;/data/redmine:/home/redmine/data&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;/home/git/repositories:/home/redmine/repositories&lt;/span&gt;
+  &lt;span class="s"&gt;restart&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;always&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;/firgure&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>与 Docker 一起使用 Rails</title>
+    <link rel="alternate" href="http://wongyouth.com/blog/2015/07/02/use-docker-with-rails/"/>
+    <id>http://wongyouth.com/blog/2015/07/02/use-docker-with-rails/</id>
+    <published>2015-07-02T08:28:00+08:00</published>
+    <updated>2015-07-02T09:41:29+08:00</updated>
+    <author>
+      <name>wongyouth</name>
+    </author>
+    <content type="html">&lt;p&gt;最近 Docker 很火，好像只要是服务器端相关的东西都有要搬到 Docker 上的趋势，
+似乎要把从开发，安装，部署，维护的问题全都要解决掉的那个意思。&lt;/p&gt;
+
+&lt;p&gt;按我的理解，Docker 架构在服务器之上，从服务器上多衍生出了一层，
+所以可以跨平台运行在各个系统之上，达到一致的用户体验。
+并且 Docker 可以快速导入一个定制好系统，
+比如可以把开发人员的系统环境复制一份给测试人员使用，体验真的很好。&lt;/p&gt;
+
+&lt;p&gt;Docker 发展很快，但我觉得就目前的阶段还是不太适合商用环境，
+毕竟真正商用时是多主机配合工作的，这点上 Docker 还有很大的空间需要完善。
+作为一个开发，测试用环境或者小范围商用时是 Docker 的确带来了巨大的用户体验。&lt;/p&gt;
+
+
+
+&lt;p&gt;在这篇博文里简单记录下 Docker 如何与 Rails 一起配合使用。以下是在 Mac OSX 的环境里使用时为例。&lt;/p&gt;
+
+&lt;h2&gt;安装&lt;/h2&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;brew install boot2docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;启动 Docker 环境&lt;/h2&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;boot2docker up
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;返回结果&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;Waiting for VM and Docker daemon to start...
+.................ooooooo
+Started.
+Writing /Users/ryan/.boot2docker/certs/boot2docker-vm/ca.pem
+Writing /Users/ryan/.boot2docker/certs/boot2docker-vm/cert.pem
+Writing /Users/ryan/.boot2docker/certs/boot2docker-vm/key.pem
+
+To connect the Docker client to the Docker daemon, please set:
+    export DOCKER_HOST=tcp://192.168.59.103:2376
+    export DOCKER_CERT_PATH=/Users/ryan/.boot2docker/certs/boot2docker-vm
+    export DOCKER_TLS_VERIFY=1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个命令实际上时启动了一个 &lt;code&gt;Virtual Box&lt;/code&gt; 虚拟机，跑了一个 Linux 内核的系统。
+如果你是使用的是一个 Linux 内核的电脑，就可以少这一部分开销了。&lt;/p&gt;
+
+&lt;h2&gt;设置系统变量给终端使用&lt;/h2&gt;
+
+&lt;p&gt;复制上一步的返回结果到终端上执行。如果有多个终端需要使用时，每个都要设置这些系统变量&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;export DOCKER_HOST=tcp://192.168.59.103:2376
+export DOCKER_CERT_PATH=/Users/ryan/.boot2docker/certs/boot2docker-vm
+export DOCKER_TLS_VERIFY=1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;创建一个 PostgreSQL 容器&lt;/h2&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run --name my-postgres -e POSTGRES_PASSWORD=postgres -d postgres
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里把 postgres 的密码设为 postgres, 可以配合在 Rails app 厘米使用这个账号。&lt;/p&gt;
+
+&lt;p&gt;如果第一次执行该命令，Docker 会先从社区共享的 Image 里下载 postgres 最新的数据，
+来创建 PostgreSQL 容器，所以需要花费几分钟时间。&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker ps
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;返回结果&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                    NAMES
+139f96ea6d0e        postgres:latest     "/docker-entrypoint.   2 minutes ago       Up 2 minutes        5432/tcp                 my-postgres
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;生成 Rails 应用的 Docker Image&lt;/h2&gt;
+
+&lt;p&gt;在终端进入 Rails 主目录，
+修改 config/database.yml 文件里数据库的设置&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;host: ENV['DB_PORT_5432_TCP_ADDR']
+username: postgres
+password: postgres
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;DB_PORT_5432_TCP_ADDR&lt;/code&gt; 这个环境变量是在 Docker 链接数据库容器到 Rails 应用容器时自动设置的，通过该地址可以找到数据库&lt;/p&gt;
+
+&lt;p&gt;生成 Dockerfile 文件，供 build 使用&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;echo 'FROM rails:onbuild' &amp;gt; Dockerfile
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行 build 来生成 docker image&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker build -t my-rails .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;创建 Rails console 容器，用来执行 Rails 任务&lt;/h2&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run --name my-bash --link my-postgres:db -v "$PWD":/usr/src/app -it my-rails /bin/bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;此时已经进入了 Docker 容器内的一个交互环境下，我们可以运行 Rails 命令来生成数据表结构&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;rake db:create db:migrate
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;要退出容器时，运行 &lt;code&gt;exit&lt;/code&gt; 就可以了&lt;/p&gt;
+
+&lt;h2&gt;创建 Rails 容器&lt;/h2&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run --name my-rails --link my-postgres:db -v "$PWD":/usr/src/app -p 3000:3000 -d my-rails
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;打开浏览器查看结果&lt;/h2&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;open http://192.168.59.103:3000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;为什么是 &lt;code&gt;192.168.59.103&lt;/code&gt; 地址而不是 &lt;code&gt;localhost&lt;/code&gt; ?
+因为 Docker 实际上是运行在虚拟机里面的，所有要访问虚拟机的 IP 才可以访问到。
+这个地址是在运行 &lt;code&gt;boot2docker up&lt;/code&gt; 时的返回结果里面有显示。&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>使用 GPG 加密数据</title>
+    <link rel="alternate" href="http://wongyouth.com/blog/2015/01/09/use-gpg-to-encrypt-your-data/"/>
+    <id>http://wongyouth.com/blog/2015/01/09/use-gpg-to-encrypt-your-data/</id>
+    <published>2015-01-09T16:18:00+08:00</published>
+    <updated>2015-01-20T13:51:26+08:00</updated>
+    <author>
+      <name>wongyouth</name>
+    </author>
+    <content type="html">&lt;p&gt;什么是 &lt;code&gt;GPG&lt;/code&gt; 加密，以下来自百度的解释&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;PGP加密系统是采用公开密钥加密与传统密钥加密相结合的一种加密技术。
+它使用一对数学上相关的钥匙，其中一个（公钥）用来加密信息，另一个（私钥）用来解密信息。
+PGP采用的传统加密技术部分所使用的密钥称为“会话密钥”（sek）。
+每次使用时，PGP都随机产生一个128位的IDEA会话密钥，用来加密报文。
+公开密钥加密技术中的公钥和私钥则用来加密会话密钥，并通过它间接地保护报文内容。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+
+
+&lt;h2&gt;1. 生成个人 gpg 密钥&lt;/h2&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;gpg --gen-key
+
+# 根据输入信息生成密钥
+
+jxb@jxbtest:~$ gpg --gen-key
+gpg (GnuPG) 1.4.11; Copyright (C) 2010 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA (default)
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048)
+Requested keysize is 2048 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &amp;lt;n&amp;gt;  = key expires in n days
+      &amp;lt;n&amp;gt;w = key expires in n weeks
+      &amp;lt;n&amp;gt;m = key expires in n months
+      &amp;lt;n&amp;gt;y = key expires in n years
+Key is valid for? (0)
+Key does not expire at all
+Is this correct? (y/N) y
+
+You need a user ID to identify your key; the software constructs the user ID
+from the Real Name, Comment and Email Address in this form:
+    "Heinrich Heine (Der Dichter) &amp;lt;heinrichh@duesseldorf.de&amp;gt;"
+
+Real name: Ryan Wang
+Email address: test@gmail.com
+Comment:
+You selected this USER-ID:
+    "Ryan Wang &amp;lt;test@gmail.com&amp;gt;"
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
+You need a Passphrase to protect your secret key.
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;2. 密钥操作&lt;/h2&gt;
+
+&lt;h4&gt;查看公钥&lt;/h4&gt;
+
+&lt;p&gt;gpg &amp;ndash;list-keys&lt;/p&gt;
+
+&lt;h4&gt;查看密钥&lt;/h4&gt;
+
+&lt;p&gt;gpg &amp;ndash;list-secret-keys&lt;/p&gt;
+
+&lt;h4&gt;导出公钥&lt;/h4&gt;
+
+&lt;p&gt;gpg -a &amp;ndash;export [Email] &amp;gt; public.key&lt;/p&gt;
+
+&lt;h4&gt;导出密钥&lt;/h4&gt;
+
+&lt;p&gt;gpg -a &amp;ndash;export-secret-key [Email] &amp;gt; private.key&lt;/p&gt;
+
+&lt;h4&gt;导入公钥&lt;/h4&gt;
+
+&lt;p&gt;gpg &amp;ndash;import public.key&lt;/p&gt;
+
+&lt;h4&gt;导入密钥&lt;/h4&gt;
+
+&lt;p&gt;gpg &amp;ndash;allow-secret-key-import &amp;ndash;import private.key&lt;/p&gt;
+
+&lt;h4&gt;删除公钥&lt;/h4&gt;
+
+&lt;p&gt;gpg &amp;ndash;delete-key &amp;ldquo;User Name&amp;rdquo;&lt;/p&gt;
+
+&lt;h4&gt;删除密钥&lt;/h4&gt;
+
+&lt;p&gt;gpg &amp;ndash;delete-secret-key &amp;ldquo;User Name&amp;rdquo;&lt;/p&gt;
+
+&lt;h2&gt;3. 加密解密&lt;/h2&gt;
+
+&lt;p&gt;1). 加密&lt;/p&gt;
+
+&lt;p&gt;在发送方加密文件。 必须先导入发送者的密钥，接受者的公钥&lt;/p&gt;
+
+&lt;p&gt;gpg -e -u &amp;ldquo;Sender User&amp;rdquo; -r &amp;ldquo;Receiver User&amp;rdquo; mydata.tgz&lt;/p&gt;
+
+&lt;p&gt;2). 解密&lt;/p&gt;
+
+&lt;p&gt;在接收方解密文件。必须先导入接受者的密钥&lt;/p&gt;
+
+&lt;p&gt;gpg -d -o mydata.tgz mydata.tgz.gpg&lt;/p&gt;
+
+&lt;h2&gt;延伸阅读&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://irtfweb.ifa.hawaii.edu/%7Elockhart/gpg/gpg-cs.html"&gt;http://irtfweb.ifa.hawaii.edu/~lockhart/gpg/gpg-cs.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>PostgreSQL Tips</title>
+    <link rel="alternate" href="http://wongyouth.com/blog/2014/10/15/postgresql-tips/"/>
+    <id>http://wongyouth.com/blog/2014/10/15/postgresql-tips/</id>
+    <published>2014-10-15T09:28:00+08:00</published>
+    <updated>2015-01-09T15:50:28+08:00</updated>
+    <author>
+      <name>wongyouth</name>
+    </author>
+    <content type="html">&lt;p&gt;PostgreSQL 查询&lt;/p&gt;
+
+&lt;h2&gt;PostgreSQL 后台进程状态&lt;/h2&gt;
+
+&lt;p&gt;当一个 postgres 进程查询很花时间时，可以在后台看一下到底是什么处理导致慢。&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;SELECT datname,usename,procpid,client_addr,waiting,query_start,current_query FROM pg_stat_activity where procpid = $PID;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;查询 PostgreSQL 存储过程源码&lt;/h2&gt;
+
+&lt;p&gt;查询一个 PostgreSQL 的存储过程的源码。&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;select prosrc from pg_proc where proname = '$PRONAME';
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+  </entry>
+  <entry>
+    <title>配置主从PostgreSQL数据库</title>
+    <link rel="alternate" href="http://wongyouth.com/blog/2014/09/05/configure-postgresql-master-slave-replication/"/>
+    <id>http://wongyouth.com/blog/2014/09/05/configure-postgresql-master-slave-replication/</id>
+    <published>2014-09-05T16:47:00+08:00</published>
+    <updated>2014-11-10T11:01:54+08:00</updated>
+    <author>
+      <name>wongyouth</name>
+    </author>
+    <content type="html">&lt;h1&gt;背景&lt;/h1&gt;
+
+&lt;p&gt;数据库的数据量开始增多，负载开始变高，需要做一个数据库主从配置。&lt;/p&gt;
+
+&lt;p&gt;数据量，单表超过了100万条数据，应用程序做读写分离，写到主数据库，读从从数据库。&lt;/p&gt;
+
+&lt;h1&gt;步骤&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;生成操作用的用户&lt;/li&gt;
+&lt;li&gt;配置主数据库，激活备份模式&lt;/li&gt;
+&lt;li&gt;关停从数据库，复制数据&lt;/li&gt;
+&lt;li&gt;配置从数据库，从主数据库同步数据&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;生成操作用的用户&lt;/h2&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;sudo apt-get install postgresql
+sudo -s postgres
+psql -c "CREATE USER rep REPLICATION LOGIN CONNECTION LIMIT 1 ENCRYPTED PASSWORD 'yourpassword';"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;配置主数据库，激活备份模式&lt;/h2&gt;
+
+&lt;p&gt;切换到配置目录&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cd /etc/postgresql/9.1/main
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;主从模式&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cat &amp;gt;&amp;gt; postgresql.conf &amp;lt;&amp;lt;EOF
+listen_addresses = 'localhost,IP_address_of_THIS_host'
+wal_level = 'hot_standby'
+archive_mode = on
+archive_command = 'cd .'
+max_wal_senders = 1
+hot_standby = on
+wal_keep_segments = 32
+checkpoint_segments = 8
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;wal_keep_segments 1个16MB 32 就是512M，这个参数用来配置保存wal日志的大小。如果备份期间有很多数据库操作导致旧日志失效时，就需要配置更大的数字才能保证同步数据文件。&lt;/p&gt;
+
+&lt;p&gt;允许从数据库连接到主数据库&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cat &amp;gt;&amp;gt; pg_hba.conf &amp;lt;&amp;lt;EOF
+host    replication     rep     IP_address_of_slave/32   md5
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;重启数据库&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;service postgresql restart
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;配置从数据库，从主数据库同步数据&lt;/h2&gt;
+
+&lt;p&gt;在从数据库机器执行&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;service postgresql stop
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cd /var/lib/postgresql/9.1/main
+echo &amp;gt; recovery.conf &amp;lt;&amp;lt;EOF
+standby_mode = 'on'
+primary_conninfo = 'host=master_IP_address port=5432 user=rep password=yourpassword'
+trigger_file = '/tmp/postgresql.trigger.5432'
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;复制数据&lt;/h2&gt;
+
+&lt;p&gt;在主数据库机器执行&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;psql -c "select pg_start_backup('initial_backup');"
+rsync -cva -P --inplace --exclude=*pg_xlog* /var/lib/postgresql/9.1/main/ slave_IP_address:/var/lib/postgresql/9.1/main/
+psql -c "select pg_stop_backup();"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;20G 的数据文件大概复制了3个多小时，要看网络状况好不好。&lt;/p&gt;
+
+&lt;h2&gt;启动从数据库&lt;/h2&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;service postgresql start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;参看log文件，看是否有报错&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;tail -f /var/log/postgresql/postgresql-9.1-main.log
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;测试&lt;/h2&gt;
+
+&lt;p&gt;在主数据库执行&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;CREATE TABLE rep_test (test varchar(40));
+INSERT INTO rep_test VALUES ('data one');
+INSERT INTO rep_test VALUES ('some more words');
+INSERT INTO rep_test VALUES ('lalala');
+INSERT INTO rep_test VALUES ('hello there');
+INSERT INTO rep_test VALUES ('blahblah');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在从数据库执行&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;SELECT * FROM rep_test;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;查看数据有无同步&lt;/p&gt;
+
+&lt;h3&gt;验证从数据库的只读属性&lt;/h3&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;INSERT INTO rep_test VALUES ('oops');
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ERROR:  cannot execute INSERT in a read-only transaction
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;查看同步状态&lt;/h2&gt;
+
+&lt;p&gt;在主数据库中执行&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;select * from pg_stat_replication;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;延伸阅读&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href="http://www.postgresql.org/docs/9.1/interactive/continuous-archiving.html#BACKUP-BASE-BACKUP"&gt;官网文档&lt;/a&gt;, &lt;a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-master-slave-replication-on-postgresql-on-an-ubuntu-12-04-vps"&gt;Ubuntu 12.04&lt;/a&gt;, &lt;a href="http://www.rassoc.com/gregr/weblog/2013/02/16/zero-to-postgresql-streaming-replication-in-10-mins/"&gt;从0配置主从&lt;/a&gt;, &lt;a title="主从切换" href="http://francs3.blog.163.com/blog/static/405767272011724103133766/"&gt;主从切换&lt;/a&gt;&lt;/p&gt;
+</content>
+  </entry>
+</feed>

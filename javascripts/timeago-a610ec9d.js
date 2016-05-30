@@ -1,0 +1,1 @@
+(function(){$(function(){return $("abbr.timeago").timeago()})}).call(this);

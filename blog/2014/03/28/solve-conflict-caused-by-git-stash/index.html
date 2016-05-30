@@ -1,0 +1,328 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge;chrome=1' />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="keywords" content="wongyouth, Ryan Wang, 王永志, Rails, Javascript, Web, 移动, 产品, 创业">
+    <meta name="description" content="王永志(Ryan Wang)的个人博客，关注Web，移动，产品，创业。">
+    <meta name="baidu-site-verification" content="whKGC9t0PW" />
+    <title>解决Git stash冲突问题 - 王永志的独立博客</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+
+    <link href="../../../../../stylesheets/all-6c32d234.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">你的浏览器版本过于<strong>陈旧</strong>。请<a href="http://browsehappy.com/">更新你的浏览器</a> 以提升访问体验。</p>
+    <![endif]-->
+    <header class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">王永志的独立博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/blog/archives">归档</a></li>
+            <li><a href="/blog/topics/技术">技术</a></li>
+            <li><a href="/blog/topics/运营">运营</a></li>
+          </ul>
+          <form class="navbar-form navbar-left" role="search" action='http://www.google.com.hk/search' id="search">
+            <div class="form-group">
+              <input type="hidden" name='sitesearch' value='wongyouth.com'>
+              <input type="text" name='q' class="form-control" placeholder='搜索'>
+            </div>
+          </form>
+        </div><!-- /.navbar-collapse -->
+
+      </div><!-- /.container -->
+    </header>
+
+    <div class="container">
+      <div class="row">
+        <div id="main" role="main" class="col-sm-8 col-md-9">
+            <article><section class="post"><h1 class="post-title"><i class="glyphicon glyphicon-info-sign"></i>解决Git stash冲突问题</h1><div class="meta text-muted">
+  <div class="date">
+    <i class="glyphicon glyphicon-calendar"></i>
+    <abbr class="timeago" title="2014-03-28T15:39:00+08:00">2014-03-28 15:39</abbr>
+  </div>
+  <div class="comments">
+    <i class="glyphicon glyphicon-comment"></i>
+    <span class="ds-thread-count" data-thread-key="/blog/2014/03/28/solve-conflict-caused-by-git-stash/" data-count-type="comments"></span>
+  </div>
+  <div class="tags">
+    <i class="glyphicon glyphicon-tags"></i>
+    <a href="/blog/tags/git/">Git</a>
+  </div>
+</div>
+
+<div class="post-content"><p>本篇博文分享一下<code>git stash</code>以及他的实际使用技巧</p>
+
+<ul>
+<li>Git stash 是什么，他的使用场景，以及如何来使用</li>
+<li>Git stash pop 时冲突的解决方法</li>
+</ul>
+
+
+
+<h2>首先了解下什么是 Git stash</h2>
+
+<p>考虑这么一个场景，我修改了一些代码用来支持新功能，因为还在进行中所以暂时不想递交代码。
+此时发现线上版本出了问题需要在本地查错。这样我需要临时保存修改的文件，然后取出线上版本到工作目录。
+此时我们有几种方法可以做</p>
+
+<ol>
+<li>复制修改的代码到备份目录，<code>reset</code> 旧代码，<code>check out</code>出线上版本。</li>
+</ol>
+<pre class="highlight shell"><code>cp file /backup/dir
+git reset --hard head <span class="c"># 恢复head代码，抛弃工作区的修改</span>
+git checkout master
+
+<span class="c"># do your job</span>
+
+<span class="c"># when your job's done</span>
+git checkout feature_branch
+cp /backup/dir file
+</code></pre>
+
+<ol>
+<li>递交现在的代码（即使还没有做完），取出线上版本，完工后回退临时递交</li>
+</ol>
+<pre class="highlight shell"><code>git commit -am <span class="s1">'work in process'</span>
+git checkout master
+
+<span class="c"># do your job</span>
+
+<span class="c"># when your job's done</span>
+git checkout feature_branch
+git reset head~
+</code></pre>
+
+<p>Git 自带了对于前一种方案的支持，这就是<code>stash</code>命令。我们来看下用stash怎么做。</p>
+<pre class="highlight shell"><code>git stash
+git checkout master
+
+<span class="c"># do your job</span>
+
+<span class="c"># when your job's done</span>
+git checkout feature_branch
+git stash pop
+</code></pre>
+
+<h2>Git stash 冲突的解决办法</h2>
+
+<p>比较一下之后看起来好像没有改变多少，我这里是假设只有修改过一个文件的情况，如果修改的文件比较多，
+就需要你找出哪些文件是要备份的，每次来罗列这些文件名是个很吃力的事情，还是让机器来做这些枯燥的工作吧。</p>
+
+<p>说完<code>stash</code>的功用，回到正题看看如何解决使用stash时会碰到的冲突问题。
+现在考虑另一个场景，假设在工作区修改了一些代码用来支持新功能，因为还在完善中所以暂时不想递交代码。
+此时发现同事递交了新功能的代码，而我需要并入他的代码来完成工作。</p>
+<pre class="highlight plaintext"><code>git stash
+git pull --all
+git rebase college_branch
+git stash pop
+</code></pre>
+
+<p>如果同事递交的代码与我修改临时保存到stash中的没有冲突，那么事情完美完工，
+如果同事与我修改的代码有冲突，最后一个命令将报 <code>Merge conflict</code> 错。
+Git 没有提供强制pop出来的功能。我们看下这个时候能做什么。</p>
+<pre class="highlight plaintext"><code>git stash show -p | git apply &amp;&amp; git stash drop
+</code></pre>
+
+<p>因为经常会要碰到这种情况，我们把它设置为别名来用</p>
+<pre class="highlight plaintext"><code>git config --global alias.unstash '!git stash show -p | git apply &amp;&amp; git stash drop'
+</code></pre>
+
+<p>这样就可以调用 <code>git unstash</code> 来使用了。这算是git的一个高级用法，Git可以自定义命令。</p>
+</div><div class="post-copyright">除非注明，文章均为 <a href="http://wongyouth.com">wongyouth</a> 原创，转载请注明本文地址：<a href="http://wongyouth.com/blog/2014/03/28/solve-conflict-caused-by-git-stash/">http://wongyouth.com/blog/2014/03/28/solve-conflict-caused-by-git-stash/</a></div><ul class="pager"><li><a href="/blog/2013/11/22/use-chef-for-automating-infrastructure-setup/">&laquo; 上一篇 &laquo;</a></li><li><a href="/blog/2014/04/10/input-special-characters-in-mac/">&raquo; 下一篇 &raquo;</a></li></ul></section>  <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="/blog/2014/03/28/solve-conflict-caused-by-git-stash/" data-title="解决Git stash冲突问题" data-url="http://wongyouth.com/blog/2014/03/28/solve-conflict-caused-by-git-stash/"></div>
+  <!-- 多说评论框 end -->
+
+</article>
+
+
+        </div>
+        <div class="col-sm-4 col-md-3">
+          <ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    关于我
+  </li>
+
+  <li class="list-group-item profile">
+    <img src="http://tp1.sinaimg.cn/1429798952/50/5627311745/1" alt="破而后立">
+    系统架构师<br>
+    全栈式 Rails 开发者<br>
+    最近折腾了一些前端框架<br>
+    关注 Web，移动，创业<br>
+    <div class="social">
+      <a class="wechat" href="/images/social/my_wechat-bcc4527b.png" rel='facebox' title="Wechat">微信</a>
+      <a class="github" href="https://github.com/wongyouth" title="GitHub">GitHub</a>
+      <a class="twitter" href="http://twitter.com/wongyouth" title="Twitter">Twitter</a>
+      <a class="rss" href="/atom.xml" title="RSS">RSS</a>
+    </div>
+  </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    近期文章
+  </li>
+
+    <li class="list-group-item">
+      <a href="/blog/2016/02/24/elk-with-rails-log-analytics/">ELK 套件分析Rails日志</a> <span class="text-muted">02-24</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2015/10/30/deploy-redmine-with-docker/">使用 Docker 来安装 Redmine 并结合 gitolite 使用</a> <span class="text-muted">10-30</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2015/07/02/use-docker-with-rails/">与 Docker 一起使用 Rails</a> <span class="text-muted">07-02</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2015/01/09/use-gpg-to-encrypt-your-data/">使用 GPG 加密数据</a> <span class="text-muted">01-09</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2014/10/15/postgresql-tips/">PostgreSQL Tips</a> <span class="text-muted">10-15</span>
+    </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    近期评论
+  </li>
+  <li class="list-group-item recent-comments">
+    <ul class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-admin="1" data-excerpt-length="70"></ul>
+  </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    标签云
+  </li>
+
+  <li class="list-group-item" id="tagcloud">
+      <a rel="3" href="/blog/tags/博客/">博客</a>
+      <a rel="9" href="/blog/tags/ruby/">Ruby</a>
+      <a rel="5" href="/blog/tags/rails/">Rails</a>
+      <a rel="6" href="/blog/tags/server/">Server</a>
+      <a rel="6" href="/blog/tags/git/">Git</a>
+      <a rel="1" href="/blog/tags/淘宝/">淘宝</a>
+      <a rel="9" href="/blog/tags/运维/">运维</a>
+      <a rel="4" href="/blog/tags/db/">DB</a>
+      <a rel="2" href="/blog/tags/postgresql/">Postgresql</a>
+      <a rel="1" href="/blog/tags/mongodb/">Mongodb</a>
+      <a rel="1" href="/blog/tags/nosql/">Nosql</a>
+      <a rel="1" href="/blog/tags/vim/">Vim</a>
+      <a rel="1" href="/blog/tags/redmine/">Redmine</a>
+      <a rel="1" href="/blog/tags/项目管理/">项目管理</a>
+      <a rel="1" href="/blog/tags/ssl/">SSL</a>
+      <a rel="2" href="/blog/tags/lvm/">LVM</a>
+      <a rel="1" href="/blog/tags/dns/">DNS</a>
+      <a rel="1" href="/blog/tags/bind9/">Bind9</a>
+      <a rel="1" href="/blog/tags/nfs/">NFS</a>
+      <a rel="2" href="/blog/tags/mac/">Mac</a>
+      <a rel="1" href="/blog/tags/chef/">Chef</a>
+      <a rel="1" href="/blog/tags/自媒体/">自媒体</a>
+      <a rel="2" href="/blog/tags/数据/">数据</a>
+      <a rel="1" href="/blog/tags/中国城市/">中国城市</a>
+      <a rel="3" href="/blog/tags/数据库/">数据库</a>
+      <a rel="1" href="/blog/tags/postgresql/">PostgreSQL</a>
+      <a rel="1" href="/blog/tags/安全/">安全</a>
+      <a rel="2" href="/blog/tags/docker/">Docker</a>
+      <a rel="1" href="/blog/tags/logstash/">Logstash</a>
+  </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    年份
+  </li>
+
+    <li class="list-group-item">
+      <span class="badge">1</span>
+      <a href="/blog/2016/">2016</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">3</span>
+      <a href="/blog/2015/">2015</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">10</span>
+      <a href="/blog/2014/">2014</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">8</span>
+      <a href="/blog/2013/">2013</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">11</span>
+      <a href="/blog/2012/">2012</a>
+    </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item">
+    <div id="qrcode"></div>
+    <div>使用手机阅读或分享至微信朋友圈</div>
+  </li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="footer" class="text-center">
+      <div>
+        ©2014 <a href="http://wongyouth.com">http://wongyouth.com</a>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1000394755'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/z_stat.php%3Fid%3D1000394755%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        <script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F84b5475b333b745a8ca4850a4852fe67' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+      </div>
+      <div class="credit">Powered by <a href="http://middlemanapp.com">Middleman</a></div>
+    </div>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+    e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+    e.src='//www.google-analytics.com/analytics.js';
+    r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-30466888-1');ga('send','pageview');
+</script>
+
+
+    <script src="../../../../../javascripts/all-7bcf5a86.js" type="text/javascript"></script>
+        <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":["mshare","weixin","tsina","qzone","tqq","renren","kaixin001"],"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"2","bdPos":"right","bdTop":"150"},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+      <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wongyouth"};
+        (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0] 
+           || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+        </script>
+      <!-- 多说公共JS代码 end -->
+
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js" type="text/javascript"></script>
+    <![endif]-->
+  </body>
+</html>
