@@ -1,0 +1,332 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge;chrome=1' />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="keywords" content="["Server", "Admin"]">
+    <meta name="description" content="王永志(Ryan Wang)的个人博客，关注Web，移动，产品，创业。">
+    <meta name="baidu-site-verification" content="whKGC9t0PW" />
+    <title>Ftp 增强工具比较 - 王永志的独立博客</title>
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+
+    <link href="../../../../../stylesheets/all-6c32d234.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">你的浏览器版本过于<strong>陈旧</strong>。请<a href="http://browsehappy.com/">更新你的浏览器</a> 以提升访问体验。</p>
+    <![endif]-->
+    <header class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">王永志的独立博客</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/blog/archives">归档</a></li>
+            <li><a href="/blog/topics/技术">技术</a></li>
+            <li><a href="/blog/topics/运营">运营</a></li>
+          </ul>
+          <form class="navbar-form navbar-left" role="search" action='http://www.google.com.hk/search' id="search">
+            <div class="form-group">
+              <input type="hidden" name='sitesearch' value='wongyouth.com'>
+              <input type="text" name='q' class="form-control" placeholder='搜索'>
+            </div>
+          </form>
+        </div><!-- /.navbar-collapse -->
+
+      </div><!-- /.container -->
+    </header>
+
+    <div class="container">
+      <div class="row">
+        <div id="main" role="main" class="col-sm-8 col-md-9">
+            <article><section class="post"><h1 class="post-title"><i class="glyphicon glyphicon-info-sign"></i>Ftp 增强工具比较</h1><div class="meta text-muted">
+  <div class="date">
+    <i class="glyphicon glyphicon-calendar"></i>
+    <abbr class="timeago" title="2016-12-30T15:13:00+08:00">2016-12-30 15:13</abbr>
+  </div>
+  <div class="comments">
+    <i class="glyphicon glyphicon-comment"></i>
+    <span class="ds-thread-count" data-thread-key="/blog/2016/12/30/enhenced-ftp-tool-comparision/" data-count-type="comments"></span>
+  </div>
+  <div class="tags">
+    <i class="glyphicon glyphicon-tags"></i>
+    <a href="/blog/tags/ftp/">ftp</a>
+  </div>
+</div>
+
+<div class="post-content"><p>现在与主机交互的首选工具应该是 <code>ssh</code> 相关的工具了，比如 <code>scp</code>, <code>rsync</code>。因为他们都是建立在传输层基础上的安全协议。
+而老牌的 <code>ftp</code> 则不然，因为他们访问主机时的登录交互容易被窃听，有泄密的可能性。
+<code>ftp</code> 也有对应的安全版本 <code>sftp</code>, 但是用的就很少了，因为 <code>sftp</code> 也是基于 <code>ssh</code> 的，但是 <code>ssh</code> 自带传输特效，所有 <code>sftp</code> 就很少用的了。</p>
+
+<p>本篇为什么要写 <code>ftp</code>，是因为对接老的系统的时候，是超出我们控制的。
+最近的项目中就需要把本地的数据包传到服务器上，因此找了几个 <code>ftp</code> 工具来分析了下。</p>
+
+<!-- readmore -->
+
+<p>主要的需求是</p>
+
+<ul>
+<li>CUI 非 GUI，因为需要结合 Shell 来写脚本</li>
+<li>容易上传整个目录</li>
+<li>可以指定上传路径</li>
+<li>最好密码不要显示在命令行里</li>
+</ul>
+
+<p>找了3个来分析了下功能 <code>ftp</code>, <code>ncftp</code>, <code>lftp</code></p>
+
+<h2><code>ftp</code></h2>
+
+<p>首先当然是用系统自带的 <code>ftp</code>，</p>
+
+<ul>
+<li><code>put</code> 命令不能指定目标路径，需要先登录后 <code>cd</code> 到目标路径</li>
+<li>不能指定整个目录上传，多个文件可以用 <code>mput</code></li>
+<li><p>密码可以带入 <code>user@pass:host</code> 中，放在 ~/.netrc 里面
+在 ~/.netrc 里的格式是</p>
+<pre class="highlight plaintext"><code>machine host/ip
+  login USERNAME
+  password PASSWORD
+</code></pre></li>
+</ul>
+
+<h2><code>ncftp</code></h2>
+
+<p><code>ncftp</code> 可以满足上面的所有需求</p>
+
+<ul>
+<li><p>上传整个目录，包括子目录</p>
+<pre class="highlight plaintext"><code>ncftpput -u user -p pass -R  host /host/dir /local/dir
+</code></pre></li>
+<li><p>上传到指定路径</p>
+<pre class="highlight plaintext"><code>ncftpput -u user -p pass host /host/dir /local/path
+</code></pre></li>
+<li><p>隐藏密码</p>
+
+<ul>
+<li><p>提示输入密码</p>
+
+<p>ncftpput -u user host /host/dir /local/path</p></li>
+<li><p>放入配置文件</p>
+
+<p>ncftpput -f login.cfg host /host/dir /local/path</p></li>
+</ul>
+
+<p>login.cfg 文件是这个格式</p>
+<pre class="highlight plaintext"><code>host example.com
+user USERNAME
+pass PASSWORD
+</code></pre></li>
+</ul>
+
+<h2><code>lftp</code></h2>
+
+<p><code>lftp</code> 满足了我的所有需求</p>
+
+<ul>
+<li><p>镜像整个目录，包括子目录</p>
+<pre class="highlight plaintext"><code>lftp -e 'mirror -R /local/dir /host/dir' host
+</code></pre></li>
+<li><p>上传到指定路径</p>
+<pre class="highlight plaintext"><code>lftp -e 'put -O /host/dir/ /local/path; bye' host
+</code></pre></li>
+<li><p>密码方式与 <code>ftp</code> 相同</p></li>
+</ul>
+
+<h2>其他比较</h2>
+
+<p>使用 <code>ncftp</code> 或者 <code>lftp</code> 登录后，都可以使用上下键历史命令回显，<code>Tab</code> 键显示候选文件，文件补全等功能。他们的功能比较相近，由于满足了我要的需求，没有再深入比较了。</p>
+</div><div class="post-copyright">除非注明，文章均为 <a href="http://wongyouth.com">wongyouth</a> 原创，转载请注明本文地址：<a href="http://wongyouth.com/blog/2016/12/30/enhenced-ftp-tool-comparision/">http://wongyouth.com/blog/2016/12/30/enhenced-ftp-tool-comparision/</a></div><ul class="pager"><li><a href="/blog/2016/02/24/elk-with-rails-log-analytics/">&laquo; 上一篇 &laquo;</a></li><li class="disabled"><a href="#">&raquo; 下一篇 &raquo;</a></li></ul></section>  <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="/blog/2016/12/30/enhenced-ftp-tool-comparision/" data-title="Ftp 增强工具比较" data-url="http://wongyouth.github.io/blog/2016/12/30/enhenced-ftp-tool-comparision/"></div>
+  <!-- 多说评论框 end -->
+
+</article>
+
+
+        </div>
+        <div class="col-sm-4 col-md-3">
+          <ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    关于我
+  </li>
+
+  <li class="list-group-item profile">
+    <img src="http://tp1.sinaimg.cn/1429798952/50/5627311745/1" alt="破而后立">
+    系统架构师<br>
+    全栈式 Rails 开发者<br>
+    最近折腾了一些前端框架<br>
+    关注 Web，移动，创业<br>
+    <div class="social">
+      <a class="wechat" href="/images/social/my_wechat-bcc4527b.png" rel='facebox' title="Wechat">微信</a>
+      <a class="github" href="https://github.com/wongyouth" title="GitHub">GitHub</a>
+      <a class="twitter" href="http://twitter.com/wongyouth" title="Twitter">Twitter</a>
+      <a class="rss" href="/atom.xml" title="RSS">RSS</a>
+    </div>
+  </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    近期文章
+  </li>
+
+    <li class="list-group-item">
+      <a href="/blog/2016/12/30/enhenced-ftp-tool-comparision/">Ftp 增强工具比较</a> <span class="text-muted">12-30</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2016/02/24/elk-with-rails-log-analytics/">ELK 套件分析Rails日志</a> <span class="text-muted">02-24</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2015/10/30/deploy-redmine-with-docker/">使用 Docker 来安装 Redmine 并结合 gitolite 使用</a> <span class="text-muted">10-30</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2015/07/02/use-docker-with-rails/">与 Docker 一起使用 Rails</a> <span class="text-muted">07-02</span>
+    </li>
+    <li class="list-group-item">
+      <a href="/blog/2015/01/09/use-gpg-to-encrypt-your-data/">使用 GPG 加密数据</a> <span class="text-muted">01-09</span>
+    </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    近期评论
+  </li>
+  <li class="list-group-item recent-comments">
+    <ul class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="1" data-show-admin="1" data-excerpt-length="70"></ul>
+  </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    标签云
+  </li>
+
+  <li class="list-group-item" id="tagcloud">
+      <a rel="3" href="/blog/tags/博客/">博客</a>
+      <a rel="9" href="/blog/tags/ruby/">Ruby</a>
+      <a rel="5" href="/blog/tags/rails/">Rails</a>
+      <a rel="6" href="/blog/tags/server/">Server</a>
+      <a rel="6" href="/blog/tags/git/">Git</a>
+      <a rel="1" href="/blog/tags/淘宝/">淘宝</a>
+      <a rel="9" href="/blog/tags/运维/">运维</a>
+      <a rel="4" href="/blog/tags/db/">DB</a>
+      <a rel="2" href="/blog/tags/postgresql/">Postgresql</a>
+      <a rel="1" href="/blog/tags/mongodb/">Mongodb</a>
+      <a rel="1" href="/blog/tags/nosql/">Nosql</a>
+      <a rel="1" href="/blog/tags/vim/">Vim</a>
+      <a rel="1" href="/blog/tags/redmine/">Redmine</a>
+      <a rel="1" href="/blog/tags/项目管理/">项目管理</a>
+      <a rel="1" href="/blog/tags/ssl/">SSL</a>
+      <a rel="2" href="/blog/tags/lvm/">LVM</a>
+      <a rel="1" href="/blog/tags/dns/">DNS</a>
+      <a rel="1" href="/blog/tags/bind9/">Bind9</a>
+      <a rel="1" href="/blog/tags/nfs/">NFS</a>
+      <a rel="2" href="/blog/tags/mac/">Mac</a>
+      <a rel="1" href="/blog/tags/chef/">Chef</a>
+      <a rel="1" href="/blog/tags/自媒体/">自媒体</a>
+      <a rel="2" href="/blog/tags/数据/">数据</a>
+      <a rel="1" href="/blog/tags/中国城市/">中国城市</a>
+      <a rel="3" href="/blog/tags/数据库/">数据库</a>
+      <a rel="1" href="/blog/tags/postgresql/">PostgreSQL</a>
+      <a rel="1" href="/blog/tags/安全/">安全</a>
+      <a rel="2" href="/blog/tags/docker/">Docker</a>
+      <a rel="1" href="/blog/tags/logstash/">Logstash</a>
+      <a rel="1" href="/blog/tags/ftp/">ftp</a>
+  </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item list-group-item-success">
+    年份
+  </li>
+
+    <li class="list-group-item">
+      <span class="badge">2</span>
+      <a href="/blog/2016/">2016</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">3</span>
+      <a href="/blog/2015/">2015</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">10</span>
+      <a href="/blog/2014/">2014</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">8</span>
+      <a href="/blog/2013/">2013</a>
+    </li>
+    <li class="list-group-item">
+      <span class="badge">11</span>
+      <a href="/blog/2012/">2012</a>
+    </li>
+</ul>
+
+<ul class="list-group">
+  <li class="list-group-item">
+    <div id="qrcode"></div>
+    <div>使用手机阅读或分享至微信朋友圈</div>
+  </li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="footer" class="text-center">
+      <div>
+        ©2014 <a href="http://wongyouth.com">http://wongyouth.com</a>
+        <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1000394755'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/z_stat.php%3Fid%3D1000394755%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+
+        <script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F84b5475b333b745a8ca4850a4852fe67' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+      </div>
+      <div class="credit">Powered by <a href="http://middlemanapp.com">Middleman</a></div>
+    </div>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+    e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+    e.src='//www.google-analytics.com/analytics.js';
+    r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-30466888-1');ga('send','pageview');
+</script>
+
+
+    <script src="../../../../../javascripts/all-7bcf5a86.js" type="text/javascript"></script>
+        <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":["mshare","weixin","tsina","qzone","tqq","renren","kaixin001"],"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"2","bdPos":"right","bdTop":"150"},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+      <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"wongyouth"};
+        (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0] 
+           || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+        </script>
+      <!-- 多说公共JS代码 end -->
+
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js" type="text/javascript"></script>
+    <![endif]-->
+  </body>
+</html>

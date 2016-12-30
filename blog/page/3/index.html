@@ -51,6 +51,35 @@
       <div class="row">
         <div id="main" role="main" class="col-sm-8 col-md-9">
               <article class="shadow">
+    <h2><a href="/blog/2013/04/22/config-dns-server-for-development/">Config DNS server for development</a> </h2>
+    <div class="meta text-muted">
+  <div class="date">
+    <i class="glyphicon glyphicon-calendar"></i>
+    <abbr class="timeago" title="2013-04-22T19:28:00+08:00">2013-04-22 19:28</abbr>
+  </div>
+  <div class="comments">
+    <i class="glyphicon glyphicon-comment"></i>
+    <span class="ds-thread-count" data-thread-key="/blog/2013/04/22/config-dns-server-for-development/" data-count-type="comments"></span>
+  </div>
+  <div class="tags">
+    <i class="glyphicon glyphicon-tags"></i>
+    <a href="/blog/tags/运维/">运维</a>, <a href="/blog/tags/dns/">DNS</a>, <a href="/blog/tags/bind9/">Bind9</a>
+  </div>
+</div>
+
+
+    <p>开发的时候我们很多时候需要配置一个与线上相同的环境来做测试。
+其中一项就是我们需要用线上相同的域名在做测试，这样就需要在开发环境里面配置域名映射。
+最为简单的情况就是使用/etc/hosts，但是如果是有一团队来做测试，需要所有的人有相同的配置，
+特别是有新成员来的时候，相同的工作要不厌其烦的重复做重复说明。</p>
+
+<p>还有一种办法就是找一台机器来做域名解析服务，其实配置起来也不是很麻烦，下面就让我来讲一个简单的例子。</p>
+
+
+
+    <a class="more-link" href="/blog/2013/04/22/config-dns-server-for-development/">Read more</a>
+  </article>
+  <article class="shadow">
     <h2><a href="/blog/2013/01/30/use-lvm-with-your-server/">Use LVM with your server</a> </h2>
     <div class="meta text-muted">
   <div class="date">
@@ -294,30 +323,6 @@
 
     <a class="more-link" href="/blog/2012/06/18/tmall-za-jin-dan/">Read more</a>
   </article>
-  <article class="shadow">
-    <h2><a href="/blog/2012/04/26/git-branch/">Git分支常用操作</a> </h2>
-    <div class="meta text-muted">
-  <div class="date">
-    <i class="glyphicon glyphicon-calendar"></i>
-    <abbr class="timeago" title="2012-04-26T10:55:00+08:00">2012-04-26 10:55</abbr>
-  </div>
-  <div class="comments">
-    <i class="glyphicon glyphicon-comment"></i>
-    <span class="ds-thread-count" data-thread-key="/blog/2012/04/26/git-branch/" data-count-type="comments"></span>
-  </div>
-  <div class="tags">
-    <i class="glyphicon glyphicon-tags"></i>
-    <a href="/blog/tags/git/">Git</a>
-  </div>
-</div>
-
-
-    <p>在这里我列举了一些日常Git操作时用到的<code>branch</code>分支命令。</p>
-
-
-
-    <a class="more-link" href="/blog/2012/04/26/git-branch/">Read more</a>
-  </article>
 
   <ul class="pager">
     <li class="">
@@ -359,6 +364,9 @@
   </li>
 
     <li class="list-group-item">
+      <a href="/blog/2016/12/30/enhenced-ftp-tool-comparision/">Ftp 增强工具比较</a> <span class="text-muted">12-30</span>
+    </li>
+    <li class="list-group-item">
       <a href="/blog/2016/02/24/elk-with-rails-log-analytics/">ELK 套件分析Rails日志</a> <span class="text-muted">02-24</span>
     </li>
     <li class="list-group-item">
@@ -369,9 +377,6 @@
     </li>
     <li class="list-group-item">
       <a href="/blog/2015/01/09/use-gpg-to-encrypt-your-data/">使用 GPG 加密数据</a> <span class="text-muted">01-09</span>
-    </li>
-    <li class="list-group-item">
-      <a href="/blog/2014/10/15/postgresql-tips/">PostgreSQL Tips</a> <span class="text-muted">10-15</span>
     </li>
 </ul>
 
@@ -419,6 +424,7 @@
       <a rel="1" href="/blog/tags/安全/">安全</a>
       <a rel="2" href="/blog/tags/docker/">Docker</a>
       <a rel="1" href="/blog/tags/logstash/">Logstash</a>
+      <a rel="1" href="/blog/tags/ftp/">ftp</a>
   </li>
 </ul>
 
@@ -428,7 +434,7 @@
   </li>
 
     <li class="list-group-item">
-      <span class="badge">1</span>
+      <span class="badge">2</span>
       <a href="/blog/2016/">2016</a>
     </li>
     <li class="list-group-item">

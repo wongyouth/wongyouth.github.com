@@ -4,10 +4,102 @@
   <id>http://wongyouth.com/blog</id>
   <link href="http://wongyouth.com/blog"/>
   <link href="http://wongyouth.com/feed.xml" rel="self"/>
-  <updated>2016-02-24T14:36:00+08:00</updated>
+  <updated>2016-12-30T15:13:00+08:00</updated>
   <author>
     <name>wongyouth</name>
   </author>
+  <entry>
+    <title>Ftp 增强工具比较</title>
+    <link rel="alternate" href="http://wongyouth.com/blog/2016/12/30/enhenced-ftp-tool-comparision/"/>
+    <id>http://wongyouth.com/blog/2016/12/30/enhenced-ftp-tool-comparision/</id>
+    <published>2016-12-30T15:13:00+08:00</published>
+    <updated>2016-12-30T16:53:32+08:00</updated>
+    <author>
+      <name>wongyouth</name>
+    </author>
+    <content type="html">&lt;p&gt;现在与主机交互的首选工具应该是 &lt;code&gt;ssh&lt;/code&gt; 相关的工具了，比如 &lt;code&gt;scp&lt;/code&gt;, &lt;code&gt;rsync&lt;/code&gt;。因为他们都是建立在传输层基础上的安全协议。
+而老牌的 &lt;code&gt;ftp&lt;/code&gt; 则不然，因为他们访问主机时的登录交互容易被窃听，有泄密的可能性。
+&lt;code&gt;ftp&lt;/code&gt; 也有对应的安全版本 &lt;code&gt;sftp&lt;/code&gt;, 但是用的就很少了，因为 &lt;code&gt;sftp&lt;/code&gt; 也是基于 &lt;code&gt;ssh&lt;/code&gt; 的，但是 &lt;code&gt;ssh&lt;/code&gt; 自带传输特效，所有 &lt;code&gt;sftp&lt;/code&gt; 就很少用的了。&lt;/p&gt;
+
+&lt;p&gt;本篇为什么要写 &lt;code&gt;ftp&lt;/code&gt;，是因为对接老的系统的时候，是超出我们控制的。
+最近的项目中就需要把本地的数据包传到服务器上，因此找了几个 &lt;code&gt;ftp&lt;/code&gt; 工具来分析了下。&lt;/p&gt;
+
+&lt;!-- readmore --&gt;
+
+&lt;p&gt;主要的需求是&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CUI 非 GUI，因为需要结合 Shell 来写脚本&lt;/li&gt;
+&lt;li&gt;容易上传整个目录&lt;/li&gt;
+&lt;li&gt;可以指定上传路径&lt;/li&gt;
+&lt;li&gt;最好密码不要显示在命令行里&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;找了3个来分析了下功能 &lt;code&gt;ftp&lt;/code&gt;, &lt;code&gt;ncftp&lt;/code&gt;, &lt;code&gt;lftp&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2&gt;&lt;code&gt;ftp&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;首先当然是用系统自带的 &lt;code&gt;ftp&lt;/code&gt;，&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;put&lt;/code&gt; 命令不能指定目标路径，需要先登录后 &lt;code&gt;cd&lt;/code&gt; 到目标路径&lt;/li&gt;
+&lt;li&gt;不能指定整个目录上传，多个文件可以用 &lt;code&gt;mput&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;密码可以带入 &lt;code&gt;user@pass:host&lt;/code&gt; 中，放在 ~/.netrc 里面
+在 ~/.netrc 里的格式是&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;machine host/ip
+  login USERNAME
+  password PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;&lt;code&gt;ncftp&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;ncftp&lt;/code&gt; 可以满足上面的所有需求&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;上传整个目录，包括子目录&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ncftpput -u user -p pass -R  host /host/dir /local/dir
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;上传到指定路径&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ncftpput -u user -p pass host /host/dir /local/path
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;隐藏密码&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;提示输入密码&lt;/p&gt;
+
+&lt;p&gt;ncftpput -u user host /host/dir /local/path&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;放入配置文件&lt;/p&gt;
+
+&lt;p&gt;ncftpput -f login.cfg host /host/dir /local/path&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;login.cfg 文件是这个格式&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;host example.com
+user USERNAME
+pass PASSWORD
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;&lt;code&gt;lftp&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;lftp&lt;/code&gt; 满足了我的所有需求&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;镜像整个目录，包括子目录&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;lftp -e 'mirror -R /local/dir /host/dir' host
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;上传到指定路径&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;lftp -e 'put -O /host/dir/ /local/path; bye' host
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;密码方式与 &lt;code&gt;ftp&lt;/code&gt; 相同&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;其他比较&lt;/h2&gt;
+
+&lt;p&gt;使用 &lt;code&gt;ncftp&lt;/code&gt; 或者 &lt;code&gt;lftp&lt;/code&gt; 登录后，都可以使用上下键历史命令回显，&lt;code&gt;Tab&lt;/code&gt; 键显示候选文件，文件补全等功能。他们的功能比较相近，由于满足了我要的需求，没有再深入比较了。&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>ELK 套件分析Rails日志</title>
     <link rel="alternate" href="http://wongyouth.com/blog/2016/02/24/elk-with-rails-log-analytics/"/>
@@ -569,132 +661,6 @@ You need a Passphrase to protect your secret key.
 &lt;p&gt;查询一个 PostgreSQL 的存储过程的源码。&lt;/p&gt;
 &lt;pre class="highlight plaintext"&gt;&lt;code&gt;select prosrc from pg_proc where proname = '$PRONAME';
 &lt;/code&gt;&lt;/pre&gt;
-</content>
-  </entry>
-  <entry>
-    <title>配置主从PostgreSQL数据库</title>
-    <link rel="alternate" href="http://wongyouth.com/blog/2014/09/05/configure-postgresql-master-slave-replication/"/>
-    <id>http://wongyouth.com/blog/2014/09/05/configure-postgresql-master-slave-replication/</id>
-    <published>2014-09-05T16:47:00+08:00</published>
-    <updated>2014-11-10T11:01:54+08:00</updated>
-    <author>
-      <name>wongyouth</name>
-    </author>
-    <content type="html">&lt;h1&gt;背景&lt;/h1&gt;
-
-&lt;p&gt;数据库的数据量开始增多，负载开始变高，需要做一个数据库主从配置。&lt;/p&gt;
-
-&lt;p&gt;数据量，单表超过了100万条数据，应用程序做读写分离，写到主数据库，读从从数据库。&lt;/p&gt;
-
-&lt;h1&gt;步骤&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;生成操作用的用户&lt;/li&gt;
-&lt;li&gt;配置主数据库，激活备份模式&lt;/li&gt;
-&lt;li&gt;关停从数据库，复制数据&lt;/li&gt;
-&lt;li&gt;配置从数据库，从主数据库同步数据&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;生成操作用的用户&lt;/h2&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;sudo apt-get install postgresql
-sudo -s postgres
-psql -c "CREATE USER rep REPLICATION LOGIN CONNECTION LIMIT 1 ENCRYPTED PASSWORD 'yourpassword';"
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2&gt;配置主数据库，激活备份模式&lt;/h2&gt;
-
-&lt;p&gt;切换到配置目录&lt;/p&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cd /etc/postgresql/9.1/main
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;主从模式&lt;/p&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cat &amp;gt;&amp;gt; postgresql.conf &amp;lt;&amp;lt;EOF
-listen_addresses = 'localhost,IP_address_of_THIS_host'
-wal_level = 'hot_standby'
-archive_mode = on
-archive_command = 'cd .'
-max_wal_senders = 1
-hot_standby = on
-wal_keep_segments = 32
-checkpoint_segments = 8
-EOF
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;wal_keep_segments 1个16MB 32 就是512M，这个参数用来配置保存wal日志的大小。如果备份期间有很多数据库操作导致旧日志失效时，就需要配置更大的数字才能保证同步数据文件。&lt;/p&gt;
-
-&lt;p&gt;允许从数据库连接到主数据库&lt;/p&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cat &amp;gt;&amp;gt; pg_hba.conf &amp;lt;&amp;lt;EOF
-host    replication     rep     IP_address_of_slave/32   md5
-EOF
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;重启数据库&lt;/p&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;service postgresql restart
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2&gt;配置从数据库，从主数据库同步数据&lt;/h2&gt;
-
-&lt;p&gt;在从数据库机器执行&lt;/p&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;service postgresql stop
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cd /var/lib/postgresql/9.1/main
-echo &amp;gt; recovery.conf &amp;lt;&amp;lt;EOF
-standby_mode = 'on'
-primary_conninfo = 'host=master_IP_address port=5432 user=rep password=yourpassword'
-trigger_file = '/tmp/postgresql.trigger.5432'
-EOF
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2&gt;复制数据&lt;/h2&gt;
-
-&lt;p&gt;在主数据库机器执行&lt;/p&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;psql -c "select pg_start_backup('initial_backup');"
-rsync -cva -P --inplace --exclude=*pg_xlog* /var/lib/postgresql/9.1/main/ slave_IP_address:/var/lib/postgresql/9.1/main/
-psql -c "select pg_stop_backup();"
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;20G 的数据文件大概复制了3个多小时，要看网络状况好不好。&lt;/p&gt;
-
-&lt;h2&gt;启动从数据库&lt;/h2&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;service postgresql start
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;参看log文件，看是否有报错&lt;/p&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;tail -f /var/log/postgresql/postgresql-9.1-main.log
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2&gt;测试&lt;/h2&gt;
-
-&lt;p&gt;在主数据库执行&lt;/p&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;CREATE TABLE rep_test (test varchar(40));
-INSERT INTO rep_test VALUES ('data one');
-INSERT INTO rep_test VALUES ('some more words');
-INSERT INTO rep_test VALUES ('lalala');
-INSERT INTO rep_test VALUES ('hello there');
-INSERT INTO rep_test VALUES ('blahblah');
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;在从数据库执行&lt;/p&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;SELECT * FROM rep_test;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;查看数据有无同步&lt;/p&gt;
-
-&lt;h3&gt;验证从数据库的只读属性&lt;/h3&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;INSERT INTO rep_test VALUES ('oops');
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ERROR:  cannot execute INSERT in a read-only transaction
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2&gt;查看同步状态&lt;/h2&gt;
-
-&lt;p&gt;在主数据库中执行&lt;/p&gt;
-&lt;pre class="highlight plaintext"&gt;&lt;code&gt;select * from pg_stat_replication;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2&gt;延伸阅读&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href="http://www.postgresql.org/docs/9.1/interactive/continuous-archiving.html#BACKUP-BASE-BACKUP"&gt;官网文档&lt;/a&gt;, &lt;a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-master-slave-replication-on-postgresql-on-an-ubuntu-12-04-vps"&gt;Ubuntu 12.04&lt;/a&gt;, &lt;a href="http://www.rassoc.com/gregr/weblog/2013/02/16/zero-to-postgresql-streaming-replication-in-10-mins/"&gt;从0配置主从&lt;/a&gt;, &lt;a title="主从切换" href="http://francs3.blog.163.com/blog/static/405767272011724103133766/"&gt;主从切换&lt;/a&gt;&lt;/p&gt;
 </content>
   </entry>
 </feed>

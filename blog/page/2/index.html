@@ -51,6 +51,44 @@
       <div class="row">
         <div id="main" role="main" class="col-sm-8 col-md-9">
               <article class="shadow">
+    <h2><a href="/blog/2014/06/30/gem-chinacity-to-get-the-latest-china-cities-data-from-official-site/">使用 chinacity 从国家统计局官网取最新城市数据</a> </h2>
+    <div class="meta text-muted">
+  <div class="date">
+    <i class="glyphicon glyphicon-calendar"></i>
+    <abbr class="timeago" title="2014-06-30T20:09:00+08:00">2014-06-30 20:09</abbr>
+  </div>
+  <div class="comments">
+    <i class="glyphicon glyphicon-comment"></i>
+    <span class="ds-thread-count" data-thread-key="/blog/2014/06/30/gem-chinacity-to-get-the-latest-china-cities-data-from-official-site/" data-count-type="comments"></span>
+  </div>
+  <div class="tags">
+    <i class="glyphicon glyphicon-tags"></i>
+    <a href="/blog/tags/ruby/">Ruby</a>, <a href="/blog/tags/数据/">数据</a>, <a href="/blog/tags/中国城市/">中国城市</a>
+  </div>
+</div>
+
+
+    <p>最近项目里需要用到中国城市数据，看了几个Gem，发现数据都不是最新的，遂写了个Gem <a href="http://github.com/wongyouth/chinacity">chinacity</a> 用来从国家统计局取最新数据。</p>
+
+<p>因为考虑到城市类基础数据一旦开始使用，id与别的数据关联后就比较难再更新数据了，所以就做成只取数据生成文件的简单小工具。</p>
+
+<h2>功能</h2>
+
+<ul>
+<li>从国家统计局官网取最新数据。</li>
+<li>支持导出 JSON，CSV格式</li>
+<li>JSON 数据 兼容 <a href="https://github.com/saberma/china_city">china_city</a> Gem 的数据格式</li>
+<li>支持同时导出拼音缩写</li>
+</ul>
+
+<h2>用法</h2>
+
+<h3>导出JSON格式</h3>
+<pre class="highlight plaintext"><code>$ chinacity &gt; areas.json...</code></pre>
+
+    <a class="more-link" href="/blog/2014/06/30/gem-chinacity-to-get-the-latest-china-cities-data-from-official-site/">Read more</a>
+  </article>
+  <article class="shadow">
     <h2><a href="/blog/2014/04/28/first-step-for-we-media/">独立博客，自媒体第一步</a> </h2>
     <div class="meta text-muted">
   <div class="date">
@@ -330,35 +368,6 @@ You can download bootstrap page with code below.</p>
 
     <a class="more-link" href="/blog/2013/04/23/use-nfs-to-share-files/">Read more</a>
   </article>
-  <article class="shadow">
-    <h2><a href="/blog/2013/04/22/config-dns-server-for-development/">Config DNS server for development</a> </h2>
-    <div class="meta text-muted">
-  <div class="date">
-    <i class="glyphicon glyphicon-calendar"></i>
-    <abbr class="timeago" title="2013-04-22T19:28:00+08:00">2013-04-22 19:28</abbr>
-  </div>
-  <div class="comments">
-    <i class="glyphicon glyphicon-comment"></i>
-    <span class="ds-thread-count" data-thread-key="/blog/2013/04/22/config-dns-server-for-development/" data-count-type="comments"></span>
-  </div>
-  <div class="tags">
-    <i class="glyphicon glyphicon-tags"></i>
-    <a href="/blog/tags/运维/">运维</a>, <a href="/blog/tags/dns/">DNS</a>, <a href="/blog/tags/bind9/">Bind9</a>
-  </div>
-</div>
-
-
-    <p>开发的时候我们很多时候需要配置一个与线上相同的环境来做测试。
-其中一项就是我们需要用线上相同的域名在做测试，这样就需要在开发环境里面配置域名映射。
-最为简单的情况就是使用/etc/hosts，但是如果是有一团队来做测试，需要所有的人有相同的配置，
-特别是有新成员来的时候，相同的工作要不厌其烦的重复做重复说明。</p>
-
-<p>还有一种办法就是找一台机器来做域名解析服务，其实配置起来也不是很麻烦，下面就让我来讲一个简单的例子。</p>
-
-
-
-    <a class="more-link" href="/blog/2013/04/22/config-dns-server-for-development/">Read more</a>
-  </article>
 
   <ul class="pager">
     <li class="">
@@ -400,6 +409,9 @@ You can download bootstrap page with code below.</p>
   </li>
 
     <li class="list-group-item">
+      <a href="/blog/2016/12/30/enhenced-ftp-tool-comparision/">Ftp 增强工具比较</a> <span class="text-muted">12-30</span>
+    </li>
+    <li class="list-group-item">
       <a href="/blog/2016/02/24/elk-with-rails-log-analytics/">ELK 套件分析Rails日志</a> <span class="text-muted">02-24</span>
     </li>
     <li class="list-group-item">
@@ -410,9 +422,6 @@ You can download bootstrap page with code below.</p>
     </li>
     <li class="list-group-item">
       <a href="/blog/2015/01/09/use-gpg-to-encrypt-your-data/">使用 GPG 加密数据</a> <span class="text-muted">01-09</span>
-    </li>
-    <li class="list-group-item">
-      <a href="/blog/2014/10/15/postgresql-tips/">PostgreSQL Tips</a> <span class="text-muted">10-15</span>
     </li>
 </ul>
 
@@ -460,6 +469,7 @@ You can download bootstrap page with code below.</p>
       <a rel="1" href="/blog/tags/安全/">安全</a>
       <a rel="2" href="/blog/tags/docker/">Docker</a>
       <a rel="1" href="/blog/tags/logstash/">Logstash</a>
+      <a rel="1" href="/blog/tags/ftp/">ftp</a>
   </li>
 </ul>
 
@@ -469,7 +479,7 @@ You can download bootstrap page with code below.</p>
   </li>
 
     <li class="list-group-item">
-      <span class="badge">1</span>
+      <span class="badge">2</span>
       <a href="/blog/2016/">2016</a>
     </li>
     <li class="list-group-item">

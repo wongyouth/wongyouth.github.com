@@ -51,6 +51,33 @@
       <div class="row">
         <div id="main" role="main" class="col-sm-8 col-md-9">
               <article class="shadow">
+    <h2><a href="/blog/2016/12/30/enhenced-ftp-tool-comparision/">Ftp 增强工具比较</a> </h2>
+    <div class="meta text-muted">
+  <div class="date">
+    <i class="glyphicon glyphicon-calendar"></i>
+    <abbr class="timeago" title="2016-12-30T15:13:00+08:00">2016-12-30 15:13</abbr>
+  </div>
+  <div class="comments">
+    <i class="glyphicon glyphicon-comment"></i>
+    <span class="ds-thread-count" data-thread-key="/blog/2016/12/30/enhenced-ftp-tool-comparision/" data-count-type="comments"></span>
+  </div>
+  <div class="tags">
+    <i class="glyphicon glyphicon-tags"></i>
+    <a href="/blog/tags/ftp/">ftp</a>
+  </div>
+</div>
+
+
+    <p>现在与主机交互的首选工具应该是 <code>ssh</code> 相关的工具了，比如 <code>scp</code>, <code>rsync</code>。因为他们都是建立在传输层基础上的安全协议。
+而老牌的 <code>ftp</code> 则不然，因为他们访问主机时的登录交互容易被窃听，有泄密的可能性。
+<code>ftp</code> 也有对应的安全版本 <code>sftp</code>, 但是用的就很少了，因为 <code>sftp</code> 也是基于 <code>ssh</code> 的，但是 <code>ssh</code> 自带传输特效，所有 <code>sftp</code> 就很少用的了。</p>
+
+<p>本篇为什么要写 <code>ftp</code>，是因为对接老的系统的时候，是超出我们控制的。
+最近的项目中就需要把本地的数据包传到服务器上，因此找了几...</p>
+
+    <a class="more-link" href="/blog/2016/12/30/enhenced-ftp-tool-comparision/">Read more</a>
+  </article>
+  <article class="shadow">
     <h2><a href="/blog/2016/02/24/elk-with-rails-log-analytics/">ELK 套件分析Rails日志</a> </h2>
     <div class="meta text-muted">
   <div class="date">
@@ -366,44 +393,6 @@ psql -c "CREATE USER rep REPLICATION LOGIN CONNECTION...</code></pre>
 
     <a class="more-link" href="/blog/2014/07/05/variations-of-equal-method-in-ruby/">Read more</a>
   </article>
-  <article class="shadow">
-    <h2><a href="/blog/2014/06/30/gem-chinacity-to-get-the-latest-china-cities-data-from-official-site/">使用 chinacity 从国家统计局官网取最新城市数据</a> </h2>
-    <div class="meta text-muted">
-  <div class="date">
-    <i class="glyphicon glyphicon-calendar"></i>
-    <abbr class="timeago" title="2014-06-30T20:09:00+08:00">2014-06-30 20:09</abbr>
-  </div>
-  <div class="comments">
-    <i class="glyphicon glyphicon-comment"></i>
-    <span class="ds-thread-count" data-thread-key="/blog/2014/06/30/gem-chinacity-to-get-the-latest-china-cities-data-from-official-site/" data-count-type="comments"></span>
-  </div>
-  <div class="tags">
-    <i class="glyphicon glyphicon-tags"></i>
-    <a href="/blog/tags/ruby/">Ruby</a>, <a href="/blog/tags/数据/">数据</a>, <a href="/blog/tags/中国城市/">中国城市</a>
-  </div>
-</div>
-
-
-    <p>最近项目里需要用到中国城市数据，看了几个Gem，发现数据都不是最新的，遂写了个Gem <a href="http://github.com/wongyouth/chinacity">chinacity</a> 用来从国家统计局取最新数据。</p>
-
-<p>因为考虑到城市类基础数据一旦开始使用，id与别的数据关联后就比较难再更新数据了，所以就做成只取数据生成文件的简单小工具。</p>
-
-<h2>功能</h2>
-
-<ul>
-<li>从国家统计局官网取最新数据。</li>
-<li>支持导出 JSON，CSV格式</li>
-<li>JSON 数据 兼容 <a href="https://github.com/saberma/china_city">china_city</a> Gem 的数据格式</li>
-<li>支持同时导出拼音缩写</li>
-</ul>
-
-<h2>用法</h2>
-
-<h3>导出JSON格式</h3>
-<pre class="highlight plaintext"><code>$ chinacity &gt; areas.json...</code></pre>
-
-    <a class="more-link" href="/blog/2014/06/30/gem-chinacity-to-get-the-latest-china-cities-data-from-official-site/">Read more</a>
-  </article>
 
   <ul class="pager">
     <li class="disabled">
@@ -445,6 +434,9 @@ psql -c "CREATE USER rep REPLICATION LOGIN CONNECTION...</code></pre>
   </li>
 
     <li class="list-group-item">
+      <a href="/blog/2016/12/30/enhenced-ftp-tool-comparision/">Ftp 增强工具比较</a> <span class="text-muted">12-30</span>
+    </li>
+    <li class="list-group-item">
       <a href="/blog/2016/02/24/elk-with-rails-log-analytics/">ELK 套件分析Rails日志</a> <span class="text-muted">02-24</span>
     </li>
     <li class="list-group-item">
@@ -455,9 +447,6 @@ psql -c "CREATE USER rep REPLICATION LOGIN CONNECTION...</code></pre>
     </li>
     <li class="list-group-item">
       <a href="/blog/2015/01/09/use-gpg-to-encrypt-your-data/">使用 GPG 加密数据</a> <span class="text-muted">01-09</span>
-    </li>
-    <li class="list-group-item">
-      <a href="/blog/2014/10/15/postgresql-tips/">PostgreSQL Tips</a> <span class="text-muted">10-15</span>
     </li>
 </ul>
 
@@ -505,6 +494,7 @@ psql -c "CREATE USER rep REPLICATION LOGIN CONNECTION...</code></pre>
       <a rel="1" href="/blog/tags/安全/">安全</a>
       <a rel="2" href="/blog/tags/docker/">Docker</a>
       <a rel="1" href="/blog/tags/logstash/">Logstash</a>
+      <a rel="1" href="/blog/tags/ftp/">ftp</a>
   </li>
 </ul>
 
@@ -514,7 +504,7 @@ psql -c "CREATE USER rep REPLICATION LOGIN CONNECTION...</code></pre>
   </li>
 
     <li class="list-group-item">
-      <span class="badge">1</span>
+      <span class="badge">2</span>
       <a href="/blog/2016/">2016</a>
     </li>
     <li class="list-group-item">
