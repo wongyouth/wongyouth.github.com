@@ -9,7 +9,7 @@ activate :syntax#, :line_numbers => true
 set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true, :smartypants => true, :no_intra_emphasis => true, :autolink => true
 
-@domain = 'wongyouth.com'.freeze
+@domain = 'wongyouth.github.io'.freeze
 
 ###
 # Blog settings
@@ -164,12 +164,13 @@ set :frontmatter_extensions, %w(.html .slim)
 case ENV['TARGET'].to_s.downcase
 when 'github'
   activate :deploy do |deploy|
-    deploy.build_before = true
+    deploy.build_before = false
     deploy.method = :git
     # Optional Settings
     # deploy.remote   = "custom-remote" # remote name or git url, default: origin
     # deploy.branch   = "custom-branch" # default: gh-pages
-    # deploy.strategy = :force_push      # commit strategy: can be :force_push or :submodule, default: :force_push
+    deploy.branch   = "master" # default: gh-pages
+    deploy.strategy = :force_push      # commit strategy: can be :force_push or :submodule, default: :force_push
   end
 else 'gitcafe'
   activate :deploy do |deploy|

@@ -14,6 +14,6 @@ namespace :deploy do
   end
 end
 
-task :deploy => 'deploy:gitcafe'
+task :deploy => 'deploy:github'
 task :default => :deploy
 
