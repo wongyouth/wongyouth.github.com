@@ -1,0 +1,9 @@
+---
+title: 归档
+layout: blog
+change_frequency: daily
+---
+
+- blog.articles.group_by{|p| p.date.year}.each do |year, articles|
+  = partial 'partials/archive', locals: {title: year, articles: articles}
+
