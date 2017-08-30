@@ -12,7 +12,7 @@ fancybox: true
 sidebar: right
 widgets:
 - category
-- tag
+# - tag
 - tagcloud
 - archive
 - recent_posts
@@ -24,8 +24,8 @@ index_widgets:
 # - archive
 
 # widget behavior
-archive_type: 'monthly'
-show_count: false
+archive_type: 'yearly'
+show_count: true
 
 # Miscellaneous
 google_analytics:
