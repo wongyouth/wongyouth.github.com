@@ -19,7 +19,7 @@ Here comes the [SpeedSpider][1], it's A simple and speedy web spider for site pa
 
 UPDATE:
 
-It turns out `wget` can do all the jobs I wanted except it doest not use threads. So wget way may be slower than SpeedSpider.
+It turns out `wget` can do all the jobs I wanted except it doesn't use threads. So wget way may be slower than SpeedSpider.
 You can download bootstrap page with code below.
 
     wget -m -p -E -k -np http://twitter.github.io/bootstrap

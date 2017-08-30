@@ -53,7 +53,7 @@ topics: '技术'
 `Kibana` 作为最后的用户 UI 接口，支持了很多分析的功能。比如分析每天的PV情况，一天内访问的高峰与低谷，异常攻击情况，瓶颈的处理等。
 
 
-![Kibana截图](../images/blog/kibana.png)
+![Kibana截图](/images/blog/kibana.png)
 
 ## 实际应用
 

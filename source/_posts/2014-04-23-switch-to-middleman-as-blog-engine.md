@@ -1,6 +1,7 @@
 ---
 title: 新版博客发布，使用Middleman做为博客引擎
 date: 2014-04-23 12:46 +0800
+category: Blog
 tags: [博客]
 topic: 技术
 ---
@@ -84,7 +85,7 @@ Octopress也没有使用最新的Jekyll版本。但是Octopress最好的就是�
 在尝试使用 `Jekyll` 之后，最终决定使用 `Middleman` 因为我熟悉Rails这套机制，所以基本没有什么入门难度。
 如果你熟悉Nodejs或者你懂Javascript，那么Assemble应该更加适合，不用找最好的，找到适合自己的。
 
-![Middleman](../images/blog/middleman.png)
+![Middleman](/images/blog/middleman.png)
 
 -   使用 `middleman-blog` 作为博客引擎;
 -   使用 `middleman-syntax` 高亮语法;

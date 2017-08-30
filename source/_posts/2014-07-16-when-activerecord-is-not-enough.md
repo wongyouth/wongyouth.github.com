@@ -25,6 +25,8 @@ Post.where.not(title: 'Arel is cool')
 Post.where(Post[:title].not_eq('Arel is cool')
 ```
 
+<!-- more -->
+
 ## 2. NULL 运算
 
 ```

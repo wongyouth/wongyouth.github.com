@@ -22,6 +22,8 @@ topic: 技术
 
 能够实现这个技术的，有RAID0, LVM Stripe。这里我只说LVM。
 
+<!-- more -->
+
 # 操作
 
 ## 确认 vg 所有 物理盘数量

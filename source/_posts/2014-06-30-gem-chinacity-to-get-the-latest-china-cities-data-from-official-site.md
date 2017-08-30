@@ -17,6 +17,8 @@ topic: 技术
 * JSON 数据 兼容 [china_city](https://github.com/saberma/china_city) Gem 的数据格式
 * 支持同时导出拼音缩写
 
+<!-- more -->
+
 ## 用法
 
 ### 导出JSON格式
