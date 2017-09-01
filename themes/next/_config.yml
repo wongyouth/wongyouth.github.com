@@ -6,7 +6,7 @@
 favicon: /favicon.ico
 
 # Set default keywords (Use a comma to separate)
-keywords: "Hexo, NexT"
+keywords: "Ryan Wang, Blog, 技术博客"
 
 # Set rss to false to disable feed link.
 # Leave rss as empty to use site's feed link.
@@ -167,8 +167,8 @@ sidebar:
   b2t: false
 
   # Scroll percent label in b2t button
-  scrollpercent: false
-  
+  scrollpercent: true
+
   # Enable sidebar on narrow view
   onmobile: false
 
