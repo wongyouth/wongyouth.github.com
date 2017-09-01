@@ -5,9 +5,11 @@
 # Site
 title: 向往自由的鱼
 subtitle:
-description:
+description: 随想随写，乱写一气
 author: Ryan Wang
-language: zh-CN
+avatar: https://avatars0.githubusercontent.com/u/944583?v=4&s=460
+#language: zh-CN
+language: zh-Hans
 timezone:
 
 # URL
@@ -73,9 +75,14 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+# theme: landscape
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type:
+
+social:
+  GitHub: https://github.com/wongyouth
+  Weibo: http://weibo.com/u/1429798952/home?wvr=5&lf=reg
