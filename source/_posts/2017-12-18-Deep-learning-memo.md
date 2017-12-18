@@ -40,8 +40,44 @@ tanh, sigmoid, relu，深度神经网络中推荐使用 relu
 
 ## 训练算法
 
-梯度下降算法： GSD
+### SGD
+
+梯度下降算法： SGD
 步长： 0.01, 太大速度快但可能取不到最精确值，太小则速度慢
+
+缺点： 步长选择比较困难
+
+### Momentum
+
+下降初期能够很好的加速
+
+
+### Adagrad
+
+前期放大梯度，后期约束梯度
+依赖人工设置全局学习率
+
+### Adadelta
+
+Adagrad的优化，不需要人工设置全局学习率
+
+训练初中期，加速效果不错，很快
+训练后期，反复在局部最小值附近抖动
+
+
+### RMSprop
+
+Adadelta 的一个特例
+
+* 依赖全局学习率
+* 趋于 Adagrad 和 Adadelta 之间
+* 对于 RNN 效果和好
+
+### adam
+
+本质上是带有动量项的RMSprop
+
+* 自适应学习率
 
 ## 最大池化
 
@@ -79,7 +115,12 @@ No.     方阵              kernel 和通道       步长
 6       10                用于10个数字                                                        
 </pre>
 
-## 例子
+## 后续阅读
 
+https://zhuanlan.zhihu.com/p/22252270
+http://ycszen.github.io/2016/08/24/SGD%EF%BC%8CAdagrad%EF%BC%8CAdadelta%EF%BC%8CAdam%E7%AD%89%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%AF%94%E8%BE%83/
+
+### 列子
 https://www.tuicool.com/articles/vieuIbi
 https://www.tuicool.com/articles/bayI7ne
+
