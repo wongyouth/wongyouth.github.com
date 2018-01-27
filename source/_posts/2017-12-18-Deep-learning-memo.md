@@ -120,7 +120,7 @@ No.     方阵              kernel 和通道       步长
 https://zhuanlan.zhihu.com/p/22252270
 http://ycszen.github.io/2016/08/24/SGD%EF%BC%8CAdagrad%EF%BC%8CAdadelta%EF%BC%8CAdam%E7%AD%89%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%AF%94%E8%BE%83/
 
-### 列子
+### 例子
 https://www.tuicool.com/articles/vieuIbi
 https://www.tuicool.com/articles/bayI7ne
 
