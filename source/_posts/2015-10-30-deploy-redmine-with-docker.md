@@ -6,7 +6,7 @@ keywords: ["Redmine", "gitolite", "服务器 Server", "部署 Deployment"]
 topic: "技术"
 ---
 
-[上一篇](http://wongyouth.github.io/2015/07/02/use-docker-with-rails/)介绍了 Docker 之后，仅仅过了3个月时间，Docker又增加了很多变化:
+[上一篇](/2015/07/02/与-docker-一起使用-rails/)介绍了 Docker 之后，仅仅过了3个月时间，Docker又增加了很多变化:
 比如 [Docker Machine](https://docs.docker.com/machine/install-machine/), [Docker Compose](https://docs.docker.com/compose/install/)。
 
 最近项目里要把 Redmine 从盛大云到阿里云，正好可以发挥 Docker 的强项。这里分析一下需要实现的功能：

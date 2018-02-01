@@ -51,4 +51,4 @@ tags: ['Docker']
     cd $WORKDIR
     RAILS_ENV=production bundle exec rake db:migrate
 
-[1]: http://wongyouth.github.io/2015/10/30/%E4%BD%BF%E7%94%A8-docker-%E6%9D%A5%E5%AE%89%E8%A3%85-redmine-%E5%B9%B6%E7%BB%93%E5%90%88-gitolite-%E4%BD%BF%E7%94%A8/
+[1]: /2015/10/30/%E4%BD%BF%E7%94%A8-docker-%E6%9D%A5%E5%AE%89%E8%A3%85-redmine-%E5%B9%B6%E7%BB%93%E5%90%88-gitolite-%E4%BD%BF%E7%94%A8/
