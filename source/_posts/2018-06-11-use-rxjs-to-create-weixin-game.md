@@ -7,7 +7,7 @@ tags: ['微信', 'rxjs', '游戏']
 自从去年2017年微信开放了小游戏之后，极大的促进H5游戏的发展。可以想象今年微信游戏必定非常火。
 乘着这股春风，结合近期研究的 `rxjs`，想尝试下用 `rxjs` 改写微信官方小游戏。
 
-![wexin-game](/images/blog/weixin-game.png)
+![weixin-game](/images/blog/wxgame.gif)
 
 <!-- more -->
 
