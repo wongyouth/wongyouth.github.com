@@ -1,5 +1,5 @@
 ---
-title: 使用 Cordova, Vue 开发的网络小说阅读器App 书山追更
+title: 自用的网络小说阅读器App【书山追更】
 date: 2018-10-11 01:03:59
 tags:
 ---
