@@ -1,5 +1,5 @@
 ---
-title: 'vhyve, OSX native VM for Docker'
+title: 'xhyve, 苹果电脑下轻量级虚拟机方案'
 date: 2019-04-28 22:48:40
 tags: ['Docker']
 ---
@@ -52,7 +52,8 @@ Docker 底层是跑在 Linux 基础上的，但是我们开发的电脑常用 Ap
     grep Virtio9p ~/.docker/machine/machines/default/config.json
 
 
-如果该值是 `false` 改成 `true`，在重新生成 VM 应该就解决了。很好奇为什么不是默认开启。
+如果该值是 `false` 改成 `true`，再重新生成 VM 应该就解决了。
+很好奇为什么不是默认开启？可以关注下官方的[issue](https://github.com/machine-drivers/docker-machine-driver-xhyve/issues/136)
 
 # 后续
 
