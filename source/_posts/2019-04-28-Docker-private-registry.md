@@ -36,7 +36,7 @@ Docker 提供了一个很棒的 Registry Image, 使用他可以快速的建立�
 运行一下命令：
 
     docker run -d \
-      -p 5000 \
+      -p 5000:5000 \
       --restart=always \
       --name registry \
       -v "$(pwd)/auth:/auth" \
