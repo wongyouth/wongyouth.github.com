@@ -63,3 +63,7 @@ topic: 技术
 ## 关联指定分支与一个远程分支
 
     git branch -u origin/foo bar
+
+## 无需切换更新其他分支
+
+    git fetch origin develop:develop
