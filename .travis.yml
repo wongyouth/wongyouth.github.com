@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+- '12'
+branches:
+  only:
+  - source
+cache: npm
+before_script:
+- git config --global user.name 'Ryan Wang'
+- git config --global user.email 'wongyouth@gmail.com'
+- sed -i'' "s~git@github.com:wongyouth/wongyouth.github.com.git~https://${GH_TOKEN}@github.com/wongyouth/wongyouth.github.com.git~"
+  _config.yml
+script:
+- npx hexo deploy generate
+- npx hexo deploy --silent
+env:
+  global:
+    secure: sS5piMDHn3NFaiB2OHrtlMqGhYiC2xQtQXSeicj85mykhcIQdAxYruDDtwGhcpYceX5h3V+RZjFtFic7/lm8424ic6Se75j8X0UACt6ZXnG/gBIMrD7s8f6vX7dFGCfkXCgQQ6vsc/G1H0YvzlDZGoNmwFrs7hdQGRHe80h3HuI=

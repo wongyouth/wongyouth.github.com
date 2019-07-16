@@ -66,4 +66,14 @@ topic: 技术
 
 ## 无需切换更新其他分支
 
+基于多人合作时，当要发合并请求之前，需要更新develop的最新代码到自己的工作分支，此时一般的操作需要4步：
+
+    git checkout develop
+    git fetch --rebase
+    git checkout work-branch
+    git rebase develop
+
+如果不需要切换分支就能更新 develop 代码的话，就能把前3步合并为1步操作：
+
     git fetch origin develop:develop
+    git rebase develop
