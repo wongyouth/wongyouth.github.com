@@ -1,0 +1,3 @@
+[submodule "themes/next-reload"]
+	path = themes/next-reload
+	url = https://github.com/next-theme/hexo-theme-next
