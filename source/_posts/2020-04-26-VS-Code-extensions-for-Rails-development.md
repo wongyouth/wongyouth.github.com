@@ -5,7 +5,7 @@ tags: ['Rails', 'VS Code']
 ---
 
 I'm using [VS Code][] on my work for a while.
-I founded [VS Code][] is really awesome for programming.
+I found [VS Code][] is really awesome for programming.
 
 Here is the extension list of [VS Code][] I used for [Ruby on Rails][] development.
 
