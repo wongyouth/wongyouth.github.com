@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>向往自由的鱼</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://wongyouth.github.io/"/>
+  <updated>2021-06-09T04:18:08.920Z</updated>
+  <id>https://wongyouth.github.io/</id>
+  
+  <author>
+    <name>Ryan Wang</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Caddy Server</title>
+    <link href="https://wongyouth.github.io/2020/12/18/caddy-server/"/>
+    <id>https://wongyouth.github.io/2020/12/18/caddy-server/</id>
+    <published>2020-12-18T17:06:01.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Caddy2"><a href="#Caddy2" class="headerlink" title="Caddy2"></a><a href="https://caddyserver.com">Caddy2</a></h1><h2 id="THE-ULTIMATE-SERVER"><a href="#THE-ULTIMATE-SERVER" class="headerlink" title="THE ULTIMATE SERVER"></a>THE ULTIMATE SERVER</h2><p>Caddy 2 is a powerful, enterprise-ready, open source web server with automatic HTTPS written in Go</p><image src="/images/blog/caddy/caddy2.001.jpeg"><a id="more"></a><p><image src="/images/blog/caddy/caddy2.002.jpeg"></p><p><image src="/images/blog/caddy/caddy2.003.jpeg"></p><p><image src="/images/blog/caddy/caddy2.004.jpeg"></p><p><image src="/images/blog/caddy/caddy2.005.jpeg"></p><p><image src="/images/blog/caddy/caddy2.006.jpeg"></p><p><image src="/images/blog/caddy/caddy2.007.jpeg"></p><p><image src="/images/blog/caddy/caddy2.008.jpeg"></p><p><image src="/images/blog/caddy/caddy2.009.jpeg"></p><p><image src="/images/blog/caddy/caddy2.010.jpeg"></p><p><image src="/images/blog/caddy/caddy2.011.jpeg"></p><p><image src="/images/blog/caddy/caddy2.012.jpeg"></p><image src="/images/blog/caddy/caddy2.013.jpeg">]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Caddy2&quot;&gt;&lt;a href=&quot;#Caddy2&quot; class=&quot;headerlink&quot; title=&quot;Caddy2&quot;&gt;&lt;/a&gt;&lt;a href=&quot;https://caddyserver.com&quot;&gt;Caddy2&lt;/a&gt;&lt;/h1&gt;&lt;h2 id=&quot;THE-ULTIMATE-SERVER&quot;&gt;&lt;a href=&quot;#THE-ULTIMATE-SERVER&quot; class=&quot;headerlink&quot; title=&quot;THE ULTIMATE SERVER&quot;&gt;&lt;/a&gt;THE ULTIMATE SERVER&lt;/h2&gt;&lt;p&gt;Caddy 2 is a powerful, enterprise-ready, open source web server with automatic HTTPS written in Go&lt;/p&gt;
+&lt;image src=&quot;/images/blog/caddy/caddy2.001.jpeg&quot;&gt;
+    
+    </summary>
+    
+    
+      <category term="Server" scheme="https://wongyouth.github.io/tags/Server/"/>
+    
+      <category term="Caddy" scheme="https://wongyouth.github.io/tags/Caddy/"/>
+    
+      <category term="Nginx" scheme="https://wongyouth.github.io/tags/Nginx/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Live View from Phoenix</title>
+    <link href="https://wongyouth.github.io/2020/09/25/live-view-from-phoenix/"/>
+    <id>https://wongyouth.github.io/2020/09/25/live-view-from-phoenix/</id>
+    <published>2020-09-25T17:26:29.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Beyond-Rails"><a href="#Beyond-Rails" class="headerlink" title="Beyond Rails"></a>Beyond Rails</h1><p>– Elixir and Phoenix Framework</p><p>First try of Live View from Phoenix</p><a id="more"></a><hr><h2 id="Language-History"><a href="#Language-History" class="headerlink" title="Language History"></a>Language History</h2><p>First released Published</p><ul><li>Ruby - 1995, same year of java</li><li><p>Rails - 2004</p></li><li><p>Elixir - 2011</p></li><li><p>Phoenix - 2014</p></li><li><p>Erlang - 1986</p></li></ul><hr><h2 id="Why-Elixir"><a href="#Why-Elixir" class="headerlink" title="Why Elixir"></a>Why Elixir</h2><ul><li>Lightweight concurrency based on Erlang VM (over 30 years)</li><li>Thread safe (by no thread at all)</li><li>Simple, just function</li><li>Balance of productivity and performance</li><li>Pattern matching</li><li>Immutability</li></ul><hr><h2 id="Create-Phoenix-project"><a href="#Create-Phoenix-project" class="headerlink" title="Create Phoenix project"></a>Create Phoenix project</h2><p>show all mix command</p><pre><code>mix help</code></pre><p>install hex - a package manager</p><pre><code>mix local.hex</code></pre><p>install phx_new package</p><pre><code>mix archive.install hex phx_new</code></pre><p>create a phoenix project</p><pre><code>mix phx.new hxdemo</code></pre><hr><h2 id="Live-view"><a href="#Live-view" class="headerlink" title="Live view"></a>Live view</h2><ul><li>Learned from Frontend</li><li>Use backend as a state store</li><li>but don’t need API.</li><li>You don’t have to write a single line of Javascript.</li></ul><hr><h2 id="What-you-need-to-do"><a href="#What-you-need-to-do" class="headerlink" title="What you need to do"></a>What you need to do</h2><p>basically 3 methods is used</p><ul><li>mount</li><li>render</li><li>handle_event</li></ul><hr><h2 id="mount-methods"><a href="#mount-methods" class="headerlink" title="mount methods"></a>mount methods</h2><pre><code>def mount(_params, _session, socket) do  &#123;:ok, assign(socket, counter: 0)&#125;end</code></pre><hr><h2 id="render-methods"><a href="#render-methods" class="headerlink" title="render methods"></a>render methods</h2><pre><code>def render(assigns) do  ~L&quot;&quot;&quot;  Counter &lt;% @counter %&gt;  &lt;button phx-click=&quot;inc&quot;&gt;+&lt;/button&gt;  &quot;&quot;&quot;end</code></pre><hr><h2 id="render-methods-1"><a href="#render-methods-1" class="headerlink" title="render methods"></a>render methods</h2><pre><code>def handle_event(&quot;inc&quot;, _params, socket) do  &#123;:noreply, assign(socket, count: socket.assigns.count + 1)&#125;end</code></pre><hr><h2 id="Internal"><a href="#Internal" class="headerlink" title="Internal"></a>Internal</h2><ul><li>Use websocket (use long pull as fallback)</li><li>Frontend phoenix liveview javascript</li><li>One connection with one GenServer at backend</li></ul><hr><h1 id="the-End"><a href="#the-End" class="headerlink" title="the End"></a>the End</h1>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Beyond-Rails&quot;&gt;&lt;a href=&quot;#Beyond-Rails&quot; class=&quot;headerlink&quot; title=&quot;Beyond Rails&quot;&gt;&lt;/a&gt;Beyond Rails&lt;/h1&gt;&lt;p&gt;– Elixir and Phoenix Framework&lt;/p&gt;
+&lt;p&gt;First try of Live View from Phoenix&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Rails" scheme="https://wongyouth.github.io/tags/Rails/"/>
+    
+      <category term="Elixir" scheme="https://wongyouth.github.io/tags/Elixir/"/>
+    
+      <category term="Phoenix" scheme="https://wongyouth.github.io/tags/Phoenix/"/>
+    
+      <category term="Live View" scheme="https://wongyouth.github.io/tags/Live-View/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dokku - Your privatr PAAS platform</title>
+    <link href="https://wongyouth.github.io/2020/08/21/dokku-your-privatr-paas-platform/"/>
+    <id>https://wongyouth.github.io/2020/08/21/dokku-your-privatr-paas-platform/</id>
+    <published>2020-08-21T15:38:55.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Dokku"><a href="#Dokku" class="headerlink" title="Dokku"></a>Dokku</h1><p>Your private PaaS platform</p><p><a href="https://github.com/dokku/dokku">https://github.com/dokku/dokku</a><br><a href="http://dokku.viewdocs.io/dokku/">http://dokku.viewdocs.io/dokku/</a></p><hr><h2 id="Highlights"><a href="#Highlights" class="headerlink" title="Highlights"></a>Highlights</h2><ul><li>Heroku like</li><li>Push to deployment</li><li>Zero downtime deployment</li><li>Ecosystem including plugins</li><li>Github starts ~20k</li></ul><hr><a id="more"></a><h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><pre><code># for debian systems, installs Dokku via apt-getwget https://raw.githubusercontent.com/dokku/dokku/v0.21.4/bootstrap.sh;sudo DOKKU_TAG=v0.21.4 bash bootstrap.sh# or installed by Dockerdocker run \--env DOKKU_HOSTNAME=dokku.me \--name dokku \--publish 3022:22 \--publish 8080:80 \--publish 8443:443 \--volume ~/dokku:/mnt/dokku \--volume /var/run/docker.sock:/var/run/docker.sock \dokku/dokku:0.21.4</code></pre><!-- ---## setup ssh configAdd ssh config for dokku.em to your ~/.ssh/config    Host dokku.me      Hostname 127.0.0.1      User root      Port 3022--><hr><h2 id="Setup-your-app"><a href="#Setup-your-app" class="headerlink" title="Setup your app"></a>Setup your app</h2><pre><code># on the Dokku host# create an appdokku apps:create ruby-getting-started# install the postgres plugin# plugin installation requires root, hence the user changedokku plugin:install https://github.com/dokku/dokku-postgres.git# create a postgres service with the name railsdatabasedokku postgres:create railsdatabase# each official datastore offers a `link` method to link a service to any applicationdokku postgres:link railsdatabase ruby-getting-started</code></pre><hr><h2 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h2><pre><code># from your local machine# SSH access to github must be enabled on this hostgit clone https://github.com/heroku/ruby-getting-startedcd ruby-getting-startedgit remote add dokku dokku@dokku.me:ruby-getting-startedgit push dokku master</code></pre><hr><h2 id="Add-user-keys"><a href="#Add-user-keys" class="headerlink" title="Add user keys"></a>Add user keys</h2><p>fatal: ‘ruby-getting-started’ does not appear to be a git repository<br>fatal: Could not read from remote repository.</p><p>Please make sure you have the correct access rights<br>and the repository exists.</p><pre><code>cat ~/.ssh/id_rsa.pub | docker exec -i dokku dokku ssh-keys:add ryan</code></pre><hr><h2 id="SSL-Let’s-Encrypt"><a href="#SSL-Let’s-Encrypt" class="headerlink" title="SSL - Let’s Encrypt"></a>SSL - Let’s Encrypt</h2><pre><code>dokku plugin:install https://github.com/dokku/dokku-letsencrypt.gitdokku config:set --no-restart myapp DOKKU_LETSENCRYPT_EMAIL=your@email.tlddokku letsencrypt myappdokku letsencrypt:auto-renew myapp</code></pre><p><a href="https://github.com/dokku/dokku-letsencrypt">https://github.com/dokku/dokku-letsencrypt</a></p><hr><h2 id="Verification"><a href="#Verification" class="headerlink" title="Verification"></a>Verification</h2><image src='/images/blog/dokku.png'><hr><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p><a href="http://dokku.viewdocs.io/dokku/deployment/application-deployment/">http://dokku.viewdocs.io/dokku/deployment/application-deployment/</a></p><p><a href="http://dokku.viewdocs.io/dokku/getting-started/install/docker/">http://dokku.viewdocs.io/dokku/getting-started/install/docker/</a></p><p><a href="http://dokku.viewdocs.io/dokku/deployment/user-management/">http://dokku.viewdocs.io/dokku/deployment/user-management/</a></p><hr><h2 id="The-end"><a href="#The-end" class="headerlink" title="The end"></a>The end</h2><p>Thanks for your listening!</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Dokku&quot;&gt;&lt;a href=&quot;#Dokku&quot; class=&quot;headerlink&quot; title=&quot;Dokku&quot;&gt;&lt;/a&gt;Dokku&lt;/h1&gt;&lt;p&gt;Your private PaaS platform&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/dokku/dokku&quot;&gt;https://github.com/dokku/dokku&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://dokku.viewdocs.io/dokku/&quot;&gt;http://dokku.viewdocs.io/dokku/&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&quot;Highlights&quot;&gt;&lt;a href=&quot;#Highlights&quot; class=&quot;headerlink&quot; title=&quot;Highlights&quot;&gt;&lt;/a&gt;Highlights&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Heroku like&lt;/li&gt;
+&lt;li&gt;Push to deployment&lt;/li&gt;
+&lt;li&gt;Zero downtime deployment&lt;/li&gt;
+&lt;li&gt;Ecosystem including plugins&lt;/li&gt;
+&lt;li&gt;Github starts ~20k&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+    
+    </summary>
+    
+    
+      <category term="Docker" scheme="https://wongyouth.github.io/tags/Docker/"/>
+    
+      <category term="Heroku" scheme="https://wongyouth.github.io/tags/Heroku/"/>
+    
+      <category term="PAAS" scheme="https://wongyouth.github.io/tags/PAAS/"/>
+    
+      <category term="Deployment" scheme="https://wongyouth.github.io/tags/Deployment/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Use swapfile with lower memory VPS</title>
+    <link href="https://wongyouth.github.io/2020/07/31/use-swapfile-with-lower-memory-vps/"/>
+    <id>https://wongyouth.github.io/2020/07/31/use-swapfile-with-lower-memory-vps/</id>
+    <published>2020-07-31T14:32:43.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近用到用云主机来做应用的自动发布处理。<br>就是那种当你提交了代码到代码库后，自动跑CI，然后自动发布到服务器上去，一切都是自动运行。</p><a id="more"></a><p>这时候一般会选择一台最便宜的云主机自搭一台做 CI 或 CD。<br>为什么不用第三方服务？</p><p>因为</p><ol><li>有的时候真的不便宜</li><li>大部分在国外，如果要回访到国内主机操作，可能会有网络问题，你懂得</li><li>云主机可以一机多用，最大化利用其价值</li><li>云主机真的超便宜，每月5刀吧，1T流量，1G内存，20G硬盘，真香！</li></ol><p>说回到主题。配置这么低的云主机当然会有所限制，碰到的问题是编译打包 javascript 文件。<br>我用 docker build 都能编译 Dockerfile，却在 webpack 打包 JS 文件是内存不足！<br>1年前这个问题困扰我很久，我以为没有硬件问题办法解决，直接缴械投降了。<br>1年后看到别人的方案： 使用 swapfile 交换内存区来解决。嗯，真香现场啊。</p><p>马上复制一份留作后用:</p><pre><code># Allocate a file for swapsudo fallocate -l 2048m /mnt/swap_file.swap# Change permissionsudo chmod 600 /mnt/swap_file.swap# Format the file for swapping devicesudo mkswap /mnt/swap_file.swap# Enable the swapsudo swapon /mnt/swap_file.swap</code></pre><p>原文链接：<br><a href="https://medium.com/@dpaluy/the-ultimate-guide-to-dokku-and-ruby-on-rails-5-9ecad2dba4a3">https://medium.com/@dpaluy/the-ultimate-guide-to-dokku-and-ruby-on-rails-5-9ecad2dba4a3</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近用到用云主机来做应用的自动发布处理。&lt;br&gt;就是那种当你提交了代码到代码库后，自动跑CI，然后自动发布到服务器上去，一切都是自动运行。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Docker" scheme="https://wongyouth.github.io/tags/Docker/"/>
+    
+      <category term="VPS" scheme="https://wongyouth.github.io/tags/VPS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Userful extension list of VS Code for Ruby on Rails development</title>
+    <link href="https://wongyouth.github.io/2020/04/26/userful-extension-list-of-vs-code-for-ruby-on-rails-development/"/>
+    <id>https://wongyouth.github.io/2020/04/26/userful-extension-list-of-vs-code-for-ruby-on-rails-development/</id>
+    <published>2020-04-26T12:20:21.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>I’m using <a href="https://code.visualstudio.com/">VS Code</a> on my work for a while.<br>I found <a href="https://code.visualstudio.com/">VS Code</a> is really awesome for programming.</p><p>Here is the extension list of <a href="https://code.visualstudio.com/">VS Code</a> I used for <a href="https://rubyonrails.org/">Ruby on Rails</a> development.</p><h4 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h4><ul><li>Gutlens</li><li>Git Tree Compare</li><li>Conflict Squeezer</li></ul><a id="more"></a><h4 id="Rails"><a href="#Rails" class="headerlink" title="Rails"></a>Rails</h4><ul><li>Rails Go to Spec</li><li>Rails Run Specs</li><li>ruby rubocop</li><li>Better Haml</li><li>change-case</li><li>vscode-gemfile</li><li>Auto Rename Tag</li></ul><h4 id="Docs"><a href="#Docs" class="headerlink" title="Docs"></a>Docs</h4><ul><li>devdocs</li></ul><h4 id="Call-API-in-VSCode"><a href="#Call-API-in-VSCode" class="headerlink" title="Call API in VSCode"></a>Call API in VSCode</h4><ul><li>REST Client</li></ul><h4 id="CVS"><a href="#CVS" class="headerlink" title="CVS"></a>CVS</h4><ul><li>Edit csv</li><li>Excel Viewer</li><li>Rainbow CSV</li></ul><h4 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h4><ul><li>Remote SSH</li><li>Resource Monitor</li></ul><h4 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h4><ul><li>Settings Sync</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;I’m using &lt;a href=&quot;https://code.visualstudio.com/&quot;&gt;VS Code&lt;/a&gt; on my work for a while.&lt;br&gt;I found &lt;a href=&quot;https://code.visualstudio.com/&quot;&gt;VS Code&lt;/a&gt; is really awesome for programming.&lt;/p&gt;
+&lt;p&gt;Here is the extension list of &lt;a href=&quot;https://code.visualstudio.com/&quot;&gt;VS Code&lt;/a&gt; I used for &lt;a href=&quot;https://rubyonrails.org/&quot;&gt;Ruby on Rails&lt;/a&gt; development.&lt;/p&gt;
+&lt;h4 id=&quot;Git&quot;&gt;&lt;a href=&quot;#Git&quot; class=&quot;headerlink&quot; title=&quot;Git&quot;&gt;&lt;/a&gt;Git&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;Gutlens&lt;/li&gt;
+&lt;li&gt;Git Tree Compare&lt;/li&gt;
+&lt;li&gt;Conflict Squeezer&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+    
+      <category term="Rails" scheme="https://wongyouth.github.io/tags/Rails/"/>
+    
+      <category term="VS Code" scheme="https://wongyouth.github.io/tags/VS-Code/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>xhyve, 苹果电脑下轻量级虚拟机方案</title>
+    <link href="https://wongyouth.github.io/2019/04/28/xhyve-%E8%8B%B9%E6%9E%9C%E7%94%B5%E8%84%91%E4%B8%8B%E8%BD%BB%E9%87%8F%E7%BA%A7%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%96%B9%E6%A1%88/"/>
+    <id>https://wongyouth.github.io/2019/04/28/xhyve-苹果电脑下轻量级虚拟机方案/</id>
+    <published>2019-04-28T22:48:40.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>Docker 底层是跑在 Linux 基础上的，但是我们开发的电脑常用 Apple Mac,<br>如果想在 OSX 上跑 Docker 的话，一般使用 <code>Virtual Box</code> 或者 <code>VMware</code> 来运行一个VM。<br>因为这层软件也不是原生的，相当于多加了一层，<br>开启一个 VM 常常很耗时，运行在上面的应用的性能并不好。</p><p>常常让人觉得 Docker 对 OSX 的亲和力不够。</p><p>最近才看到有一个基于 OSX 原生底层的 VM 叫做 <a href="https://github.com/machyve/xhyve">xhyve</a>。我尝鲜了一把，虽然遇到了一个小坑，但是克服之后用起来感觉很不错，赶紧来看看吧。</p><a id="more"></a><h2 id="Install"><a href="#Install" class="headerlink" title="Install"></a>Install</h2><pre><code>brew install xhyve docker-machine-driver-xhyve docker docker-machine</code></pre><p>如果之前有安装过 docker 系列的的，推荐升级或者重新安装一遍。</p><h2 id="create-a-VM"><a href="#create-a-VM" class="headerlink" title="create a VM"></a>create a VM</h2><pre><code>docker-machine create default --driver xhyveeval $(docker-machine env)</code></pre><p>网上有推荐加 nfs 参数的，如果需要在host机和VM之间互传数据的话。</p><pre><code>docker-machine create default --driver xhyve -—xhyve-experimental-nfs-share</code></pre><h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><pre><code>docker psdocker run hello-world</code></pre><h1 id="遇到的坑"><a href="#遇到的坑" class="headerlink" title="遇到的坑"></a>遇到的坑</h1><p>参数 <code>-v</code> 带的本地 volume 映射不上去。</p><pre><code>docker run -v .:/usr/app sh</code></pre><p>运行后进入到 container 时发现并没有相应的文件。</p><h2 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h2><p>执行</p><pre><code>grep Virtio9p ~/.docker/machine/machines/default/config.json</code></pre><p>如果该值是 <code>false</code> 改成 <code>true</code>，再重启 VM 就解决了。</p><pre><code>docker-machine restart</code></pre><p>很好奇为什么不是默认开启？可以关注下官方的<a href="https://github.com/machine-drivers/docker-machine-driver-xhyve/issues/136">issue</a></p><h1 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h1><p>使用 vhyme 后极大的降低了 VM 的开启速度。<br>他也极好的支持了使用 <code>swarm</code> 的来增加 node 的测试。我在后面篇幅将进行尝试。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Docker 底层是跑在 Linux 基础上的，但是我们开发的电脑常用 Apple Mac,&lt;br&gt;如果想在 OSX 上跑 Docker 的话，一般使用 &lt;code&gt;Virtual Box&lt;/code&gt; 或者 &lt;code&gt;VMware&lt;/code&gt; 来运行一个VM。&lt;br&gt;因为这层软件也不是原生的，相当于多加了一层，&lt;br&gt;开启一个 VM 常常很耗时，运行在上面的应用的性能并不好。&lt;/p&gt;
+&lt;p&gt;常常让人觉得 Docker 对 OSX 的亲和力不够。&lt;/p&gt;
+&lt;p&gt;最近才看到有一个基于 OSX 原生底层的 VM 叫做 &lt;a href=&quot;https://github.com/machyve/xhyve&quot;&gt;xhyve&lt;/a&gt;。我尝鲜了一把，虽然遇到了一个小坑，但是克服之后用起来感觉很不错，赶紧来看看吧。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Docker" scheme="https://wongyouth.github.io/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>建立自己的 Docker 私有库</title>
+    <link href="https://wongyouth.github.io/2019/04/28/%E5%BB%BA%E7%AB%8B%E8%87%AA%E5%B7%B1%E7%9A%84-docker-%E7%A7%81%E6%9C%89%E5%BA%93/"/>
+    <id>https://wongyouth.github.io/2019/04/28/建立自己的-docker-私有库/</id>
+    <published>2019-04-28T22:17:59.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>若想在 production 上使用 Docker，必然需要使用使用私有的 Registry。<br>Docker 提供了一个很棒的 Registry Image, 使用他可以快速的建立自己的私有库。</p><a id="more"></a><h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><h2 id="htpasswd"><a href="#htpasswd" class="headerlink" title="htpasswd"></a>htpasswd</h2><p>因为这个私有库需要从公网进行访问，所以必然要做些鉴权的处理。我们简单实用 htpasswd 实现的 <code>HTTP Basic Authentication</code> 来进行鉴权。</p><p>使用以下命令来生成一个 md5 加密的密码文件</p><pre><code>docker run --entrypoint htpasswd registry:2 \-Bbn testuser testpasswd &gt; auth/htpasswd</code></pre><p>你可以多次运行来添加多个账号密码。</p><h2 id="HTTP-TLS"><a href="#HTTP-TLS" class="headerlink" title="HTTP TLS"></a>HTTP TLS</h2><p>因为 <code>HTTP Basic Authentication</code> 是以明文来传递密码信息的，所以需要Web应用打开 HTTP TLS。</p><p>具体的工作是我们要生成两个文件，可以通过 <code>Let&#39;s Encrypt</code> 来免费获得。</p><ul><li>server.crt # CA证书文件</li><li>server.key # 秘钥文件</li></ul><h2 id="执行Docker命令"><a href="#执行Docker命令" class="headerlink" title="执行Docker命令"></a>执行Docker命令</h2><p>运行一下命令：</p><pre><code>docker run -d \  -p 5000:5000 \  --restart=always \  --name registry \  -v &quot;$(pwd)/auth:/auth&quot; \  -v &quot;$(pwd)/ssl:/ssl&quot; \  -v registry:/var/lib/registry \  -e REGISTRY_AUTH=htpasswd \  -e &quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&quot; \  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \  -e REGISTRY_HTTP_TLS_CERTIFICATE=/ssl/server.crt \  -e REGISTRY_HTTP_TLS_KEY=/ssl/server.key \  registry:2</code></pre><p>执行后运行 <code>docker ps</code> 可以在输出中看到。</p><h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>执行以下命令输入密码后尝试是否能成功。</p><pre><code>docker login -u testuser yourdomain.com:5000</code></pre><h2 id="发布-image-到私有库"><a href="#发布-image-到私有库" class="headerlink" title="发布 image 到私有库"></a>发布 image 到私有库</h2><p>先给本地 image 加标签，再 push 到私有库即可。</p><pre><code>docker pull hello-worlddocker tag hello-world yourdomain.com:5000/hello-worlddocker push yourdomain.com:5000/hello-world</code></pre><h2 id="使用私有库"><a href="#使用私有库" class="headerlink" title="使用私有库"></a>使用私有库</h2><p>就像使用共有库一样只是前面要加上私有库域名信息。</p><pre><code>docker run yourdomain.com:5000/hello-world</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;若想在 production 上使用 Docker，必然需要使用使用私有的 Registry。&lt;br&gt;Docker 提供了一个很棒的 Registry Image, 使用他可以快速的建立自己的私有库。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Docker" scheme="https://wongyouth.github.io/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>自用的网络小说阅读器App【书山追更】</title>
+    <link href="https://wongyouth.github.io/2018/10/11/%E8%87%AA%E7%94%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8app%E3%80%90%E4%B9%A6%E5%B1%B1%E8%BF%BD%E6%9B%B4%E3%80%91/"/>
+    <id>https://wongyouth.github.io/2018/10/11/自用的网络小说阅读器app【书山追更】/</id>
+    <published>2018-10-11T01:03:59.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>这是去年做的阅读网络小说的App<a href="/downloads/sszg.apk">【书山追更】</a>，使用了 Cordova, Vue 开发，也迭代了不少版本。</p><p>主要是为了满足自用，爱看书的朋友可以下载来试试，无广告哦~~</p><p>仿的是【追书神器】App，使用的也是他们的免费接口。</p><p>Update(2020-09-26): 追书神器的免费接口已经不能返回小说内容，现在已经基本不能使用这个APP了。<br>留存以后找其他书源。</p><a id="more"></a><p>最大的不同是【书山追更】使用了网页形式的直上直下的翻页形式，不像现在流行的仿实体书的翻页效果。</p><h3 id="首页"><a href="#首页" class="headerlink" title="首页"></a>首页</h3><p><img src="/images/sszg/hp.png" alt="首页"></p><h3 id="排行榜列表"><a href="#排行榜列表" class="headerlink" title="排行榜列表"></a>排行榜列表</h3><p><img src="/images/sszg/rank.png" alt="排行榜首页"></p><h3 id="排行榜详情"><a href="#排行榜详情" class="headerlink" title="排行榜详情"></a>排行榜详情</h3><p><img src="/images/sszg/rank-week.png" alt="排行榜周榜"></p><h3 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h3><p><img src="/images/sszg/search.png" alt="搜索"></p><h3 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h3><p><img src="/images/sszg/about.png" alt="关于"></p><h3 id="首次打开时向导"><a href="#首次打开时向导" class="headerlink" title="首次打开时向导"></a>首次打开时向导</h3><p><img src="/images/sszg/guides.png" alt="首次打开时向导"></p><h3 id="阅读效果"><a href="#阅读效果" class="headerlink" title="阅读效果"></a>阅读效果</h3><p><img src="/images/sszg/read.png" alt="阅读效果"></p><h3 id="夜晚模式"><a href="#夜晚模式" class="headerlink" title="夜晚模式"></a>夜晚模式</h3><p><img src="/images/sszg/night-mode.png" alt="夜晚模式"></p><h3 id="底部菜单"><a href="#底部菜单" class="headerlink" title="底部菜单"></a>底部菜单</h3><p><img src="/images/sszg/read-menu.png" alt="底部菜单"></p><h3 id="可换书源"><a href="#可换书源" class="headerlink" title="可换书源"></a>可换书源</h3><p><img src="/images/sszg/sources.png" alt="换源"></p><h3 id="背景色，字号大小设置"><a href="#背景色，字号大小设置" class="headerlink" title="背景色，字号大小设置"></a>背景色，字号大小设置</h3><p><img src="/images/sszg/setting.png" alt="设置"></p><h3 id="单屏显示目录，方便跳转"><a href="#单屏显示目录，方便跳转" class="headerlink" title="单屏显示目录，方便跳转"></a>单屏显示目录，方便跳转</h3><p><img src="/images/sszg/catalog.png" alt="目录"></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这是去年做的阅读网络小说的App&lt;a href=&quot;/downloads/sszg.apk&quot;&gt;【书山追更】&lt;/a&gt;，使用了 Cordova, Vue 开发，也迭代了不少版本。&lt;/p&gt;
+&lt;p&gt;主要是为了满足自用，爱看书的朋友可以下载来试试，无广告哦~~&lt;/p&gt;
+&lt;p&gt;仿的是【追书神器】App，使用的也是他们的免费接口。&lt;/p&gt;
+&lt;p&gt;Update(2020-09-26): 追书神器的免费接口已经不能返回小说内容，现在已经基本不能使用这个APP了。&lt;br&gt;留存以后找其他书源。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>说说小程序美团框架mpvue</title>
+    <link href="https://wongyouth.github.io/2018/09/07/%E8%AF%B4%E8%AF%B4%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BE%8E%E5%9B%A2%E6%A1%86%E6%9E%B6mpvue/"/>
+    <id>https://wongyouth.github.io/2018/09/07/说说小程序美团框架mpvue/</id>
+    <published>2018-09-07T22:49:48.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>这段时间开始做小程序的开发，所以稍微研究了下小程序的开发框架。<br>当下比较有名的有以下几个开发框架:</p><ul><li>基于模板的类 vue 的原生框架</li><li>在原生框架上改良的仿 <code>Vue</code> 框架 <code>wepy</code></li><li>基于 <code>Vue</code> 的 <code>mpvue</code></li><li>基于 <code>React</code> 的 <code>taro</code>。</li></ul><p>另外还有几个小众的：</p><ul><li><a href="https://github.com/RubyLouvre/anu">anu</a></li><li><a href="https://tina.js.org/">tina</a></li></ul><p>因为之前比较熟悉<code>Vue</code>，所以没有太费脑力就选了 <code>mpvue</code>。</p><p>看了文档觉得虽然有所限制，比如：</p><ul><li>模板里不能写复制的表达式</li><li>模板里不能用函数</li><li>不能用 filter</li><li>不能用 slot</li></ul><p>感觉虽然有限制，但是好像没有特别大的关系。多费点代码还是能克服的。</p><p>谁知道，刚码了两个页面就遇到了坑。</p><ul><li>beforeDestroy 回调基本没用</li><li>mounted 可能永远不会调用第二次</li><li>再次进入页面时有上次状态的残影</li><li>再次进入页面时取不到变化的页面路径参数</li><li>使用 HTML 原有的标签名作为组件名时，自定义组件内模板不起作用</li><li>错误如果不捕捉会被吞没，不报错</li></ul><p>倒不是某个框架的问题，搜了一下其他的框架基本也都有这些问题。</p><p>还没有具体看过 <code>mpvue</code> 源码，但是看了前人介绍，有些是因为小程序的特色所导致的。<br>比如为什么页面再次打开会有之前的状态值存留。</p><p>个人感觉以下内部世界被割裂成了3个世界：</p><p>mpvue 对象 -&gt; 小程序Page对象 -&gt; View render</p><p>原生的 Page 里 通过 <code>setData</code> 把数据传输给视图进行显示，<br>当页面关闭后，页面对象消失，但是 <code>mpvue</code> 对象会重复使用，<br>每次页面重开时会使用之前的 mpvue 对象，造成了数据的残留。<br>理想状态是 Page 关闭时，销毁 mpvue 对象，打开时再重新生成。这样整个生命周期就与预期一致了。</p><p>正因为以上的原因，造成了很多意想不到的问题(keng)。</p><p>也探索了一些解决方法：</p><p>问题1：数据残留</p><pre><code>export default &#123;  data () &#123;    return &#123;      a: 23    &#125;  &#125;&#125;</code></pre><p>对策：onUnload里重置初始值</p><pre><code>export default &#123;  data () &#123;    return &#123;      a: 23    &#125;  &#125;,  onUnload () &#123;    Object.assign(this.$data, this.$options.data())  &#125;&#125;</code></pre><p>这里的 <code>this.$options</code> 是<code>Vue</code>内部使用的属性，保留着初始的对象值。<br>可以把他写成一个Vue plugin，这样就可以省却每个页面都要写的尴尬。</p><p>问题2：computed 内获取的参数不会变化</p><pre><code>export default &#123;  computed: &#123;    id () &#123;      return this.$root.$mp.query.id    &#125;  &#125;&#125;</code></pre><p>对策：写入 mounted 里，赋值到 <code>data</code> 对象内</p><pre><code>export default &#123;  data () &#123;    return &#123;      id: null    &#125;  &#125;,  mounted () &#123;    this.id = this.$root.$mp.query.id  &#125;&#125;</code></pre><p>问题: 组件文件名不要使用HTML标签名</p><p>组件名用了 article， 引入时不报错，但是组件内部模板不显示，也不报错。<br>即使引入时改了，也还是不显示：</p><pre><code>import Article2 from &apos;./article&apos;</code></pre><p>对策: 为了减少麻烦，一定要使用非HTML标签名，引入时也最好名称一致。</p><p>问题4：自定义组件时写的事件处理函数不起作用</p><pre><code>&lt;template lang=&apos;pug&apos;&gt;  .container    tag1(      @click=&apos;handler&apos;      v-for=&apos;item in items&apos;      :key=&apos;item.id&apos;    )&lt;/template&gt;</code></pre><p>对策：如果想再调用时处理事件的话，需要在自定义内部通过<code>$emit</code> 发出来，<br>自定义组件所有的事件都需要自己发射到父组件。</p><p>暂时就先记这么多，后续有再跟进。<br>多说一句： <code>mpvue</code> 是基于 <code>Vue</code> 2.4.1 基础上开发的，所有 2.4.1 以上的功能就不要去用了。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;这段时间开始做小程序的开发，所以稍微研究了下小程序的开发框架。&lt;br&gt;当下比较有名的有以下几个开发框架:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;基于模板的类 vue 的原生框架&lt;/li&gt;
+&lt;li&gt;在原生框架上改良的仿 &lt;code&gt;Vue&lt;/code&gt; 框架 &lt;code&gt;wepy&lt;/co
+      
+    
+    </summary>
+    
+    
+      <category term="Vue" scheme="https://wongyouth.github.io/tags/Vue/"/>
+    
+      <category term="小程序" scheme="https://wongyouth.github.io/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>用 rxjs 改写微信官方小游戏</title>
+    <link href="https://wongyouth.github.io/2018/06/11/%E7%94%A8-rxjs-%E6%94%B9%E5%86%99%E5%BE%AE%E4%BF%A1%E5%AE%98%E6%96%B9%E5%B0%8F%E6%B8%B8%E6%88%8F/"/>
+    <id>https://wongyouth.github.io/2018/06/11/用-rxjs-改写微信官方小游戏/</id>
+    <published>2018-06-11T15:58:11.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>自从去年2017年微信开放了小游戏之后，极大的促进H5游戏的发展。可以想象今年微信游戏必定非常火。<br>乘着这股春风，结合近期研究的 <code>rxjs</code>，想尝试下用 <code>rxjs</code> 改写微信官方小游戏。</p><p><img src="/images/blog/wxgame.gif" alt="weixin-game"></p><a id="more"></a><p><code>rxjs</code> 是响应式编程的 Javascript 库。</p><p>响应式的概念就是声明式编程的方法，代表的有 React， Vue。 在我理解他与传统的命令式编程方法最大的区别在于： 不是根据事件来处理每个逻辑，而是先设置好每个事件的 flow，只要有一个事件触发了，那么这些事件会带动触发其他事件，再接着触发其他事件，最后汇集到一个状态量中。而 View 上的更新是只更根据状态做显示。</p><p>除了现在流行的使用类来组织代码，还有一种完全不同的代码组织方式，那就是函数式编程。<br>这可能是另外一个话题，但是有趣的是使用 <code>rxjs</code> 你可以完全只使用函数来写代码。</p><p>不再啰嗦，看代码。</p><h3 id="游戏包括"><a href="#游戏包括" class="headerlink" title="游戏包括"></a>游戏包括</h3><ul><li>地图的滚动更新</li><li>飞机的位置</li><li>敌机群的位置</li><li>子弹的位置</li><li>爆炸动画的位置，与当前播放的图片索引值</li><li>游戏是否结束</li><li>分数</li></ul><h3 id="整体的代码结构与状态流"><a href="#整体的代码结构与状态流" class="headerlink" title="整体的代码结构与状态流"></a>整体的代码结构与状态流</h3><pre><code>const clock$ = interval(1000 / FPS, animationFrameScheduler)const playerSubject$ = new BehaviorSubject()const bg$ = &#123;...&#125;const player$ = &#123;...&#125;const enemies$ = &#123;...&#125;const bullets$ = &#123;...&#125;const explosions$ = &#123;...&#125;const collision$ = &#123;...&#125;const restart$ = &#123;...&#125;const state$ = merge(bg$, player$, enemies$, bullets$, collision$, explosions$, restart$)  .pipe(    startWith(getInitState()),    scan((state, reducer) =&gt; reducer(state))  )bgmAudio.play()state$.subscribe(function(state) &#123;  playerSubject$.next(state.player)  render(state)&#125;)</code></pre><p>状态流是由上面提到的背景，敌机，飞机，子弹等流合成，在 <code>subscribe</code> 的回调函数里面，只要根据最新的 <code>state</code> 画图就可以了。</p><h3 id="初始状态"><a href="#初始状态" class="headerlink" title="初始状态"></a>初始状态</h3><pre><code>function getInitState() &#123;  return &#123;    bg: &#123;      img: bgImg,      width: BG_WIDTH,      height: BG_HEIGHT,      top: 0    &#125;,    player: &#123;      img: playerImg,      width: PLAYER_WIDTH,      height: PLAYER_HEIGHT,      x: screenWidth / 2 - PLAYER_WIDTH / 2,      y: screenHeight - PLAYER_HEIGHT - 30    &#125;,    enemies: [],    bullets: [],    explosions: &#123;      images: aniImgs,      frames: []    &#125;,    gameover: false,    score: 0  &#125;&#125;</code></pre><p>与传统的类不太一样，现在前端开发中特别是单页应用中越来越用到一个概念就是要有一个全局的状态来管理共享数据，来起到所有组件内同步更新的作用。这里也沿用了这种方式，特别是在调试的时候可以很方便的查看游戏内部的状态。</p><p>下面我们再来细看每个流：</p><h3 id="时钟流"><a href="#时钟流" class="headerlink" title="时钟流"></a>时钟流</h3><p>每秒60帧，每个时钟单位约16.67毫秒，这是大部分游戏的设置值。帧率越大画面越流畅。</p><pre><code>const clock$ = interval(1000 / FPS, animationFrameScheduler)  .pipe(share())</code></pre><p>这里用到一个 <code>share()</code>，是因为这个时钟流会多次用到，所以做了共享。</p><h3 id="地图背景流"><a href="#地图背景流" class="headerlink" title="地图背景流"></a>地图背景流</h3><p>地图背景的更新，每个时钟单位 top 值增加 2 个像素值</p><pre><code>const bg$ = clock$  .pipe(    map(() =&gt; state =&gt; &#123;      if (state.gameover) return state      state.bg.top = state.bg.top &gt; screenHeight ? 0 : state.bg.top + 2      return state    &#125;)  )</code></pre><h3 id="飞机流"><a href="#飞机流" class="headerlink" title="飞机流"></a>飞机流</h3><p>飞机位置的移动要响应触屏移动，而触屏时需要根据飞机当前值来确定要不要触发移动，所以需要当前的状态，而状态又是由飞机流来生成的，是一个循环。如果碰到这种循环的情况要用到 Subject 来解决， Subject 相当于一个中介的概念。内部是一个 <code>pub</code> <code>sub</code> 模式。</p><pre><code>const playerSubject$ = new BehaviorSubject()const touchstart$ = fromEvent(canvas, &apos;touchstart&apos;).pipe(share())const touchend$ = fromEvent(canvas, &apos;touchend&apos;)const touchmove$ = fromEvent(canvas, &apos;touchmove&apos;)</code></pre><p>飞机的移动只在触屏时触发，所以由 touchstart$ 作为发起源，当手指在飞机的触屏移动是， playerMove$ 就会发出当前的位置</p><pre><code>const playerMove$ = touchstart$.pipe(  withLatestFrom(playerSubject$),  filter(([ev, player]) =&gt; &#123;    return checkIsFingerOnAir(ev, player)  &#125;),  mergeMap(() =&gt; &#123;    return touchmove$.pipe(takeUntil(touchend$))  &#125;),  map(ev =&gt; ev.touches[0]),  // tap(console.log),)</code></pre><p>player$ 根据触屏的位置来改变飞机的位置</p><pre><code>const player$ = playerMove$  .pipe(    map((&#123;clientX, clientY&#125;) =&gt; (state) =&gt; &#123;      if (state.gameover) return state      const &#123;player&#125; = state      player.x = range(clientX - player.width / 2, 0, screenWidth - player.width)      player.y = range(clientY - player.height / 2, 0, screenHeight - player.height)      return state    &#125;)  )</code></pre><h3 id="子弹流"><a href="#子弹流" class="headerlink" title="子弹流"></a>子弹流</h3><p>子弹流比较简单，每个 clock 单位改变已有子弹的y值，但超出屏幕时从列表内删除，每 20 个 clock 单位产生新的子弹。</p><pre><code>const bullets$ = clock$.pipe(  map(frame =&gt; state =&gt; &#123;    if (state.gameover) return state    const player = state.player    // 移动子弹    state.bullets.forEach(function(bullet, index) &#123;      bullet.y -= 6      if (bullet.y &lt; -BULLET_HEIGHT) &#123;        state.bullets.splice(index, 1)      &#125;    &#125;)    // 动态生成    if (frame % 20 === 0) &#123;      state.bullets.push(&#123;        img: bulletImg,        x: player.x + player.width / 2 - BULLET_WIDTH / 2,        y: player.y - BULLET_HEIGHT,        width: BULLET_WIDTH,        height: BULLET_HEIGHT      &#125;)      bulletAudio.play()    &#125;    return state  &#125;))</code></pre><h3 id="爆炸流"><a href="#爆炸流" class="headerlink" title="爆炸流"></a>爆炸流</h3><p>爆炸动画的流，由新产生的爆炸流，和改变显示的图片来完成。爆炸由碰撞检测产生，这里用了 explosionSubject$ 来做中转。当所有的爆炸图片显示完时，从列表移除，不再显示。</p><pre><code>const explosionSubject$ = new Subject()const newExplo$ = explosionSubject$.pipe(  map(enemy =&gt; state =&gt; &#123;    const frame = Object.assign(&#123;&#125;, enemy, &#123;index: 0&#125;)    state.explosions.frames.push(frame)    return state  &#125;))const exploPlay$ = clock$.pipe(  map(() =&gt; state =&gt; &#123;    for (const frame of state.explosions.frames) &#123;      frame.index += 1      frame.y += 6    &#125;    state.explosions.frames = state.explosions.frames.filter(frame =&gt; frame.index &lt; state.explosions.images.length)    return state  &#125;))const explosions$ = merge(exploPlay$, newExplo$)</code></pre><h3 id="敌机流"><a href="#敌机流" class="headerlink" title="敌机流"></a>敌机流</h3><p>敌机流也比较简单，每 30 个 clock 单位新产生一个敌机，每个 clock 单位移动</p><pre><code>const enemies$ = merge(clock$)  .pipe(    map(frame =&gt; state =&gt; &#123;      if (state.gameover) return state      // 移动敌机      state.enemies.forEach(function(enemy, index) &#123;        enemy.y += 6        if ( enemy.y &gt; screenHeight + enemy.height) &#123;          state.enemies.splice(index, 1)        &#125;      &#125;)      // 生成      if (frame % 30 === 0) &#123;        state.enemies.push(&#123;          img: enemyImg,          x: rnd(0, screenWidth - ENEMY_WIDTH),          y: -ENEMY_HEIGHT,          width: ENEMY_WIDTH,          height: ENEMY_HEIGHT,          speed: 6        &#125;)      &#125;      return state    &#125;)  )</code></pre><h3 id="碰撞流"><a href="#碰撞流" class="headerlink" title="碰撞流"></a>碰撞流</h3><p>碰撞流做了两个检测，一个检测子弹是否击中敌机，如果击中，则 explosionSubject$.next(enemy) 下，让爆炸显示。另一个则是检测敌机与我方飞机的碰撞检测，如果击中，则游戏结束。</p><pre><code>const collision$ = clock$.pipe(  map(() =&gt; state =&gt; &#123;    if (state.gameover) return state    state.bulltes = state.bullets.filter(bullet =&gt; &#123;      state.enemies.every((enemy, index) =&gt; &#123;        if (isCollideWith(enemy, bullet)) &#123;          state.enemies.splice(index, 1)          boomAudio.play()          state.score += 1          explosionSubject$.next(enemy)          return false        &#125;        return true      &#125;)    &#125;)    for (const enemy of state.enemies) &#123;      if (isCollideWith(state.player, enemy)) &#123;        state.gameover = true        break      &#125;    &#125;    return state  &#125;))</code></pre><h3 id="重启流"><a href="#重启流" class="headerlink" title="重启流"></a>重启流</h3><p>重新游戏流，检测是否在游戏终止时，点击了重新游戏这个按钮，是则重置游戏状态，开始新游戏</p><pre><code>const restart$ = touchstart$.pipe(  filter(ev =&gt; &#123;    const &#123;clientX, clientY&#125; = ev.touches[0]    return (      clientX &gt; btnArea.startX      &amp;&amp; clientX &lt; btnArea.endX      &amp;&amp; clientY &gt; btnArea.startY      &amp;&amp; clientY &lt; btnArea.endY    )  &#125;),  map(() =&gt; state =&gt; state.gameover ? getInitState() : state))</code></pre><h3 id="状态流"><a href="#状态流" class="headerlink" title="状态流"></a>状态流</h3><p>所有以上的流 merge 之后通过 reducer 来完成每次状态的更新。我们这里所有的流发出的不是一般的数据，而是函数，所以当接收到函数时，我们把当前 <code>state</code> 传入这个函数中去，更新状态里相应的数据，返回新的状态。而状态流放出的则是当前的最新状态值。</p><pre><code>const state$ = merge(bg$, player$, enemies$, bullets$, collision$, explosions$, restart$)  .pipe(    startWith(getInitState()),    scan((state, reducer) =&gt; reducer(state))  )</code></pre><p>订阅这个 state$ 状态流，每时钟单位根据状态值画图。<br>其中</p><pre><code>playerSubject$.next(state.player)</code></pre><p>这行代码是通知之前的 playerSubject$ 来中转更新飞机位置</p><pre><code>bgmAudio.play()state$.subscribe(function(state) &#123;  playerSubject$.next(state.player)  render(state)&#125;)</code></pre><h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>游戏在我的小米Note3手机的微信测试了下，帧率一般在56 ~ 60 左右，可以看到，使用 <code>rxjs</code> 是可以写游戏代码的。</p><p>代码通过 <code>webpack</code> 打包后，832k ，有点大，但是离微信的上限4M还是很大空余空间的。</p><p><code>rxjs</code> 可以改变代码的编写方式，甚至思维方式。数据在各个流之间进行流动，最后汇集到一个状态内，我们只要管理状态到视图的更新显示，感觉整体的结构还是很直观的。</p><p>与原来的代码比较，原来的代码游戏在 <code>Game over</code> 时有bug，手指还是可以拖动飞机的移动， <code>rxjs</code> 版不会有这个问题。</p><p>感觉 <code>rxjs</code> 的潜力还没有被挖掘出来，可能在处理多人联机游戏的 <code>rxjs</code> 带来的好处将更大。</p><p>本篇例子中完全舍去了类的使用，只使用到了函数。但是重点不在这里，完全可以使用类结合 <code>rxjs</code> 来使用，毕竟 <code>es6</code> 支持了类，当然要发挥它的长处。</p><p>后奉上<a href="https://github.com/wongyouth/rxjs-wxgame">源码</a>。</p><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://reactivex.io/">Rxjs</a><br><a href="https://www.learnrxjs.io/">Learning rxjs</a><br><a href="https://manu.ninja/game-state-with-rxjs-5-immutable-js">Game State with RxJS 5/Immutable.js</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;自从去年2017年微信开放了小游戏之后，极大的促进H5游戏的发展。可以想象今年微信游戏必定非常火。&lt;br&gt;乘着这股春风，结合近期研究的 &lt;code&gt;rxjs&lt;/code&gt;，想尝试下用 &lt;code&gt;rxjs&lt;/code&gt; 改写微信官方小游戏。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/blog/wxgame.gif&quot; alt=&quot;weixin-game&quot;&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="微信" scheme="https://wongyouth.github.io/tags/%E5%BE%AE%E4%BF%A1/"/>
+    
+      <category term="rxjs" scheme="https://wongyouth.github.io/tags/rxjs/"/>
+    
+      <category term="游戏" scheme="https://wongyouth.github.io/tags/%E6%B8%B8%E6%88%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>更新Docker容器</title>
+    <link href="https://wongyouth.github.io/2018/02/01/%E6%9B%B4%E6%96%B0docker%E5%AE%B9%E5%99%A8/"/>
+    <id>https://wongyouth.github.io/2018/02/01/更新docker容器/</id>
+    <published>2018-02-01T14:14:57.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="/2015/10/30/%E4%BD%BF%E7%94%A8-docker-%E6%9D%A5%E5%AE%89%E8%A3%85-redmine-%E5%B9%B6%E7%BB%93%E5%90%88-gitolite-%E4%BD%BF%E7%94%A8/">使用 Docker 安装了 Redmine</a> 之后，已经过了很久了，这几天在维护服务器时，发现 Redmine 的版本也升级了。<br>就想着也升级一下容器吧。</p><p>先说下大体思路：</p><ul><li>升级 Docker Image</li><li>关闭就容器，并删除之</li><li>重新开启新的容器，这样才能使用新的代码</li><li>升级数据库</li></ul><h2 id="升级-Docker-Image"><a href="#升级-Docker-Image" class="headerlink" title="升级 Docker Image"></a>升级 Docker Image</h2><p>升级Image很简单，只要从服务器拉下来最新的数据就行了</p><pre><code>docker pull quay.io/sameersbn/redmine:latest</code></pre><h2 id="关闭就容器，并删除之"><a href="#关闭就容器，并删除之" class="headerlink" title="关闭就容器，并删除之"></a>关闭就容器，并删除之</h2><p>到工作目录 /data, 使用 docker-compose 来关闭级容器</p><pre><code>cd /datadocker-compose stopdocker rm data_redmine_1</code></pre><h2 id="重新开启新的容器，这样才能使用新的代码"><a href="#重新开启新的容器，这样才能使用新的代码" class="headerlink" title="重新开启新的容器，这样才能使用新的代码"></a>重新开启新的容器，这样才能使用新的代码</h2><p>因为代码升级，新增加了些环境参数的配置</p><pre><code>REDMINE_SECRET_TOKENDB_NAME</code></pre><p>这两个一个是log提示我的，另一个发现服务升级完后，旧用户登录不了了，查了原因才知道是因为数据库名称的默认值变了。<br>可能受影响的还有其他不少参数，需要在<a href="https://hub.docker.com/r/sameersbn/redmine/">详情页</a>仔细看看。</p><pre><code>docker-compose start</code></pre><h2 id="升级数据库"><a href="#升级数据库" class="headerlink" title="升级数据库"></a>升级数据库</h2><pre><code>docker exec -it data_redmine_1 bashcd $WORKDIRRAILS_ENV=production bundle exec rake db:migrate</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;/2015/10/30/%E4%BD%BF%E7%94%A8-docker-%E6%9D%A5%E5%AE%89%E8%A3%85-redmine-%E5%B9%B6%E7%BB%93%E5%90%88-gitolite-%E4%BD%BF%E7%94%A
+      
+    
+    </summary>
+    
+    
+      <category term="Docker" scheme="https://wongyouth.github.io/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>深度学习笔记</title>
+    <link href="https://wongyouth.github.io/2017/12/18/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>https://wongyouth.github.io/2017/12/18/深度学习笔记/</id>
+    <published>2017-12-18T15:46:47.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>深度学习笔记。</p><h2 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h2><p>h(x) = XW + b</p><p>方阵尺寸<br>X = (100,784),  batch size: 100, 特征尺寸： 784<br>W = (784,10),   特征尺寸，输出个数<br>b = (10,1),     输出个数，1<br>h = (100,10)    batch size, 输出个数</p><h2 id="分类方法"><a href="#分类方法" class="headerlink" title="分类方法"></a>分类方法</h2><p>softmax，确定图像是属于10个数字中的哪一个</p><h2 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h2><p>tanh, sigmoid, relu，深度神经网络中推荐使用 relu</p><p>输出值范围</p><ul><li>tanh<br>-1 ~ 1</li><li>sigmoid<br>0 ~ 1,  1 / (1 + e^-x)</li><li>relu<br>0 ~ 正无穷, max(0, x)</li></ul><h2 id="Loss-function"><a href="#Loss-function" class="headerlink" title="Loss function"></a>Loss function</h2><p>交叉熵 Cross entropy:</p><pre><code>- reduce\_sum(Y\_ * log(Y))</code></pre><h2 id="训练算法"><a href="#训练算法" class="headerlink" title="训练算法"></a>训练算法</h2><h3 id="SGD"><a href="#SGD" class="headerlink" title="SGD"></a>SGD</h3><p>梯度下降算法： SGD<br>步长： 0.01, 太大速度快但可能取不到最精确值，太小则速度慢</p><p>缺点： 步长选择比较困难</p><h3 id="Momentum"><a href="#Momentum" class="headerlink" title="Momentum"></a>Momentum</h3><p>下降初期能够很好的加速</p><h3 id="Adagrad"><a href="#Adagrad" class="headerlink" title="Adagrad"></a>Adagrad</h3><p>前期放大梯度，后期约束梯度<br>依赖人工设置全局学习率</p><h3 id="Adadelta"><a href="#Adadelta" class="headerlink" title="Adadelta"></a>Adadelta</h3><p>Adagrad的优化，不需要人工设置全局学习率</p><p>训练初中期，加速效果不错，很快<br>训练后期，反复在局部最小值附近抖动</p><h3 id="RMSprop"><a href="#RMSprop" class="headerlink" title="RMSprop"></a>RMSprop</h3><p>Adadelta 的一个特例</p><ul><li>依赖全局学习率</li><li>趋于 Adagrad 和 Adadelta 之间</li><li>对于 RNN 效果和好</li></ul><h3 id="adam"><a href="#adam" class="headerlink" title="adam"></a>adam</h3><p>本质上是带有动量项的RMSprop</p><ul><li>自适应学习率</li></ul><h2 id="最大池化"><a href="#最大池化" class="headerlink" title="最大池化"></a>最大池化</h2><p>max pooling， 比如 5x5 的池中取最大一个值作为输出值</p><h2 id="strides-步长"><a href="#strides-步长" class="headerlink" title="strides 步长"></a>strides 步长</h2><p>步长的意义在于缩小特征尺寸。比如输入 28x28 的方阵如果使用 2x2 的步长，则输出的方阵缩小为 14x14</p><h2 id="输入通道，输出通道"><a href="#输入通道，输出通道" class="headerlink" title="输入通道，输出通道"></a>输入通道，输出通道</h2><p>在建立深度学习的层中，一般是缩小特征尺寸，增大通道大小。整个特征个数是呈现变小的趋势。</p><pre>No.     方阵              kernel 和通道       步长1       28x28x1           5x5,1,4             1x1                                             2       28x28x4           4x4,4,8             2x2                                             3       14x14x8           4x4,8,12            2x2                                             4       7x7x12            全连接                                                              5       200               softmax                                                             6       10                用于10个数字                                                        </pre><h2 id="如何确定通道大小"><a href="#如何确定通道大小" class="headerlink" title="如何确定通道大小"></a>如何确定通道大小</h2><p>比如手写的数字 4 个通道是比较小的，需要增加到6个，是个经验值</p><pre>No.     方阵              kernel 和通道       步长1       28x28x1           5x5,1,6             1x1                                             2       28x28x6           4x4,6,12            2x2                                             3       14x14x12          4x4,12,24           2x2                                             4       7x7x24            全连接                                                              5       200               softmax                                                             6       10                用于10个数字                                                        </pre><h2 id="后续阅读"><a href="#后续阅读" class="headerlink" title="后续阅读"></a>后续阅读</h2><p><a href="https://zhuanlan.zhihu.com/p/22252270">https://zhuanlan.zhihu.com/p/22252270</a><br><a href="http://ycszen.github.io/2016/08/24/SGD%EF%BC%8CAdagrad%EF%BC%8CAdadelta%EF%BC%8CAdam%E7%AD%89%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%AF%94%E8%BE%83/">http://ycszen.github.io/2016/08/24/SGD%EF%BC%8CAdagrad%EF%BC%8CAdadelta%EF%BC%8CAdam%E7%AD%89%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%AF%94%E8%BE%83/</a><br><a href="https://yq.aliyun.com/articles/250639">https://yq.aliyun.com/articles/250639</a></p><h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p><a href="https://www.tuicool.com/articles/vieuIbi">https://www.tuicool.com/articles/vieuIbi</a><br><a href="https://www.tuicool.com/articles/bayI7ne">https://www.tuicool.com/articles/bayI7ne</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;深度学习笔记。&lt;/p&gt;
+&lt;h2 id=&quot;公式&quot;&gt;&lt;a href=&quot;#公式&quot; class=&quot;headerlink&quot; title=&quot;公式&quot;&gt;&lt;/a&gt;公式&lt;/h2&gt;&lt;p&gt;h(x) = XW + b&lt;/p&gt;
+&lt;p&gt;方阵尺寸&lt;br&gt;X = (100,784),  batch size
+      
+    
+    </summary>
+    
+    
+      <category term="技术" scheme="https://wongyouth.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用Telnet发送邮件</title>
+    <link href="https://wongyouth.github.io/2017/12/14/%E4%BD%BF%E7%94%A8telnet%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/"/>
+    <id>https://wongyouth.github.io/2017/12/14/使用telnet发送邮件/</id>
+    <published>2017-12-14T13:40:58.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在写一个发邮件的小程序，经常会碰到邮箱系统报错，但是看了日志也没看出的头绪来。<br>因为出错信息不详细，或者是信息与真正的错误没啥关联，会被带到沟里去。</p><p>其实用 SMTP 服务器的话，都是用 smtp 协议来发邮件，都是文本形式的协议，协议其实挺简单的。</p><p>总的来说3个大步骤</p><ol><li>建立连接</li><li>验证</li><li>上传邮件内容</li></ol><p>详细来说一下这个过程:</p><ol><li><p>HELO <domain> , qq邮箱域名是必须的。</p><pre><code>helo qq.com250 smtp.qq.com</code></pre></li><li><p>AUTH  base64编码的用户名，密码，每个单独一行</p><pre><code>auth login334 VXNlcm5hbWU6aW5mb0BqaWFveHVlYmFuZy5jb20=334 UGFzc3dvcmQ6xxxxxxxxxxxxxxxxxxxxxxxxxxx235 Authentication successful</code></pre></li><li><p>MAIL FROM: <email> 发件人邮箱</p><pre><code>mail from: info@jiaoxuebang.com250 Ok</code></pre></li><li><p>RCPT TO: <email> 收件人邮箱</p><pre><code>rcpt to: ryan@jiaoxuebang.com250 Ok</code></pre></li><li><p>DATA 邮件数据，包括邮件头部，正文， 以 换行<code>.</code>换行 结束</p><pre><code>data354 End data with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;subject: testtest.250 Ok: queued as</code></pre></li></ol><p>250 显示已经进入队列等待发送了。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;最近在写一个发邮件的小程序，经常会碰到邮箱系统报错，但是看了日志也没看出的头绪来。&lt;br&gt;因为出错信息不详细，或者是信息与真正的错误没啥关联，会被带到沟里去。&lt;/p&gt;
+&lt;p&gt;其实用 SMTP 服务器的话，都是用 smtp 协议来发邮件，都是文本形式的协议，协议其实挺简单的。
+      
+    
+    </summary>
+    
+    
+      <category term="技术" scheme="https://wongyouth.github.io/tags/%E6%8A%80%E6%9C%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用 Ruby 来调用 Windows DLL 函数</title>
+    <link href="https://wongyouth.github.io/2017/11/10/%E4%BD%BF%E7%94%A8-ruby-%E6%9D%A5%E8%B0%83%E7%94%A8-windows-dll-%E5%87%BD%E6%95%B0/"/>
+    <id>https://wongyouth.github.io/2017/11/10/使用-ruby-来调用-windows-dll-函数/</id>
+    <published>2017-11-10T10:11:42.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>正好项目中要使用外部的 <code>DLL</code> 接口，如果用 <code>C</code> 来写固然是可以的。<br>但是也好多年没用了，觉得再拿起来也要些时间。就搜了下 <code>Ruby</code> 来怎么对接。</p><p>基本上网上推荐了2种方法：</p><ul><li><code>fiddle</code></li><li><code>ffi</code></li></ul><p><code>fiddle</code> 是 <code>Ruby</code> 标准库自带的，用法比较简单，但是官方文档特别少。<br><code>ffi</code> 是一个独立的 <code>Gem</code>，他是基于 <code>libffi</code> 的一个外部扩展来实现的，官网文档比较多。</p><p>感觉 <code>fiddle</code> 使用比较简单，我用的 <code>DLL</code> 也不是很复杂，就只试了 <code>fiddle</code>。<br>首先推荐看下这篇<a href="http://blog.honeybadger.io/use-any-c-library-from-ruby-via-fiddle-the-ruby-standard-librarys-best-kept-secret/">基础教程</a> ，大体就知道怎么用了。</p><p>但是很快就遇到了一个问题，<code>int[]</code> 这种数组怎么传过去。<br>搜了下，看到了<a href="https://ruby-china.org/topics/24821">这篇文章</a>，试了一下用 <code>a.pack(&#39;i&#39; * a.size)</code> 方法的确可以。</p><p>遇到的第二个问题是如何传 <code>UNICODE</code> 字符串，搜了一下没有搜到。<br>于是我就想说不定 <code>ffi</code> 这边的文档会有些提示。<br>果然官方<code>Wiki</code> 里有一篇<a href="https://github.com/ffi/ffi/wiki/windows-examples">例子</a>讲到了，使用需要<code>encode(&#39;UTF-16LE&#39;)</code>一下，<br>有一点我试的时候不在末尾加 <code>\0</code> 也是没问题的。</p><figure class="highlight rb"><figcaption><span>message_box.rb</span><a href="/downloads/code/message_box.rb">view raw</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="string">&#x27;fiddle&#x27;</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">&#x27;fiddle/import&#x27;</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">&#x27;fiddle/types&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">User32</span></span></span><br><span class="line">extend Fiddle::Importer</span><br><span class="line"></span><br><span class="line">dlload <span class="string">&#x27;user32&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> Fiddle::Win32Types <span class="comment"># 增加一些常用的typealias</span></span><br><span class="line">typealias <span class="string">&#x27;LPCTSTR&#x27;</span>, <span class="string">&#x27;char*&#x27;</span></span><br><span class="line"></span><br><span class="line">extern <span class="string">&#x27;int MessageBoxW(HWND, LPCTSTR, LPCTSTR, UINT)&#x27;</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">msg = <span class="string">&#x27;Hello 你好&#x27;</span>.encode(<span class="string">&#x27;UTF-16LE&#x27;</span>)</span><br><span class="line">User32.MessageBoxW(<span class="number">0</span>, msg, msg, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;正好项目中要使用外部的 &lt;code&gt;DLL&lt;/code&gt; 接口，如果用 &lt;code&gt;C&lt;/code&gt; 来写固然是可以的。&lt;br&gt;但是也好多年没用了，觉得再拿起来也要些时间。就搜了下 &lt;code&gt;Ruby&lt;/code&gt; 来怎么对接。&lt;/p&gt;
+&lt;p&gt;基本上网上推荐了2种方法：&lt;
+      
+    
+    </summary>
+    
+    
+      <category term="Ruby" scheme="https://wongyouth.github.io/tags/Ruby/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>切换到新的博客引擎 Hexo</title>
+    <link href="https://wongyouth.github.io/2017/09/03/%E5%88%87%E6%8D%A2%E5%88%B0%E6%96%B0%E7%9A%84%E5%8D%9A%E5%AE%A2%E5%BC%95%E6%93%8E-hexo/"/>
+    <id>https://wongyouth.github.io/2017/09/03/切换到新的博客引擎-hexo/</id>
+    <published>2017-09-03T10:25:28.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>是的，又换了一个博客引擎。</p><p>从 Octopress -&gt; middleman-blog -&gt; Hexo，博客没写几篇引擎倒是换的很勤，自嘲一下！</p><p>自从 2014 年切换到 <a href="https://github.com/middleman/middleman-blog">middleman-blog</a>, 已经有3年时间了，但是 <code>middleman-blog</code> 发展却停滞了。<br>究其原因，我想到了几点：</p><a id="more"></a><ul><li>毕竟 Ruby 是个小众语言，使用的人基数就不大</li><li>middleman-blog 是 middleman 的一个扩展项目，所以很多东西还要受限于 middleman，如果 middleman 不发展， middleman-blog 也发展不了</li></ul><p>我之前还提交过一个 <a href="https://github.com/middleman/middleman-blog/pull/212">PR</a> 给 <code>middleman-blog</code>，<br>没想到新版本更新后竟然被忽略掉了，有点莫名其妙。</p><p>说下体验</p><ul><li>主题比较少，网上搜索文章比较少，遇到问题肯定想找到答案也难，自己看源码。</li><li>每次升级 Ruby 环境时，感觉升级会有点小麻烦，自己用着也不是很爽。</li><li>想装些 JavaScript 的包，比较麻烦，我之前还是用 <code>bower</code> 来管理的，现在主流已经换到 <code>npm</code> 了。</li></ul><p>所以想换一个基于 <code>nodejs</code> 的微博引擎，其实我是想用基于 <code>nuxt</code> 的，但是目前还没有，所以用了 <code>hexo</code>，专门用于生成博客的，毕竟术业有专攻，没有什么坏处。</p><h2 id="迁移到-Hexo"><a href="#迁移到-Hexo" class="headerlink" title="迁移到 Hexo"></a>迁移到 Hexo</h2><p>如果按 <a href="https://hexo.io/docs/migration.html">官方Migration</a> 来， 出来的网址是这样的：</p><p><a href="http://localhost:4000/2017/09/03/2017-09-03-title">http://localhost:4000/2017/09/03/2017-09-03-title</a></p><p>但是我们要的是这样的：</p><p><a href="http://localhost:4000/2017/09/03/title">http://localhost:4000/2017/09/03/title</a></p><p>所以还要配置</p><pre><code>#permalink: :year/:month/:day/:title/permalink: :year/:month/:day/:post_title/</code></pre><p>感觉 <code>Hexo</code> 3 出来后文档有点乱。这个也是我看了源码查到的，之前烦恼了好几天。</p><h2 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h2><p>其他主要就是自己选个 <a href="https://hexo.io/themes/">主题</a> 就行了，我选的是 <a href="https://github.com/iissnan/hexo-theme-next">next</a> 主题。</p><h2 id="RSS"><a href="#RSS" class="headerlink" title="RSS"></a>RSS</h2><p>为了网址加上 RSS， 搜了下需要要加 <code>next-generator-feed</code>，但是加了后会报错，说找不到 <code>process-nextick-args</code>，于是 npm i process-nextick-args –save</p><h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>总体感觉 <code>Hexo</code> 小问题比较多，但是社区是很活跃的，Star 有 18k，希望以后不用再换博客引擎了。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;是的，又换了一个博客引擎。&lt;/p&gt;
+&lt;p&gt;从 Octopress -&amp;gt; middleman-blog -&amp;gt; Hexo，博客没写几篇引擎倒是换的很勤，自嘲一下！&lt;/p&gt;
+&lt;p&gt;自从 2014 年切换到 &lt;a href=&quot;https://github.com/middleman/middleman-blog&quot;&gt;middleman-blog&lt;/a&gt;, 已经有3年时间了，但是 &lt;code&gt;middleman-blog&lt;/code&gt; 发展却停滞了。&lt;br&gt;究其原因，我想到了几点：&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Blog" scheme="https://wongyouth.github.io/tags/Blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用 ImageMagick 处理图片小记</title>
+    <link href="https://wongyouth.github.io/2017/06/09/%E4%BD%BF%E7%94%A8-imagemagick-%E5%A4%84%E7%90%86%E5%9B%BE%E7%89%87%E5%B0%8F%E8%AE%B0/"/>
+    <id>https://wongyouth.github.io/2017/06/09/使用-imagemagick-处理图片小记/</id>
+    <published>2017-06-09T12:38:00.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="http://imagemagick.org">ImageMagick</a> 是强大的图片处理工具，<br>可以用来处理图转换，旋转，放大，缩小，模糊等很多处理。</p><p>本篇准备用一个案例来说明 <code>ImageMagick</code> 的用法。</p><h2 id="需求描述"><a href="#需求描述" class="headerlink" title="需求描述"></a>需求描述</h2><ul><li>给定一张底图图片，白色背景，黑色散列点小黑子，大小为6400x6400</li><li>要求把这张图片8x8的切成64小块，打乱排序后重新得到一张图片。</li><li>在每张小图片底部叠加一张中间有序号的图片，用于确认图片顺序。</li></ul><a id="more"></a><h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><ol><li>去掉白色背景改为透明，叠加后可显示底下图片</li><li>复制一张同样大小的白色图片</li><li>切分白色图片为8x8大小的图片</li><li>在每张小图片中间添加红色序号文字，依次为00 ~ 63</li><li>合并小图片为一张大图片</li><li>叠加透明图片到有序号的图片上</li><li>切分叠加后的图片为 8x8 的64张图片</li><li>合并打乱顺序后的小图片为一张图片</li></ol><p>以下为每个处理的命令</p><p>假设 图片名为 base.png</p><ol><li><p>去掉白色背景改为透明，叠加后可显示底下图片</p><pre><code>convert base.png -transparent white base.nobg.png</code></pre></li><li><p>复制一张同样大小的白色图片</p><pre><code># 用白色填充全部范围convert base.png -fill white -draw &apos;rectangle 0,0 6400,6400&apos; base.white.png</code></pre></li><li><p>切分白色图片为8x8大小的图片</p><pre><code># +repage 用于消除虚拟画布大小convert base.white.png -crop 12.5%x12.5% +repage sp-%02d.png</code></pre></li><li><p>在每张小图片中间添加红色序号文字，依次为00 ~ 63</p><pre><code>for f in sp-*.pngdo  no=$&#123;f:3:2&#125;  convert $f -gravity center -fill red -pointsize 30 -annotate 0 $no label-$&#123;no&#125;.pngdonerm sp-*.png</code></pre></li><li><p>合并小图片为一张大图片</p><pre><code># 增加 -goemetry +0+0 参数是为了不添加padding# -tile 8x8 指定 8行8列montage label-*.png -goemetry +0+0 -tile 8x8 concat.label.pngrm label-*.png</code></pre></li><li><p>叠加透明图片到有序号的图片上</p><pre><code>composite base.nobg.png -gravity center concat.label.png base.label.png</code></pre></li><li><p>切分叠加后的图片为 8x8 的64张图片</p><pre><code>convert base.label.png -crop 12.5%x12.5% +repage sp-%02d.png</code></pre></li><li><p>合并打乱顺序后的小图片为一张图片</p><pre><code>montage `ls sp-*.png | ruby -e &apos;puts STDIN.readlines.shuffle&apos;` -goemetry +0+0 -tile 8x8 out.pngrm sp-*.png# shell 没有可以打乱顺序的命令，这里使用了ruby的一行代码来搞定</code></pre></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;http://imagemagick.org&quot;&gt;ImageMagick&lt;/a&gt; 是强大的图片处理工具，&lt;br&gt;可以用来处理图转换，旋转，放大，缩小，模糊等很多处理。&lt;/p&gt;
+&lt;p&gt;本篇准备用一个案例来说明 &lt;code&gt;ImageMagick&lt;/code&gt; 的用法。&lt;/p&gt;
+&lt;h2 id=&quot;需求描述&quot;&gt;&lt;a href=&quot;#需求描述&quot; class=&quot;headerlink&quot; title=&quot;需求描述&quot;&gt;&lt;/a&gt;需求描述&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;给定一张底图图片，白色背景，黑色散列点小黑子，大小为6400x6400&lt;/li&gt;
+&lt;li&gt;要求把这张图片8x8的切成64小块，打乱排序后重新得到一张图片。&lt;/li&gt;
+&lt;li&gt;在每张小图片底部叠加一张中间有序号的图片，用于确认图片顺序。&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+    
+      <category term="ImageMagick" scheme="https://wongyouth.github.io/tags/ImageMagick/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Ftp 增强工具比较</title>
+    <link href="https://wongyouth.github.io/2016/12/30/ftp-%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E6%AF%94%E8%BE%83/"/>
+    <id>https://wongyouth.github.io/2016/12/30/ftp-增强工具比较/</id>
+    <published>2016-12-30T07:13:00.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>现在与主机交互的首选工具应该是 <code>ssh</code> 相关的工具了，比如 <code>scp</code>, <code>rsync</code>。因为他们都是建立在传输层基础上的安全协议。<br>而老牌的 <code>ftp</code> 则不然，因为他们访问主机时的登录交互容易被窃听，有泄密的可能性。<br><code>ftp</code> 也有对应的安全版本 <code>sftp</code>, 但是用的就很少了，因为 <code>sftp</code> 也是基于 <code>ssh</code> 的，但是 <code>ssh</code> 自带传输特效，所有 <code>sftp</code> 就很少用的了。</p><p>本篇为什么要写 <code>ftp</code>，是因为对接老的系统的时候，是超出我们控制的。<br>最近的项目中就需要把本地的数据包传到服务器上，因此找了几个 <code>ftp</code> 工具来分析了下。</p><a id="more"></a><p>主要的需求是</p><ul><li>CUI 非 GUI，因为需要结合 Shell 来写脚本</li><li>容易上传整个目录</li><li>可以指定上传路径</li><li>最好密码不要显示在命令行里</li></ul><p>找了3个来分析了下功能 <code>ftp</code>, <code>ncftp</code>, <code>lftp</code></p><h2 id="ftp"><a href="#ftp" class="headerlink" title="ftp"></a><code>ftp</code></h2><p>首先当然是用系统自带的 <code>ftp</code>，</p><ul><li><code>put</code> 命令不能指定目标路径，需要先登录后 <code>cd</code> 到目标路径</li><li>不能指定整个目录上传，多个文件可以用 <code>mput</code></li><li><p>密码可以带入 <code>user@pass:host</code> 中，放在 ~/.netrc 里面<br>在 ~/.netrc 里的格式是</p><pre><code>machine host/ip  login USERNAME  password PASSWORD</code></pre></li></ul><h2 id="ncftp"><a href="#ncftp" class="headerlink" title="ncftp"></a><code>ncftp</code></h2><p><code>ncftp</code> 可以满足上面的所有需求</p><ul><li><p>上传整个目录，包括子目录</p><pre><code>ncftpput -u user -p pass -R  host /host/dir /local/dir</code></pre></li><li><p>上传到指定路径</p><pre><code>ncftpput -u user -p pass host /host/dir /local/path</code></pre></li><li><p>隐藏密码</p><ul><li><p>提示输入密码</p><pre><code>ncftpput -u user host /host/dir /local/path</code></pre></li><li><p>放入配置文件</p><pre><code>ncftpput -f login.cfg host /host/dir /local/path</code></pre><p>  login.cfg 文件是这个格式</p><pre><code>host example.comuser USERNAMEpass PASSWORD</code></pre></li></ul></li></ul><h2 id="lftp"><a href="#lftp" class="headerlink" title="lftp"></a><code>lftp</code></h2><p><code>lftp</code> 满足了我的所有需求</p><ul><li><p>镜像整个目录，包括子目录</p><pre><code>lftp -e &apos;mirror -R /local/dir /host/dir&apos; host</code></pre></li><li><p>上传到指定路径</p><pre><code>lftp -e &apos;put -O /host/dir/ /local/path; bye&apos; host</code></pre></li><li><p>密码方式与 <code>ftp</code> 相同</p></li></ul><h2 id="其他比较"><a href="#其他比较" class="headerlink" title="其他比较"></a>其他比较</h2><p>使用 <code>ncftp</code> 或者 <code>lftp</code> 登录后，都可以使用上下键历史命令回显，<code>Tab</code> 键显示候选文件，文件补全等功能。他们的功能比较相近，由于满足了我要的需求，没有再深入比较了。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;现在与主机交互的首选工具应该是 &lt;code&gt;ssh&lt;/code&gt; 相关的工具了，比如 &lt;code&gt;scp&lt;/code&gt;, &lt;code&gt;rsync&lt;/code&gt;。因为他们都是建立在传输层基础上的安全协议。&lt;br&gt;而老牌的 &lt;code&gt;ftp&lt;/code&gt; 则不然，因为他们访问主机时的登录交互容易被窃听，有泄密的可能性。&lt;br&gt;&lt;code&gt;ftp&lt;/code&gt; 也有对应的安全版本 &lt;code&gt;sftp&lt;/code&gt;, 但是用的就很少了，因为 &lt;code&gt;sftp&lt;/code&gt; 也是基于 &lt;code&gt;ssh&lt;/code&gt; 的，但是 &lt;code&gt;ssh&lt;/code&gt; 自带传输特效，所有 &lt;code&gt;sftp&lt;/code&gt; 就很少用的了。&lt;/p&gt;
+&lt;p&gt;本篇为什么要写 &lt;code&gt;ftp&lt;/code&gt;，是因为对接老的系统的时候，是超出我们控制的。&lt;br&gt;最近的项目中就需要把本地的数据包传到服务器上，因此找了几个 &lt;code&gt;ftp&lt;/code&gt; 工具来分析了下。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="ftp" scheme="https://wongyouth.github.io/tags/ftp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ELK 套件分析Rails日志</title>
+    <link href="https://wongyouth.github.io/2016/02/24/elk-%E5%A5%97%E4%BB%B6%E5%88%86%E6%9E%90rails%E6%97%A5%E5%BF%97/"/>
+    <id>https://wongyouth.github.io/2016/02/24/elk-套件分析rails日志/</id>
+    <published>2016-02-24T06:36:00.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>当系统访问很频繁，服务器日志增多到一定量时，仅靠 <code>tail -f</code> 已经很难分析出有用信息了。<br>可能就只能进行一些简单的排除工作，比如根据日志内的时间信息，查找该时间附近有什么特殊访问之类。</p><p>即使这样用有时候也会比较麻烦，因为当你的应用服务器增多时，每个服务器都是单独写到本机日志文件内，造成了分析日志的难度。<br>这个时候就很需要一个工具来收集各个服务器日志来统一处理。</p><p>今天说的就是有关于这个问题的解法。</p><a id="more"></a><p>日志收集的工具也有不少 <a href="https://flume.apache.org/">Flume</a>，<a href="http://storm.apache.org/">storm</a>。 今天说的是 <a href="https://www.elastic.co/webinars/introduction-elk-stack">ELK stack</a> 这个套件。这个套件由 3 个部分组成：</p><ul><li><a href="https://www.elastic.co/products/elasticsearch">ElasticSearch</a></li><li><a href="https://www.elastic.co/products/logstash">Logstash</a></li><li><a href="https://www.elastic.co/products/kibana">Kibana</a></li></ul><p>简单地说: <code>Logstash</code> 用来收集数据；<code>ElasticSearch</code> 存储数据；<code>Kibana</code> 是表现层，Web 接口用来对接用户UI。</p><h3 id="ElasticSearch"><a href="#ElasticSearch" class="headerlink" title="ElasticSearch"></a>ElasticSearch</h3><p>相信 <code>ElasticSearch</code> 大家可能听说的，是做全文搜索的，跟 <code>Solr</code> 差不多是基于 <code>Lucene</code> 来做的。他有几个特点：</p><ul><li>RESTful Web 接口</li><li>API 数据基于 JSON</li><li>分布式架构</li></ul><p>当然 <code>Solr</code> 现在也可以放到多台服务器上组成集群了，但是 <code>ElasticSearch</code> 从一开始就是这么设计的，这种与生俱来的特性与后天修补出来的体验是否一样，你懂得。</p><p><code>ElasticSearch</code> 在 <code>ELK</code> 套件中处于数据存储的身份，无疑是最核心的。</p><h3 id="Logstash"><a href="#Logstash" class="headerlink" title="Logstash"></a>Logstash</h3><p><code>Logstash</code> 可以单独使用，比如把各个服务器的日志收集起来集成到一个日志文件内，这样只要看一个日志文件，就不需要费力到每个服务器查看日志了。<br>当然结合今天介绍的套件使用无疑是最强大的。</p><p><code>Logstash</code> 作为输入接口，他有很多插件可用，对接文件，对接网络接口，甚至对接 ElasticSearch 作为输入。<br>比如在我们的例子中，要收集多台日志文件，Logstash 可以开 TCP 端口，各个日志服务器使用 <a href="https://www.elastic.co/downloads/beats/filebeat">filebeat</a> 代理来检查日志输出，一旦有新的日志输出到文件，<br><code>filebeat</code> 就会把该内容发送到 <code>Logstash</code> 配置的端口内，这样就完成了日志的收集工作。</p><p><code>Logstash</code> 在收集了日志后，还可以对数据进行 分析，拆解成多个字段，再输出到 <code>ElasticSearch</code> 中，这样就能使用 <code>ElasticSearch</code> 强大的功能对这些字段进行搜索了。</p><h3 id="Kibana"><a href="#Kibana" class="headerlink" title="Kibana"></a>Kibana</h3><p><code>Kibana</code> 作为最后的用户 UI 接口，支持了很多分析的功能。比如分析每天的PV情况，一天内访问的高峰与低谷，异常攻击情况，瓶颈的处理等。</p><p><img src="/images/blog/kibana.png" alt="Kibana截图"></p><h2 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h2><p>下面是配置的 Rails4 日志的分析结构</p><figure class="highlight plain"><figcaption><span>logstash-pattern-rails4.conf</span><a href="/downloads/code/logstash-pattern-rails4.conf">view raw</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># Rails4 log prefix</span><br><span class="line">LOGLEVELSINGLE %{WORD}</span><br><span class="line">PROCESSNUM %{NUMBER}</span><br><span class="line">RAILS4PREFIX %{LOGLEVELSINGLE}, \[%{TIMESTAMP_ISO8601} #%{PROCESSNUM}]  %{LOGLEVEL} -- : </span><br><span class="line"></span><br><span class="line"># This will often be the only line:</span><br><span class="line">URIPATHPARAM2 %{URIPATH:uripath}(?:%{URIPARAM})?</span><br><span class="line">RAILS4HEAD (?m)%{RAILS4PREFIX}Started %{WORD:verb} &quot;%{URIPATHPARAM2:request}&quot; for %{IPORHOST:clientip} at (?&lt;timestamp&gt;%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{HOUR}:%{MINUTE}:%{SECOND} %{ISO8601_TIMEZONE})</span><br><span class="line"></span><br><span class="line"># Output schema migration info right after started</span><br><span class="line">RAILS4SCHEMAMIGRATION \W*%{RAILS4PREFIX}ActiveRecord::SchemaMigration Load \(%{NUMBER:schemams}ms\)  SELECT &quot;schema_migrations&quot;.* FROM &quot;schema_migrations&quot;</span><br><span class="line"># For some strange reason, params are stripped of {} - not sure that&#39;s a good idea.</span><br><span class="line">RAILS4PARAMETERS \W*%{RAILS4PREFIX}  Parameters: {%{DATA:params}}</span><br><span class="line">RAILS4RPROCESSING (?:%{RAILS4SCHEMAMIGRATION})?\W*%{RAILS4PREFIX}Processing by %{RCONTROLLER} as (?&lt;format&gt;\S+)(?:%{RAILS4PARAMETERS})?</span><br><span class="line"></span><br><span class="line">RAILS4PROFILE (?:\(Views: %{NUMBER:viewms:float}ms \| ActiveRecord: %{NUMBER:activerecordms:float}ms|\(ActiveRecord: %{NUMBER:activerecordms:float}ms)?</span><br><span class="line">RAILS4FOOT %{RAILS4PREFIX}Completed %{NUMBER:response} %{DATA} in %{NUMBER:totalms:int}ms %{RAILS4PROFILE}%{GREEDYDATA}</span><br><span class="line"></span><br><span class="line"># Put it all together</span><br><span class="line">RAILS4 %{RAILS4HEAD}(?:%{RAILS4RPROCESSING})?(?&lt;context&gt;(?:%{DATA}\n)*)(?:%{RAILS4FOOT})?</span><br></pre></td></tr></table></figure><p>补充要说的是，时间戳默认是以 <code>Logstash</code> 收到的日志数据的系统时间为每条日志时间戳的，这与时间日志发生的时间并不一致，<br>需要抽出日志内容里的时间为日志时间戳，这个需要在以下的处理：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data &#123;</span><br><span class="line">  match &#x3D;&gt; [&quot;timestamp&quot;, &#39;yyyy-MM-dd HH:mm:ss Z&#39;]</span><br><span class="line">  remove_field &#x3D;&gt; [&#39;timestamp&#39;] # 删除原来的时间戳</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>完整的<code>Logstash</code> 配置文件例子</p><figure class="highlight plain"><figcaption><span>logstash.conf</span><a href="/downloads/code/logstash.conf">view raw</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">input {</span><br><span class="line">  #beats {</span><br><span class="line">  #  port &#x3D;&gt; &#39;5044&#39;</span><br><span class="line">  #}</span><br><span class="line"></span><br><span class="line">  file {</span><br><span class="line">    path &#x3D;&gt; &#39;&#x2F;path&#x2F;to&#x2F;log&#x2F;production.log&#39;</span><br><span class="line">    codec &#x3D;&gt; multiline {</span><br><span class="line">      pattern &#x3D;&gt; &quot;-- : Started &quot;</span><br><span class="line">      negate &#x3D;&gt; true</span><br><span class="line">      what &#x3D;&gt; &#39;previous&#39;</span><br><span class="line">    }</span><br><span class="line">  }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">filter {</span><br><span class="line">  grok {</span><br><span class="line">    patterns_dir &#x3D;&gt; &#39;..&#x2F;grok-patterns&#39;</span><br><span class="line">    match &#x3D;&gt; { &quot;message&quot; &#x3D;&gt; &quot;%{RAILS4}&quot; }</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  date {</span><br><span class="line">    match &#x3D;&gt; [&#39;timestamp&#39;, &#39;yyyy-MM-dd HH:mm:ss Z&#39;]</span><br><span class="line">    remove_field &#x3D;&gt; [&#39;timestamp&#39;]</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  geoip {</span><br><span class="line">    source &#x3D;&gt; &#39;clientip&#39;</span><br><span class="line">    #fields &#x3D;&gt;  [&quot;city_name&quot;, &quot;country_code2&quot;, &quot;country_name&quot;, &quot;latitude&quot;, &quot;longitude&quot;, &quot;region_name&quot;]</span><br><span class="line">  }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">output {</span><br><span class="line">  stdout {</span><br><span class="line">    codec &#x3D;&gt; rubydebug</span><br><span class="line">  }</span><br><span class="line"></span><br><span class="line">  elasticsearch {</span><br><span class="line">    hosts &#x3D;&gt; [&#39;127.0.0.1:9200&#39;]</span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></table></figure><h2 id="延伸阅读"><a href="#延伸阅读" class="headerlink" title="延伸阅读"></a>延伸阅读</h2><p>参考 <a href="http://kibana.logstash.es/content/">ELKstack 中文指南</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;当系统访问很频繁，服务器日志增多到一定量时，仅靠 &lt;code&gt;tail -f&lt;/code&gt; 已经很难分析出有用信息了。&lt;br&gt;可能就只能进行一些简单的排除工作，比如根据日志内的时间信息，查找该时间附近有什么特殊访问之类。&lt;/p&gt;
+&lt;p&gt;即使这样用有时候也会比较麻烦，因为当你的应用服务器增多时，每个服务器都是单独写到本机日志文件内，造成了分析日志的难度。&lt;br&gt;这个时候就很需要一个工具来收集各个服务器日志来统一处理。&lt;/p&gt;
+&lt;p&gt;今天说的就是有关于这个问题的解法。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Logstash" scheme="https://wongyouth.github.io/tags/Logstash/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用 Docker 来安装 Redmine 并结合 gitolite 使用</title>
+    <link href="https://wongyouth.github.io/2015/10/30/%E4%BD%BF%E7%94%A8-docker-%E6%9D%A5%E5%AE%89%E8%A3%85-redmine-%E5%B9%B6%E7%BB%93%E5%90%88-gitolite-%E4%BD%BF%E7%94%A8/"/>
+    <id>https://wongyouth.github.io/2015/10/30/使用-docker-来安装-redmine-并结合-gitolite-使用/</id>
+    <published>2015-10-30T03:16:00.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="/2015/07/02/与-docker-一起使用-rails/">上一篇</a>介绍了 Docker 之后，仅仅过了3个月时间，Docker又增加了很多变化:<br>比如 <a href="https://docs.docker.com/machine/install-machine/">Docker Machine</a>, <a href="https://docs.docker.com/compose/install/">Docker Compose</a>。</p><p>最近项目里要把 Redmine 从盛大云到阿里云，正好可以发挥 Docker 的强项。这里分析一下需要实现的功能：</p><ul><li>Redmine 服务</li><li>Postgres 数据库服务</li><li><a href="https://github.com/sitaramc/gitolite">gitolite</a> Git repo 服务</li><li>迁移老数据到新的服务里</li><li>Redmine 服务自启动</li></ul><a id="more"></a><h3 id="Install-gitolite"><a href="#Install-gitolite" class="headerlink" title="Install gitolite"></a>Install gitolite</h3><p>虽然 gitolite 也有docker 提供，但是 redmine 需要访问 git 下面的 repo 文件，所以会有权限问题。<br>Docker 现在对 权限映射 这方面的支持还不是很好。所以我决定把 gitolite 安装在宿主机器内部。<br>所以 gitolite 按照官网的安装步骤安装。旧的 repo 数据只要复制覆盖 /home/git/repositories 就可以了。</p><h3 id="Docker-for-Redmine"><a href="#Docker-for-Redmine" class="headerlink" title="Docker for Redmine"></a>Docker for Redmine</h3><p>在 <a href="https://hub.docker.com">Docker hub</a> 里搜了一下可用的 Redmine 之后，<br>发现 <a href="https://hub.docker.com/r/sameersbn/redmine/">sameersbn/redmine 版本</a> 比<a href="https://hub.docker.com/_/redmine/">官方版本</a> 多了很多星，<br>连下载量也比官方多了一倍不止。比较了下内容之后发现官方版无法支持外发邮件，所以只有选择 <code>sameersbn</code> 版了。</p><p>如果是完全新安装不需要迁移数据的话，可以直接使用提供的样例 <a href="https://raw.githubusercontent.com/sameersbn/docker-redmine/master/docker-compose.yml">docker-compose.yml</a> 文件了。<br>所以 Redmine 这部分还是比较简单，使用了</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">redmine:</span><br><span class="line">  image: quay.io&#x2F;sameersbn&#x2F;redmine:latest</span><br><span class="line">  links:</span><br><span class="line">    - postgresql:postgresql</span><br><span class="line">  environment:</span><br><span class="line">    - USERMAP_UID&#x3D;1001</span><br><span class="line">    - USERMAP_GID&#x3D;1001</span><br><span class="line">    - TZ&#x3D;Asia&#x2F;Beijing</span><br><span class="line">    - REDMINE_PORT&#x3D;3000</span><br><span class="line">    - SMTP_ENABLED&#x3D;true</span><br><span class="line">    - SMTP_DOMAIN&#x3D;example.com</span><br><span class="line">    - SMTP_HOST&#x3D;smtp.exmail.qq.com</span><br><span class="line">    - SMTP_PORT&#x3D;25</span><br><span class="line">    - SMTP_USER&#x3D;user@example.com</span><br><span class="line">    - SMTP_PASS&#x3D;exampass</span><br><span class="line">    - SMTP_AUTHENTICATION&#x3D;:login</span><br><span class="line">    - IMAP_ENABLED&#x3D;false</span><br><span class="line">    - IMAP_USER&#x3D;mailer@example.com</span><br><span class="line">    - IMAP_PASS&#x3D;password</span><br><span class="line">    - IMAP_HOST&#x3D;imap.gmail.com</span><br><span class="line">    - IMAP_PORT&#x3D;993</span><br><span class="line">    - IMAP_SSL&#x3D;true</span><br><span class="line">    - IMAP_INTERVAL&#x3D;30</span><br><span class="line">  ports:</span><br><span class="line">    - &quot;80:80&quot;</span><br><span class="line">  volumes:</span><br><span class="line">    - &#x2F;data&#x2F;redmine:&#x2F;home&#x2F;redmine&#x2F;data</span><br><span class="line">    - &#x2F;home&#x2F;git&#x2F;repositories:&#x2F;home&#x2F;redmine&#x2F;repositories</span><br><span class="line">  restart: always</span><br></pre></td></tr></table></figure><ul><li>其中老服务器中用户上传的文件需要迁移到 /data/redmine/files 文件夹中就可以了。</li><li><code>USERMAP_UID=1001 USERMAP_GID=1001</code> 1001 是 git 用户的 uid, gid。<br>这样 docker 内的 redmine 的 uid,gid 就与git的一致，解决了权限问题。</li><li><code>restart: always</code> 让这个 container 自启动</li></ul><h3 id="Docker-for-Postgres"><a href="#Docker-for-Postgres" class="headerlink" title="Docker for Postgres"></a>Docker for Postgres</h3><p>上面的样例中数据库使用的是被定制化过的 Postgres ，但是我觉得官方的版本完全够用了。<br>迁移的策略是这样的，</p><ol><li><p>先用 docker 启动一个最基本的 postgres image: <code>docker-compose up -f /data/pg.yml</code></p><pre><code>postgresql:  image: postgres  environment:    - POSTGRES_USER=redmine    - POSTGRES_PASSWORD=secret    - PGDATA=/data  volumes:    - /data/pg:/data</code></pre></li><li><p>开启一个 postgres client 导入数据库旧数据，默认数据库名字是redmine</p><pre><code>$ docker run --link data_postgresql_1:db -v /data:/data -it postgres bash$ psql -h $DB_PORT_5432_TCP_ADDR -U redmine redmine &lt; /data/pg_old_data.sql</code></pre></li><li><p>链接 Redmine docker 到 postgresql docker 就可以完工了。</p></li></ol><p>完整的 docker-compose.yml 文件</p><figure class="highlight yml"><figcaption><span>docker-compose.yml</span><a href="/downloads/code/docker-compose.yml">view raw</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">postgresql:</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">postgres</span></span><br><span class="line">  <span class="attr">environment:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">POSTGRES_USER=redmine</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">POSTGRES_PASSWORD=redmine</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">PGDATA=/data</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/data/pg:/data</span></span><br><span class="line">  <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  </span><br><span class="line"><span class="attr">redmine:</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">quay.io/sameersbn/redmine:latest</span></span><br><span class="line">  <span class="attr">links:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">postgresql:postgresql</span></span><br><span class="line">  <span class="attr">environment:</span></span><br><span class="line">    <span class="comment">#- REDMINE_VERSION=3.0.1</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">USERMAP_UID=1001</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">USERMAP_GID=1001</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">TZ=Asia/Beijing</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">REDMINE_PORT=3000</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">SMTP_ENABLED=true</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">SMTP_DOMAIN=example.com</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">SMTP_HOST=smtp.exmail.qq.com</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">SMTP_PORT=25</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">SMTP_USER=redmine@example.com</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">SMTP_PASS=redminepass</span></span><br><span class="line">    <span class="comment">#- SMTP_STARTTLS=true</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">SMTP_AUTHENTICATION=:login</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">IMAP_ENABLED=false</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">IMAP_USER=mailer@example.com</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">IMAP_PASS=password</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">IMAP_HOST=imap.gmail.com</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">IMAP_PORT=993</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">IMAP_SSL=true</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">IMAP_INTERVAL=30</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">UNICORN_TIMEOUT=300</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">NGINX_MAX_UPLOAD_SIZE=100m</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;80:80&quot;</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/data/redmine:/home/redmine/data</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/home/git/repositories:/home/redmine/repositories</span></span><br><span class="line">  <span class="attr">restart:</span> <span class="string">always</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;/2015/07/02/与-docker-一起使用-rails/&quot;&gt;上一篇&lt;/a&gt;介绍了 Docker 之后，仅仅过了3个月时间，Docker又增加了很多变化:&lt;br&gt;比如 &lt;a href=&quot;https://docs.docker.com/machine/install-machine/&quot;&gt;Docker Machine&lt;/a&gt;, &lt;a href=&quot;https://docs.docker.com/compose/install/&quot;&gt;Docker Compose&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;最近项目里要把 Redmine 从盛大云到阿里云，正好可以发挥 Docker 的强项。这里分析一下需要实现的功能：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Redmine 服务&lt;/li&gt;
+&lt;li&gt;Postgres 数据库服务&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/sitaramc/gitolite&quot;&gt;gitolite&lt;/a&gt; Git repo 服务&lt;/li&gt;
+&lt;li&gt;迁移老数据到新的服务里&lt;/li&gt;
+&lt;li&gt;Redmine 服务自启动&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+    
+      <category term="Docker" scheme="https://wongyouth.github.io/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>与 Docker 一起使用 Rails</title>
+    <link href="https://wongyouth.github.io/2015/07/02/%E4%B8%8E-docker-%E4%B8%80%E8%B5%B7%E4%BD%BF%E7%94%A8-rails/"/>
+    <id>https://wongyouth.github.io/2015/07/02/与-docker-一起使用-rails/</id>
+    <published>2015-07-02T00:28:00.000Z</published>
+    <updated>2021-06-09T04:18:08.920Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近 Docker 很火，好像只要是服务器端相关的东西都有要搬到 Docker 上的趋势，<br>似乎要把从开发，安装，部署，维护的问题全都要解决掉的那个意思。</p><p>按我的理解，Docker 架构在服务器之上，从服务器上多衍生出了一层，<br>所以可以跨平台运行在各个系统之上，达到一致的用户体验。<br>并且 Docker 可以快速导入一个定制好系统，<br>比如可以把开发人员的系统环境复制一份给测试人员使用，体验真的很好。</p><p>Docker 发展很快，但我觉得就目前的阶段还是不太适合商用环境，<br>毕竟真正商用时是多主机配合工作的，这点上 Docker 还有很大的空间需要完善。<br>作为一个开发，测试用环境或者小范围商用时是 Docker 的确带来了巨大的用户体验。</p><a id="more"></a><p>在这篇博文里简单记录下 Docker 如何与 Rails 一起配合使用。以下是在 Mac OSX 的环境里使用时为例。</p><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><pre><code>brew install boot2docker</code></pre><h2 id="启动-Docker-环境"><a href="#启动-Docker-环境" class="headerlink" title="启动 Docker 环境"></a>启动 Docker 环境</h2><pre><code>boot2docker up</code></pre><p>返回结果</p><pre><code>Waiting for VM and Docker daemon to start....................oooooooStarted.Writing /Users/ryan/.boot2docker/certs/boot2docker-vm/ca.pemWriting /Users/ryan/.boot2docker/certs/boot2docker-vm/cert.pemWriting /Users/ryan/.boot2docker/certs/boot2docker-vm/key.pemTo connect the Docker client to the Docker daemon, please set:    export DOCKER_HOST=tcp://192.168.59.103:2376    export DOCKER_CERT_PATH=/Users/ryan/.boot2docker/certs/boot2docker-vm    export DOCKER_TLS_VERIFY=1</code></pre><p>这个命令实际上时启动了一个 <code>Virtual Box</code> 虚拟机，跑了一个 Linux 内核的系统。<br>如果你是使用的是一个 Linux 内核的电脑，就可以少这一部分开销了。</p><h2 id="设置系统变量给终端使用"><a href="#设置系统变量给终端使用" class="headerlink" title="设置系统变量给终端使用"></a>设置系统变量给终端使用</h2><p>复制上一步的返回结果到终端上执行。如果有多个终端需要使用时，每个都要设置这些系统变量</p><pre><code>export DOCKER_HOST=tcp://192.168.59.103:2376export DOCKER_CERT_PATH=/Users/ryan/.boot2docker/certs/boot2docker-vmexport DOCKER_TLS_VERIFY=1</code></pre><h2 id="创建一个-PostgreSQL-容器"><a href="#创建一个-PostgreSQL-容器" class="headerlink" title="创建一个 PostgreSQL 容器"></a>创建一个 PostgreSQL 容器</h2><pre><code>docker run --name my-postgres -e POSTGRES_PASSWORD=postgres -d postgres</code></pre><p>这里把 postgres 的密码设为 postgres, 可以配合在 Rails app 厘米使用这个账号。</p><p>如果第一次执行该命令，Docker 会先从社区共享的 Image 里下载 postgres 最新的数据，<br>来创建 PostgreSQL 容器，所以需要花费几分钟时间。</p><pre><code>docker ps</code></pre><p>返回结果</p><pre><code>CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                    NAMES139f96ea6d0e        postgres:latest     &quot;/docker-entrypoint.   2 minutes ago       Up 2 minutes        5432/tcp                 my-postgres</code></pre><h2 id="生成-Rails-应用的-Docker-Image"><a href="#生成-Rails-应用的-Docker-Image" class="headerlink" title="生成 Rails 应用的 Docker Image"></a>生成 Rails 应用的 Docker Image</h2><p>在终端进入 Rails 主目录，<br>修改 config/database.yml 文件里数据库的设置</p><pre><code>host: ENV[&apos;DB_PORT_5432_TCP_ADDR&apos;]username: postgrespassword: postgres</code></pre><p><code>DB_PORT_5432_TCP_ADDR</code> 这个环境变量是在 Docker 链接数据库容器到 Rails 应用容器时自动设置的，通过该地址可以找到数据库</p><p>生成 Dockerfile 文件，供 build 使用</p><pre><code>echo &apos;FROM rails:onbuild&apos; &gt; Dockerfile</code></pre><p>执行 build 来生成 docker image</p><pre><code>docker build -t my-rails .</code></pre><h2 id="创建-Rails-console-容器，用来执行-Rails-任务"><a href="#创建-Rails-console-容器，用来执行-Rails-任务" class="headerlink" title="创建 Rails console 容器，用来执行 Rails 任务"></a>创建 Rails console 容器，用来执行 Rails 任务</h2><pre><code>docker run --name my-bash --link my-postgres:db -v &quot;$PWD&quot;:/usr/src/app -it my-rails /bin/bash</code></pre><p>此时已经进入了 Docker 容器内的一个交互环境下，我们可以运行 Rails 命令来生成数据表结构</p><pre><code>rake db:create db:migrate</code></pre><p>要退出容器时，运行 <code>exit</code> 就可以了</p><h2 id="创建-Rails-容器"><a href="#创建-Rails-容器" class="headerlink" title="创建 Rails 容器"></a>创建 Rails 容器</h2><pre><code>docker run --name my-rails --link my-postgres:db -v &quot;$PWD&quot;:/usr/src/app -p 3000:3000 -d my-rails</code></pre><h2 id="打开浏览器查看结果"><a href="#打开浏览器查看结果" class="headerlink" title="打开浏览器查看结果"></a>打开浏览器查看结果</h2><pre><code>open http://192.168.59.103:3000</code></pre><p>为什么是 <code>192.168.59.103</code> 地址而不是 <code>localhost</code> ?<br>因为 Docker 实际上是运行在虚拟机里面的，所有要访问虚拟机的 IP 才可以访问到。<br>这个地址是在运行 <code>boot2docker up</code> 时的返回结果里面有显示。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近 Docker 很火，好像只要是服务器端相关的东西都有要搬到 Docker 上的趋势，&lt;br&gt;似乎要把从开发，安装，部署，维护的问题全都要解决掉的那个意思。&lt;/p&gt;
+&lt;p&gt;按我的理解，Docker 架构在服务器之上，从服务器上多衍生出了一层，&lt;br&gt;所以可以跨平台运行在各个系统之上，达到一致的用户体验。&lt;br&gt;并且 Docker 可以快速导入一个定制好系统，&lt;br&gt;比如可以把开发人员的系统环境复制一份给测试人员使用，体验真的很好。&lt;/p&gt;
+&lt;p&gt;Docker 发展很快，但我觉得就目前的阶段还是不太适合商用环境，&lt;br&gt;毕竟真正商用时是多主机配合工作的，这点上 Docker 还有很大的空间需要完善。&lt;br&gt;作为一个开发，测试用环境或者小范围商用时是 Docker 的确带来了巨大的用户体验。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Rails" scheme="https://wongyouth.github.io/tags/Rails/"/>
+    
+      <category term="Docker" scheme="https://wongyouth.github.io/tags/Docker/"/>
+    
+  </entry>
+  
+</feed>

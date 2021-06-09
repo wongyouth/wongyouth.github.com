@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wongyouth.github.io","root":"/","scheme":"Pisces","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+
+  <meta name="description" content="之前写过一篇关于 LVM 的博文。今天要说的是有关 LVM 的一个应用。 原理当系统需要很多读写操作，需要更高效率的磁盘读写能力，完全升级磁盘等级会没有太多意义。因为无论多好的磁盘读写能力，总会达到峰顶。 这时候我们需要另一种的解法。 挂载更多的磁盘到一个目录，这样写到一个磁盘的数据会分散到各个磁盘中，这样子理论上可以达到无限扩展。 能够实现这个技术的，有RAID0, LVM Stripe。这里我">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Using LVM striped logical volumn">
+<meta property="og:url" content="https://wongyouth.github.io/2014/09/04/using-lvm-striped-logical-volumn/index.html">
+<meta property="og:site_name" content="向往自由的鱼">
+<meta property="og:description" content="之前写过一篇关于 LVM 的博文。今天要说的是有关 LVM 的一个应用。 原理当系统需要很多读写操作，需要更高效率的磁盘读写能力，完全升级磁盘等级会没有太多意义。因为无论多好的磁盘读写能力，总会达到峰顶。 这时候我们需要另一种的解法。 挂载更多的磁盘到一个目录，这样写到一个磁盘的数据会分散到各个磁盘中，这样子理论上可以达到无限扩展。 能够实现这个技术的，有RAID0, LVM Stripe。这里我">
+<meta property="og:locale">
+<meta property="article:published_time" content="2014-09-04T09:47:00.000Z">
+<meta property="article:modified_time" content="2021-06-09T04:18:08.920Z">
+<meta property="article:author" content="Ryan Wang">
+<meta property="article:tag" content="Server">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="LVM">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wongyouth.github.io/2014/09/04/using-lvm-striped-logical-volumn/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>Using LVM striped logical volumn | 向往自由的鱼</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">向往自由的鱼</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AE%E8%AE%A4-vg-%E6%89%80%E6%9C%89-%E7%89%A9%E7%90%86%E7%9B%98%E6%95%B0%E9%87%8F"><span class="nav-number">2.1.</span> <span class="nav-text">确认 vg 所有 物理盘数量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90-Stripe-%E9%80%BB%E8%BE%91%E7%9B%98"><span class="nav-number">2.2.</span> <span class="nav-text">生成 Stripe 逻辑盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%80%BB%E8%BE%91%E7%9B%98%E6%98%AF%E5%90%A6%E6%98%AF-Stripe-%E7%9B%98"><span class="nav-number">2.3.</span> <span class="nav-text">查看逻辑盘是否是 Stripe 盘</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%A9%E5%B1%95Striped%E9%80%BB%E8%BE%91%E7%9B%98"><span class="nav-number">3.</span> <span class="nav-text">扩展Striped逻辑盘</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-Stripe-%E9%80%BB%E8%BE%91%E7%9B%98%E4%BF%A1%E6%81%AF"><span class="nav-number">3.1.</span> <span class="nav-text">查看 Stripe  逻辑盘信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E9%80%BB%E8%BE%91%E7%9B%98%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.2.</span> <span class="nav-text">调整逻辑盘大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%B6%E4%BC%B8%E9%98%85%E8%AF%BB"><span class="nav-number">3.3.</span> <span class="nav-text">延伸阅读</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan Wang"
+      src="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+  <p class="site-author-name" itemprop="name">Ryan Wang</p>
+  <div class="site-description" itemprop="description">随想随写</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wongyouth" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wongyouth" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://wongyouth.github.io/2014/09/04/using-lvm-striped-logical-volumn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+      <meta itemprop="name" content="Ryan Wang">
+      <meta itemprop="description" content="随想随写">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向往自由的鱼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Using LVM striped logical volumn
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2014-09-04 09:47:00" itemprop="dateCreated datePublished" datetime="2014-09-04T09:47:00+00:00">2014-09-04</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2021-06-09 04:18:08" itemprop="dateModified" datetime="2021-06-09T04:18:08+00:00">2021-06-09</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Server/" itemprop="url" rel="index"><span itemprop="name">Server</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2014/09/04/using-lvm-striped-logical-volumn/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/09/04/using-lvm-striped-logical-volumn/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>之前写过一篇关于 LVM 的<a href="/blog/2013/01/30/use-lvm-with-your-server/">博文</a>。<br>今天要说的是有关 LVM 的一个应用。</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>当系统需要很多读写操作，需要更高效率的磁盘读写能力，完全升级磁盘等级会没有太多意义。<br>因为无论多好的磁盘读写能力，总会达到峰顶。</p>
+<p>这时候我们需要另一种的解法。</p>
+<p>挂载更多的磁盘到一个目录，这样写到一个磁盘的数据会分散到各个磁盘中，<br>这样子理论上可以达到无限扩展。</p>
+<p>能够实现这个技术的，有RAID0, LVM Stripe。这里我只说LVM。</p>
+<a id="more"></a>
+<h1 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h1><h2 id="确认-vg-所有-物理盘数量"><a href="#确认-vg-所有-物理盘数量" class="headerlink" title="确认 vg 所有 物理盘数量"></a>确认 vg 所有 物理盘数量</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jxb@pg2:~$ sudo vgs</span><br><span class="line">  VG   #PV #LV #SN Attr   VSize  VFree</span><br><span class="line">  db     3   1   0 wz--n- 59.99g 1008.00m</span><br></pre></td></tr></table></figure>
+<p>这里可以确认 PV 的数量是 3 个。</p>
+<h2 id="生成-Stripe-逻辑盘"><a href="#生成-Stripe-逻辑盘" class="headerlink" title="生成 Stripe 逻辑盘"></a>生成 <code>Stripe</code> 逻辑盘</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># lvcreate -n pg1 -L 59G -i 3 db</span><br></pre></td></tr></table></figure>
+<p>生成由 3 个物理盘组成的 <code>striped</code> 的逻辑盘</p>
+<h2 id="查看逻辑盘是否是-Stripe-盘"><a href="#查看逻辑盘是否是-Stripe-盘" class="headerlink" title="查看逻辑盘是否是 Stripe 盘"></a>查看逻辑盘是否是 <code>Stripe</code> 盘</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jxb@db:~$ sudo lvs --segments</span><br><span class="line">[sudo] password for jxb:</span><br><span class="line">  LV   VG   Attr   #Str Type    SSize</span><br><span class="line">  pg1  db   -wi-ao    3 striped 59.00g</span><br></pre></td></tr></table></figure>
+<p>这是一个由3个盘组成的 <code>Stripe</code> 盘。总共的容量是59G。</p>
+<h1 id="扩展Striped逻辑盘"><a href="#扩展Striped逻辑盘" class="headerlink" title="扩展Striped逻辑盘"></a>扩展Striped逻辑盘</h1><p>扩展Striped逻辑盘的时候需要准备与生成时相同数量的物理盘，我们现在用了3个盘，所以一定要准备3个物理盘</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">jxb@pg2:~$ sudo pvcreate &#x2F;dev&#x2F;xvdg</span><br><span class="line">  Physical volume &quot;&#x2F;dev&#x2F;xvdg&quot; successfully created</span><br><span class="line">jxb@pg2:~$ sudo vgextend db &#x2F;dev&#x2F;xvdg</span><br><span class="line">  Volume group &quot;db&quot; successfully extended</span><br><span class="line">jxb@pg2:~$ sudo lvextend db&#x2F;pg1 -L 70G</span><br><span class="line">  Using stripesize of last segment 4.00 KiB</span><br><span class="line">  Rounding size (17920 extents) down to stripe boundary size for segment (17919 extents)</span><br><span class="line">  Extending logical volume pg1 to 70.00 GiB</span><br><span class="line">  Insufficient free space: 2814 extents needed, but only 2811 available</span><br></pre></td></tr></table></figure>
+<p>可以看到只有一个物理盘的时候无法扩展逻辑盘</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">jxb@pg2:~$ sudo pvcreate &#x2F;dev&#x2F;xvdi</span><br><span class="line">  Physical volume &quot;&#x2F;dev&#x2F;xvdi&quot; successfully created</span><br><span class="line">jxb@pg2:~$ sudo pvcreate &#x2F;dev&#x2F;xvdh</span><br><span class="line">  Physical volume &quot;&#x2F;dev&#x2F;xvdh&quot; successfully created</span><br><span class="line">jxb@pg2:~$ sudo vgextend db &#x2F;dev&#x2F;xvdi</span><br><span class="line">  Volume group &quot;db&quot; successfully extended</span><br><span class="line">jxb@pg2:~$ sudo vgextend db &#x2F;dev&#x2F;xvdh</span><br><span class="line">  Volume group &quot;db&quot; successfully extended</span><br><span class="line">jxb@pg2:~$ vgs</span><br><span class="line">  WARNING: Running as a non-root user. Functionality may be unavailable.</span><br><span class="line">  No volume groups found</span><br><span class="line">jxb@pg2:~$ sudo vgs</span><br><span class="line">  VG   #PV #LV #SN Attr   VSize  VFree</span><br><span class="line">  db     6   1   0 wz--n- 89.98g 30.97g</span><br><span class="line">jxb@pg2:&#x2F;u$ sudo lvextend -l+100%free db&#x2F;pg1</span><br><span class="line">  Using stripesize of last segment 4.00 KiB</span><br><span class="line">  Extending logical volume pg1 to 89.98 GiB</span><br><span class="line">  Logical volume pg1 successfully resized</span><br></pre></td></tr></table></figure>
+<h2 id="查看-Stripe-逻辑盘信息"><a href="#查看-Stripe-逻辑盘信息" class="headerlink" title="查看 Stripe  逻辑盘信息"></a>查看 <code>Stripe</code>  逻辑盘信息</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jxb@pg2:&#x2F;u$ sudo lvs --segments</span><br><span class="line">  LV   VG   Attr   #Str Type    SSize</span><br><span class="line">  pg1  db   -wi-ao    3 striped 59.99g</span><br><span class="line">  pg1  db   -wi-ao    3 striped 29.99g</span><br></pre></td></tr></table></figure>
+<h2 id="调整逻辑盘大小"><a href="#调整逻辑盘大小" class="headerlink" title="调整逻辑盘大小"></a>调整逻辑盘大小</h2><p>调整前已经使用了 76%</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jxb@pg2:&#x2F;u$ df -h</span><br><span class="line">Filesystem          Size  Used Avail Use% Mounted on</span><br><span class="line">&#x2F;dev&#x2F;mapper&#x2F;db-pg1   59G   43G   14G  76% &#x2F;u</span><br></pre></td></tr></table></figure>
+<p>执行调整操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">jxb@pg2:&#x2F;u$ sudo resize2fs &#x2F;dev&#x2F;mapper&#x2F;db-pg1</span><br><span class="line">resize2fs 1.42 (29-Nov-2011)</span><br><span class="line">Filesystem at &#x2F;dev&#x2F;mapper&#x2F;db-pg1 is mounted on &#x2F;u; on-line resizing required</span><br><span class="line">old_desc_blocks &#x3D; 4, new_desc_blocks &#x3D; 6</span><br><span class="line">Performing an on-line resize of &#x2F;dev&#x2F;mapper&#x2F;db-pg1 to 23586816 (4k) blocks.</span><br><span class="line">The filesystem on &#x2F;dev&#x2F;mapper&#x2F;db-pg1 is now 23586816 blocks long.</span><br></pre></td></tr></table></figure>
+<p>调整后 降为 51%</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jxb@pg2:&#x2F;u$ df -h</span><br><span class="line">Filesystem          Size  Used Avail Use% Mounted on</span><br><span class="line">&#x2F;dev&#x2F;mapper&#x2F;db-pg1   90G   43G   43G  51% &#x2F;u</span><br></pre></td></tr></table></figure>
+<p>到此 Stripe 逻辑盘扩展成功</p>
+<p>注意事项：<code>resize2fs</code> 在 Kernel2.6 之前是需要 <code>umount</code> 盘之后才可操作，执行该项操作做好数据备份工作。</p>
+<h2 id="延伸阅读"><a href="#延伸阅读" class="headerlink" title="延伸阅读"></a>延伸阅读</h2><p><a target="_blank" rel="noopener" href="http://tldp.org/HOWTO/LVM-HOWTO/recipethreescsistripe.html" title="生成Stripe逻辑盘">生成Stripe逻辑盘</a>,<br><a target="_blank" rel="noopener" href="http://tldp.org/HOWTO/LVM-HOWTO/recipemovevgtonewsys.html" title="迁移LVM硬盘到别的主机上">迁移LVM硬盘到别的主机上</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Server/" rel="tag"># Server</a>
+              <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"># 运维</a>
+              <a href="/tags/LVM/" rel="tag"># LVM</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2014/07/16/%E5%BD%93-activerecord-%E4%B8%8D%E5%A4%9F%E7%94%A8%E6%97%B6%E8%BF%98%E6%9C%89-arel/" rel="prev" title="当 ActiveRecord 不够用时还有 Arel">
+                  <i class="fa fa-chevron-left"></i> 当 ActiveRecord 不够用时还有 Arel
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2014/09/05/%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8Epostgresql%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="next" title="配置主从PostgreSQL数据库">
+                  配置主从PostgreSQL数据库 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ryan Wang</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://wongyouth.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://wongyouth.github.io/2014/09/04/using-lvm-striped-logical-volumn/";
+    this.page.identifier = "2014/09/04/using-lvm-striped-logical-volumn/";
+    this.page.title = "Using LVM striped logical volumn";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://wongyouth.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
