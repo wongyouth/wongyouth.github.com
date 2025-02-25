@@ -8,8 +8,7 @@ subtitle:
 description: 随想随写
 author: Ryan Wang
 avatar: https://avatars0.githubusercontent.com/u/944583?v=4&s=460
-#language: zh-CN
-language: zh-Hans
+language: zh-CN
 timezone:
 
 # URL
@@ -78,7 +77,7 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 # theme: landscape
 # theme: next
-theme: next-reload
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
