@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wongyouth.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="用过不少博客，MSN spaces，blogger.com，myspace, wordpress，搜狐，总是觉得少了点自由发挥的空间。直到现有有了octopress，就像我这个博客一样，这才是咱程序猿该有的！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用Octopress来写博客并发布到Github上">
+<meta property="og:url" content="https://wongyouth.github.io/2012/04/21/%E7%94%A8octopress%E6%9D%A5%E5%86%99%E5%8D%9A%E5%AE%A2%E5%B9%B6%E5%8F%91%E5%B8%83%E5%88%B0github%E4%B8%8A/index.html">
+<meta property="og:site_name" content="向往自由的鱼">
+<meta property="og:description" content="用过不少博客，MSN spaces，blogger.com，myspace, wordpress，搜狐，总是觉得少了点自由发挥的空间。直到现有有了octopress，就像我这个博客一样，这才是咱程序猿该有的！">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2012-04-21T12:54:00.000Z">
+<meta property="article:modified_time" content="2025-02-25T02:53:09.082Z">
+<meta property="article:author" content="Ryan Wang">
+<meta property="article:tag" content="博客">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wongyouth.github.io/2012/04/21/%E7%94%A8octopress%E6%9D%A5%E5%86%99%E5%8D%9A%E5%AE%A2%E5%B9%B6%E5%8F%91%E5%B8%83%E5%88%B0github%E4%B8%8A/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wongyouth.github.io/2012/04/21/%E7%94%A8octopress%E6%9D%A5%E5%86%99%E5%8D%9A%E5%AE%A2%E5%B9%B6%E5%8F%91%E5%B8%83%E5%88%B0github%E4%B8%8A/","path":"2012/04/21/用octopress来写博客并发布到github上/","title":"用Octopress来写博客并发布到Github上"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>用Octopress来写博客并发布到Github上 | 向往自由的鱼</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">向往自由的鱼</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E5%B8%83"><span class="nav-number">3.</span> <span class="nav-text">发布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8D%9A%E6%96%87"><span class="nav-number">4.</span> <span class="nav-text">写第一个博文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">5.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E5%85%B6%E4%BB%96%E7%94%B5%E8%84%91%E9%87%8C%E9%9D%A2%E5%90%8C%E6%AD%A5%E6%97%B6%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-number">6.</span> <span class="nav-text">在其他电脑里面同步时的操作</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan Wang"
+      src="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+  <p class="site-author-name" itemprop="name">Ryan Wang</p>
+  <div class="site-description" itemprop="description">随想随写</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wongyouth" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wongyouth" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wongyouth.github.io/2012/04/21/%E7%94%A8octopress%E6%9D%A5%E5%86%99%E5%8D%9A%E5%AE%A2%E5%B9%B6%E5%8F%91%E5%B8%83%E5%88%B0github%E4%B8%8A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+      <meta itemprop="name" content="Ryan Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向往自由的鱼">
+      <meta itemprop="description" content="随想随写">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="用Octopress来写博客并发布到Github上 | 向往自由的鱼">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用Octopress来写博客并发布到Github上
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2012-04-21 20:54:00" itemprop="dateCreated datePublished" datetime="2012-04-21T20:54:00+08:00">2012-04-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-02-25 10:53:09" itemprop="dateModified" datetime="2025-02-25T10:53:09+08:00">2025-02-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Blog/" itemprop="url" rel="index"><span itemprop="name">Blog</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2012/04/21/%E7%94%A8octopress%E6%9D%A5%E5%86%99%E5%8D%9A%E5%AE%A2%E5%B9%B6%E5%8F%91%E5%B8%83%E5%88%B0github%E4%B8%8A/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2012/04/21/用octopress来写博客并发布到github上/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>用过不少博客，MSN spaces，blogger.com，myspace, wordpress，搜狐，总是觉得少了点自由发挥的空间。直到现有有了<a target="_blank" rel="noopener" href="http://octopress.org/">octopress</a>，就像我这个博客一样，这才是咱程序猿该有的！</p>
+<span id="more"></span>
+
+<ol>
+<li>安装</li>
+<li>配置</li>
+<li>发布</li>
+<li>写第一个博文</li>
+</ol>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Install octopress</span></span><br><span class="line">git <span class="built_in">clone</span> git://github.com/imathis/octopress.git octopress</span><br><span class="line"><span class="built_in">cd</span> octopress</span><br><span class="line">bundler install</span><br><span class="line">rake install</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>你要先有个github.com的帐号，如果没有赶快注册吧。<br>注册好后新建一个软件仓库 <a target="_blank" rel="noopener" href="https://github.com/new">https://github.com/new</a> ，注意仓库名称要以下这种格式哦<code>yourname.github.com</code>，这样代码发布后自动这个url就可以访问了。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rake setup_github_pages</span><br></pre></td></tr></table></figure>
+
+<p>这个命令主要做以下的操作</p>
+<ol>
+<li>问你github上的url。 我的是 <a href="mailto:&#x67;&#105;&#116;&#64;&#103;&#105;&#116;&#x68;&#x75;&#98;&#x2e;&#x63;&#x6f;&#109;">git@github.com</a>:wongyouth&#x2F;wongyouth.github.com.git</li>
+<li>将原始的<code>imathis/octopress</code>远端仓库<code>origin</code>名称改为<code>octopress</code></li>
+<li>把你输入的url作为远端仓库名<code>origin</code></li>
+<li>把当前目录从分支<code>master</code>切换到<code>source</code></li>
+<li>把当前目录与<code>origin</code>的仓库关联，能默认push到github中</li>
+<li>配置<code>_deploy</code>目录作为github仓库的<code>master</code>分支</li>
+</ol>
+<p>要做的就是把原始的blog代码放在<code>source</code>分支中，当要发布时会自动生成发布代码到<code>_deploy</code>目录下以<code>master</code>分支更新到github上。github会以<code>master</code>中的代码作为blog的原始代码。</p>
+<h2 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Deploy blog</span></span><br><span class="line">rake generate</span><br><span class="line">rake deploy</span><br></pre></td></tr></table></figure>
+
+<p>当你发布之后，你就可以到 <a target="_blank" rel="noopener" href="http://yourname.github.com/">http://yourname.github.com</a> 上看到你的博客了，是不是很酷呢。</p>
+<h2 id="写第一个博文"><a href="#写第一个博文" class="headerlink" title="写第一个博文"></a>写第一个博文</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create first post</span></span><br><span class="line">rake new_post[<span class="string">&#x27;first post&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>引号里面是博文的标题，这个命令会在<code>source/_posts</code>下面生成一个markdown为后缀的文件，我们要做的就是编辑这个文件的内容，然后</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Start a local server for preview</span></span><br><span class="line">rake preview</span><br></pre></td></tr></table></figure>
+
+<p>会在本地启动sinatra服务，用浏览器打开 <a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a> 就可以看到效果了。如果都没有问题就可以发布了。</p>
+<p>有时候写了一半的博文想要先留为草稿放到服务器但是不发布这样情况。<br>我们可以在单独的这篇博文开头的yaml里面追加设置</p>
+<pre><code>published: false
+</code></pre>
+<p>这样deploy的时候就不会发布了。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>你可以仔细查看以下三个文件，如果觉得有必要就按照自己的配置修改。</p>
+<ol>
+<li>_config.yml</li>
+<li>config.rb</li>
+<li>config.ru</li>
+</ol>
+<p>_config.yml中有关联其他一些社区的配置，比如github.com帐号，facebook帐号等。我认为比较有用的是<a target="_blank" rel="noopener" href="http://disqus.com/">disqus</a>的评论帐号。到disqus注册一下，然后设置好<code>disqus_short_name</code>这样你的博客就有了评论功能了，而不是你一个人在唱独角戏了。</p>
+<h2 id="在其他电脑里面同步时的操作"><a href="#在其他电脑里面同步时的操作" class="headerlink" title="在其他电脑里面同步时的操作"></a>在其他电脑里面同步时的操作</h2><pre><code>git clone git@github.com:wongyouth/wongyouth.github.com.git
+cd wongyouth.github.com
+git checkout source
+git clone git@github.com:wongyouth/wongyouth.github.com.git _deploy
+</code></pre>
+<p><code>_deploy</code>目录是用来与远程代码库同步的目录，所以我们要把它checkout出来预先做好关联</p>
+<p>make a new post and something else …</p>
+<pre><code>rake generate
+rake deploy
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8D%9A%E5%AE%A2/" rel="tag"># 博客</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2012/04/21/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85ruby%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" rel="prev" title="Ubuntu下安装Ruby开发环境">
+                  <i class="fa fa-angle-left"></i> Ubuntu下安装Ruby开发环境
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2012/04/26/git%E6%A0%87%E7%AD%BE%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" rel="next" title="Git标签常用操作">
+                  Git标签常用操作 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ryan Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wongyouth","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

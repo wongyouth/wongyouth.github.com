@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wongyouth.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本篇博文分享一下git stash以及他的实际使用技巧  Git stash 是什么，他的使用场景，以及如何来使用 Git stash pop 时冲突的解决方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决Git stash冲突问题">
+<meta property="og:url" content="https://wongyouth.github.io/2014/03/28/%E8%A7%A3%E5%86%B3git-stash%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="向往自由的鱼">
+<meta property="og:description" content="本篇博文分享一下git stash以及他的实际使用技巧  Git stash 是什么，他的使用场景，以及如何来使用 Git stash pop 时冲突的解决方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2014-03-28T07:39:00.000Z">
+<meta property="article:modified_time" content="2025-02-25T02:53:09.084Z">
+<meta property="article:author" content="Ryan Wang">
+<meta property="article:tag" content="Git">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wongyouth.github.io/2014/03/28/%E8%A7%A3%E5%86%B3git-stash%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wongyouth.github.io/2014/03/28/%E8%A7%A3%E5%86%B3git-stash%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/","path":"2014/03/28/解决git-stash冲突问题/","title":"解决Git stash冲突问题"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>解决Git stash冲突问题 | 向往自由的鱼</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">向往自由的鱼</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A6%96%E5%85%88%E4%BA%86%E8%A7%A3%E4%B8%8B%E4%BB%80%E4%B9%88%E6%98%AF-Git-stash"><span class="nav-number">1.</span> <span class="nav-text">首先了解下什么是 Git stash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git-stash-%E5%86%B2%E7%AA%81%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">Git stash 冲突的解决办法</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan Wang"
+      src="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+  <p class="site-author-name" itemprop="name">Ryan Wang</p>
+  <div class="site-description" itemprop="description">随想随写</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wongyouth" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wongyouth" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wongyouth.github.io/2014/03/28/%E8%A7%A3%E5%86%B3git-stash%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+      <meta itemprop="name" content="Ryan Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向往自由的鱼">
+      <meta itemprop="description" content="随想随写">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="解决Git stash冲突问题 | 向往自由的鱼">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          解决Git stash冲突问题
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2014-03-28 15:39:00" itemprop="dateCreated datePublished" datetime="2014-03-28T15:39:00+08:00">2014-03-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-02-25 10:53:09" itemprop="dateModified" datetime="2025-02-25T10:53:09+08:00">2025-02-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2014/03/28/%E8%A7%A3%E5%86%B3git-stash%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/03/28/解决git-stash冲突问题/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本篇博文分享一下<code>git stash</code>以及他的实际使用技巧</p>
+<ul>
+<li>Git stash 是什么，他的使用场景，以及如何来使用</li>
+<li>Git stash pop 时冲突的解决方法</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="首先了解下什么是-Git-stash"><a href="#首先了解下什么是-Git-stash" class="headerlink" title="首先了解下什么是 Git stash"></a>首先了解下什么是 Git stash</h2><p>考虑这么一个场景，我修改了一些代码用来支持新功能，因为还在进行中所以暂时不想递交代码。<br>此时发现线上版本出了问题需要在本地查错。这样我需要临时保存修改的文件，然后取出线上版本到工作目录。<br>此时我们有几种方法可以做</p>
+<ol>
+<li>复制修改的代码到备份目录，<code>reset</code> 旧代码，<code>check out</code>出线上版本。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> file /backup/dir</span><br><span class="line">git reset --hard <span class="built_in">head</span> <span class="comment"># 恢复head代码，抛弃工作区的修改</span></span><br><span class="line">git checkout master</span><br><span class="line"></span><br><span class="line"><span class="comment"># do your job</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># when your job&#x27;s done</span></span><br><span class="line">git checkout feature_branch</span><br><span class="line"><span class="built_in">cp</span> /backup/dir file</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>递交现在的代码（即使还没有做完），取出线上版本，完工后回退临时递交</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git commit -am <span class="string">&#x27;work in process&#x27;</span></span><br><span class="line">git checkout master</span><br><span class="line"></span><br><span class="line"><span class="comment"># do your job</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># when your job&#x27;s done</span></span><br><span class="line">git checkout feature_branch</span><br><span class="line">git reset <span class="built_in">head</span>~</span><br></pre></td></tr></table></figure>
+
+<p>Git 自带了对于前一种方案的支持，这就是<code>stash</code>命令。我们来看下用stash怎么做。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git stash</span><br><span class="line">git checkout master</span><br><span class="line"></span><br><span class="line"><span class="comment"># do your job</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># when your job&#x27;s done</span></span><br><span class="line">git checkout feature_branch</span><br><span class="line">git stash pop</span><br></pre></td></tr></table></figure>
+
+<h2 id="Git-stash-冲突的解决办法"><a href="#Git-stash-冲突的解决办法" class="headerlink" title="Git stash 冲突的解决办法"></a>Git stash 冲突的解决办法</h2><p>比较一下之后看起来好像没有改变多少，我这里是假设只有修改过一个文件的情况，如果修改的文件比较多，<br>就需要你找出哪些文件是要备份的，每次来罗列这些文件名是个很吃力的事情，还是让机器来做这些枯燥的工作吧。</p>
+<p>说完<code>stash</code>的功用，回到正题看看如何解决使用stash时会碰到的冲突问题。<br>现在考虑另一个场景，假设在工作区修改了一些代码用来支持新功能，因为还在完善中所以暂时不想递交代码。<br>此时发现同事递交了新功能的代码，而我需要并入他的代码来完成工作。</p>
+<pre><code>git stash
+git pull --all
+git rebase college_branch
+git stash pop
+</code></pre>
+<p>如果同事递交的代码与我修改临时保存到stash中的没有冲突，那么事情完美完工，<br>如果同事与我修改的代码有冲突，最后一个命令将报 <code>Merge conflict</code> 错。<br>Git 没有提供强制pop出来的功能。我们看下这个时候能做什么。</p>
+<pre><code>git stash show -p | git apply &amp;&amp; git stash drop
+</code></pre>
+<p>因为经常会要碰到这种情况，我们把它设置为别名来用</p>
+<pre><code>git config --global alias.unstash &#39;!git stash show -p | git apply &amp;&amp; git stash drop&#39;
+</code></pre>
+<p>这样就可以调用 <code>git unstash</code> 来使用了。这算是git的一个高级用法，Git可以自定义命令。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Git/" rel="tag"># Git</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2013/11/22/%E4%BD%BF%E7%94%A8chef%E6%9D%A5%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/" rel="prev" title="使用Chef来自动化部署">
+                  <i class="fa fa-angle-left"></i> 使用Chef来自动化部署
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2014/04/10/mac%E9%87%8C%E5%BF%AB%E9%80%9F%E8%BE%93%E5%85%A5%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/" rel="next" title="Mac里快速输入特殊字符">
+                  Mac里快速输入特殊字符 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ryan Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wongyouth","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

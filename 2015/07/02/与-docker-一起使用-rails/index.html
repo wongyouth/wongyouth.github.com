@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wongyouth.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="最近 Docker 很火，好像只要是服务器端相关的东西都有要搬到 Docker 上的趋势，似乎要把从开发，安装，部署，维护的问题全都要解决掉的那个意思。 按我的理解，Docker 架构在服务器之上，从服务器上多衍生出了一层，所以可以跨平台运行在各个系统之上，达到一致的用户体验。并且 Docker 可以快速导入一个定制好系统，比如可以把开发人员的系统环境复制一份给测试人员使用，体验真的很好。 Doc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="与 Docker 一起使用 Rails">
+<meta property="og:url" content="https://wongyouth.github.io/2015/07/02/%E4%B8%8E-docker-%E4%B8%80%E8%B5%B7%E4%BD%BF%E7%94%A8-rails/index.html">
+<meta property="og:site_name" content="向往自由的鱼">
+<meta property="og:description" content="最近 Docker 很火，好像只要是服务器端相关的东西都有要搬到 Docker 上的趋势，似乎要把从开发，安装，部署，维护的问题全都要解决掉的那个意思。 按我的理解，Docker 架构在服务器之上，从服务器上多衍生出了一层，所以可以跨平台运行在各个系统之上，达到一致的用户体验。并且 Docker 可以快速导入一个定制好系统，比如可以把开发人员的系统环境复制一份给测试人员使用，体验真的很好。 Doc">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2015-07-02T00:28:00.000Z">
+<meta property="article:modified_time" content="2025-02-25T02:53:09.085Z">
+<meta property="article:author" content="Ryan Wang">
+<meta property="article:tag" content="Rails">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wongyouth.github.io/2015/07/02/%E4%B8%8E-docker-%E4%B8%80%E8%B5%B7%E4%BD%BF%E7%94%A8-rails/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wongyouth.github.io/2015/07/02/%E4%B8%8E-docker-%E4%B8%80%E8%B5%B7%E4%BD%BF%E7%94%A8-rails/","path":"2015/07/02/与-docker-一起使用-rails/","title":"与 Docker 一起使用 Rails"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>与 Docker 一起使用 Rails | 向往自由的鱼</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">向往自由的鱼</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8-Docker-%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">启动 Docker 环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F%E7%BB%99%E7%BB%88%E7%AB%AF%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">设置系统变量给终端使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-PostgreSQL-%E5%AE%B9%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">创建一个 PostgreSQL 容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90-Rails-%E5%BA%94%E7%94%A8%E7%9A%84-Docker-Image"><span class="nav-number">5.</span> <span class="nav-text">生成 Rails 应用的 Docker Image</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-Rails-console-%E5%AE%B9%E5%99%A8%EF%BC%8C%E7%94%A8%E6%9D%A5%E6%89%A7%E8%A1%8C-Rails-%E4%BB%BB%E5%8A%A1"><span class="nav-number">6.</span> <span class="nav-text">创建 Rails console 容器，用来执行 Rails 任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-Rails-%E5%AE%B9%E5%99%A8"><span class="nav-number">7.</span> <span class="nav-text">创建 Rails 容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%BC%80%E6%B5%8F%E8%A7%88%E5%99%A8%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C"><span class="nav-number">8.</span> <span class="nav-text">打开浏览器查看结果</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan Wang"
+      src="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+  <p class="site-author-name" itemprop="name">Ryan Wang</p>
+  <div class="site-description" itemprop="description">随想随写</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wongyouth" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wongyouth" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wongyouth.github.io/2015/07/02/%E4%B8%8E-docker-%E4%B8%80%E8%B5%B7%E4%BD%BF%E7%94%A8-rails/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+      <meta itemprop="name" content="Ryan Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向往自由的鱼">
+      <meta itemprop="description" content="随想随写">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="与 Docker 一起使用 Rails | 向往自由的鱼">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          与 Docker 一起使用 Rails
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2015-07-02 08:28:00" itemprop="dateCreated datePublished" datetime="2015-07-02T08:28:00+08:00">2015-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-02-25 10:53:09" itemprop="dateModified" datetime="2025-02-25T10:53:09+08:00">2025-02-25</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2015/07/02/%E4%B8%8E-docker-%E4%B8%80%E8%B5%B7%E4%BD%BF%E7%94%A8-rails/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/02/与-docker-一起使用-rails/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>最近 Docker 很火，好像只要是服务器端相关的东西都有要搬到 Docker 上的趋势，<br>似乎要把从开发，安装，部署，维护的问题全都要解决掉的那个意思。</p>
+<p>按我的理解，Docker 架构在服务器之上，从服务器上多衍生出了一层，<br>所以可以跨平台运行在各个系统之上，达到一致的用户体验。<br>并且 Docker 可以快速导入一个定制好系统，<br>比如可以把开发人员的系统环境复制一份给测试人员使用，体验真的很好。</p>
+<p>Docker 发展很快，但我觉得就目前的阶段还是不太适合商用环境，<br>毕竟真正商用时是多主机配合工作的，这点上 Docker 还有很大的空间需要完善。<br>作为一个开发，测试用环境或者小范围商用时是 Docker 的确带来了巨大的用户体验。</p>
+<span id="more"></span>
+
+<p>在这篇博文里简单记录下 Docker 如何与 Rails 一起配合使用。以下是在 Mac OSX 的环境里使用时为例。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><pre><code>brew install boot2docker
+</code></pre>
+<h2 id="启动-Docker-环境"><a href="#启动-Docker-环境" class="headerlink" title="启动 Docker 环境"></a>启动 Docker 环境</h2><pre><code>boot2docker up
+</code></pre>
+<p>返回结果</p>
+<pre><code>Waiting for VM and Docker daemon to start...
+.................ooooooo
+Started.
+Writing /Users/ryan/.boot2docker/certs/boot2docker-vm/ca.pem
+Writing /Users/ryan/.boot2docker/certs/boot2docker-vm/cert.pem
+Writing /Users/ryan/.boot2docker/certs/boot2docker-vm/key.pem
+
+To connect the Docker client to the Docker daemon, please set:
+    export DOCKER_HOST=tcp://192.168.59.103:2376
+    export DOCKER_CERT_PATH=/Users/ryan/.boot2docker/certs/boot2docker-vm
+    export DOCKER_TLS_VERIFY=1
+</code></pre>
+<p>这个命令实际上时启动了一个 <code>Virtual Box</code> 虚拟机，跑了一个 Linux 内核的系统。<br>如果你是使用的是一个 Linux 内核的电脑，就可以少这一部分开销了。</p>
+<h2 id="设置系统变量给终端使用"><a href="#设置系统变量给终端使用" class="headerlink" title="设置系统变量给终端使用"></a>设置系统变量给终端使用</h2><p>复制上一步的返回结果到终端上执行。如果有多个终端需要使用时，每个都要设置这些系统变量</p>
+<pre><code>export DOCKER_HOST=tcp://192.168.59.103:2376
+export DOCKER_CERT_PATH=/Users/ryan/.boot2docker/certs/boot2docker-vm
+export DOCKER_TLS_VERIFY=1
+</code></pre>
+<h2 id="创建一个-PostgreSQL-容器"><a href="#创建一个-PostgreSQL-容器" class="headerlink" title="创建一个 PostgreSQL 容器"></a>创建一个 PostgreSQL 容器</h2><pre><code>docker run --name my-postgres -e POSTGRES_PASSWORD=postgres -d postgres
+</code></pre>
+<p>这里把 postgres 的密码设为 postgres, 可以配合在 Rails app 厘米使用这个账号。</p>
+<p>如果第一次执行该命令，Docker 会先从社区共享的 Image 里下载 postgres 最新的数据，<br>来创建 PostgreSQL 容器，所以需要花费几分钟时间。</p>
+<pre><code>docker ps
+</code></pre>
+<p>返回结果</p>
+<pre><code>CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                    NAMES
+139f96ea6d0e        postgres:latest     &quot;/docker-entrypoint.   2 minutes ago       Up 2 minutes        5432/tcp                 my-postgres
+</code></pre>
+<h2 id="生成-Rails-应用的-Docker-Image"><a href="#生成-Rails-应用的-Docker-Image" class="headerlink" title="生成 Rails 应用的 Docker Image"></a>生成 Rails 应用的 Docker Image</h2><p>在终端进入 Rails 主目录，<br>修改 config&#x2F;database.yml 文件里数据库的设置</p>
+<pre><code>host: ENV[&#39;DB_PORT_5432_TCP_ADDR&#39;]
+username: postgres
+password: postgres
+</code></pre>
+<p><code>DB_PORT_5432_TCP_ADDR</code> 这个环境变量是在 Docker 链接数据库容器到 Rails 应用容器时自动设置的，通过该地址可以找到数据库</p>
+<p>生成 Dockerfile 文件，供 build 使用</p>
+<pre><code>echo &#39;FROM rails:onbuild&#39; &gt; Dockerfile
+</code></pre>
+<p>执行 build 来生成 docker image</p>
+<pre><code>docker build -t my-rails .
+</code></pre>
+<h2 id="创建-Rails-console-容器，用来执行-Rails-任务"><a href="#创建-Rails-console-容器，用来执行-Rails-任务" class="headerlink" title="创建 Rails console 容器，用来执行 Rails 任务"></a>创建 Rails console 容器，用来执行 Rails 任务</h2><pre><code>docker run --name my-bash --link my-postgres:db -v &quot;$PWD&quot;:/usr/src/app -it my-rails /bin/bash
+</code></pre>
+<p>此时已经进入了 Docker 容器内的一个交互环境下，我们可以运行 Rails 命令来生成数据表结构</p>
+<pre><code>rake db:create db:migrate
+</code></pre>
+<p>要退出容器时，运行 <code>exit</code> 就可以了</p>
+<h2 id="创建-Rails-容器"><a href="#创建-Rails-容器" class="headerlink" title="创建 Rails 容器"></a>创建 Rails 容器</h2><pre><code>docker run --name my-rails --link my-postgres:db -v &quot;$PWD&quot;:/usr/src/app -p 3000:3000 -d my-rails
+</code></pre>
+<h2 id="打开浏览器查看结果"><a href="#打开浏览器查看结果" class="headerlink" title="打开浏览器查看结果"></a>打开浏览器查看结果</h2><pre><code>open http://192.168.59.103:3000
+</code></pre>
+<p>为什么是 <code>192.168.59.103</code> 地址而不是 <code>localhost</code> ?<br>因为 Docker 实际上是运行在虚拟机里面的，所有要访问虚拟机的 IP 才可以访问到。<br>这个地址是在运行 <code>boot2docker up</code> 时的返回结果里面有显示。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Rails/" rel="tag"># Rails</a>
+              <a href="/tags/Docker/" rel="tag"># Docker</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2015/01/09/%E4%BD%BF%E7%94%A8-gpg-%E5%8A%A0%E5%AF%86%E6%95%B0%E6%8D%AE/" rel="prev" title="使用 GPG 加密数据">
+                  <i class="fa fa-angle-left"></i> 使用 GPG 加密数据
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2015/10/30/%E4%BD%BF%E7%94%A8-docker-%E6%9D%A5%E5%AE%89%E8%A3%85-redmine-%E5%B9%B6%E7%BB%93%E5%90%88-gitolite-%E4%BD%BF%E7%94%A8/" rel="next" title="使用 Docker 来安装 Redmine 并结合 gitolite 使用">
+                  使用 Docker 来安装 Redmine 并结合 gitolite 使用 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ryan Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wongyouth","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

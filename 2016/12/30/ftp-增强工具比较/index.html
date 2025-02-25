@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wongyouth.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="现在与主机交互的首选工具应该是 ssh 相关的工具了，比如 scp, rsync。因为他们都是建立在传输层基础上的安全协议。而老牌的 ftp 则不然，因为他们访问主机时的登录交互容易被窃听，有泄密的可能性。ftp 也有对应的安全版本 sftp, 但是用的就很少了，因为 sftp 也是基于 ssh 的，但是 ssh 自带传输特效，所有 sftp 就很少用的了。 本篇为什么要写 ftp，是因为对接老的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ftp 增强工具比较">
+<meta property="og:url" content="https://wongyouth.github.io/2016/12/30/ftp-%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E6%AF%94%E8%BE%83/index.html">
+<meta property="og:site_name" content="向往自由的鱼">
+<meta property="og:description" content="现在与主机交互的首选工具应该是 ssh 相关的工具了，比如 scp, rsync。因为他们都是建立在传输层基础上的安全协议。而老牌的 ftp 则不然，因为他们访问主机时的登录交互容易被窃听，有泄密的可能性。ftp 也有对应的安全版本 sftp, 但是用的就很少了，因为 sftp 也是基于 ssh 的，但是 ssh 自带传输特效，所有 sftp 就很少用的了。 本篇为什么要写 ftp，是因为对接老的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-12-30T07:13:00.000Z">
+<meta property="article:modified_time" content="2025-02-25T02:53:09.085Z">
+<meta property="article:author" content="Ryan Wang">
+<meta property="article:tag" content="ftp">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wongyouth.github.io/2016/12/30/ftp-%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E6%AF%94%E8%BE%83/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wongyouth.github.io/2016/12/30/ftp-%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E6%AF%94%E8%BE%83/","path":"2016/12/30/ftp-增强工具比较/","title":"Ftp 增强工具比较"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Ftp 增强工具比较 | 向往自由的鱼</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">向往自由的鱼</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ftp"><span class="nav-number">1.</span> <span class="nav-text">ftp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ncftp"><span class="nav-number">2.</span> <span class="nav-text">ncftp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lftp"><span class="nav-number">3.</span> <span class="nav-text">lftp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%AF%94%E8%BE%83"><span class="nav-number">4.</span> <span class="nav-text">其他比较</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan Wang"
+      src="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+  <p class="site-author-name" itemprop="name">Ryan Wang</p>
+  <div class="site-description" itemprop="description">随想随写</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wongyouth" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wongyouth" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wongyouth.github.io/2016/12/30/ftp-%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E6%AF%94%E8%BE%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+      <meta itemprop="name" content="Ryan Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向往自由的鱼">
+      <meta itemprop="description" content="随想随写">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Ftp 增强工具比较 | 向往自由的鱼">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ftp 增强工具比较
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-12-30 15:13:00" itemprop="dateCreated datePublished" datetime="2016-12-30T15:13:00+08:00">2016-12-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-02-25 10:53:09" itemprop="dateModified" datetime="2025-02-25T10:53:09+08:00">2025-02-25</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2016/12/30/ftp-%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E6%AF%94%E8%BE%83/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/30/ftp-增强工具比较/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>现在与主机交互的首选工具应该是 <code>ssh</code> 相关的工具了，比如 <code>scp</code>, <code>rsync</code>。因为他们都是建立在传输层基础上的安全协议。<br>而老牌的 <code>ftp</code> 则不然，因为他们访问主机时的登录交互容易被窃听，有泄密的可能性。<br><code>ftp</code> 也有对应的安全版本 <code>sftp</code>, 但是用的就很少了，因为 <code>sftp</code> 也是基于 <code>ssh</code> 的，但是 <code>ssh</code> 自带传输特效，所有 <code>sftp</code> 就很少用的了。</p>
+<p>本篇为什么要写 <code>ftp</code>，是因为对接老的系统的时候，是超出我们控制的。<br>最近的项目中就需要把本地的数据包传到服务器上，因此找了几个 <code>ftp</code> 工具来分析了下。</p>
+<span id="more"></span>
+
+<p>主要的需求是</p>
+<ul>
+<li>CUI 非 GUI，因为需要结合 Shell 来写脚本</li>
+<li>容易上传整个目录</li>
+<li>可以指定上传路径</li>
+<li>最好密码不要显示在命令行里</li>
+</ul>
+<p>找了3个来分析了下功能 <code>ftp</code>, <code>ncftp</code>, <code>lftp</code></p>
+<h2 id="ftp"><a href="#ftp" class="headerlink" title="ftp"></a><code>ftp</code></h2><p>首先当然是用系统自带的 <code>ftp</code>，</p>
+<ul>
+<li><p><code>put</code> 命令不能指定目标路径，需要先登录后 <code>cd</code> 到目标路径</p>
+</li>
+<li><p>不能指定整个目录上传，多个文件可以用 <code>mput</code></p>
+</li>
+<li><p>密码可以带入 <code>user@pass:host</code> 中，放在 ~&#x2F;.netrc 里面<br>在 ~&#x2F;.netrc 里的格式是</p>
+<pre><code>  machine host/ip
+    login USERNAME
+    password PASSWORD
+</code></pre>
+</li>
+</ul>
+<h2 id="ncftp"><a href="#ncftp" class="headerlink" title="ncftp"></a><code>ncftp</code></h2><p><code>ncftp</code> 可以满足上面的所有需求</p>
+<ul>
+<li><p>上传整个目录，包括子目录</p>
+<pre><code>  ncftpput -u user -p pass -R  host /host/dir /local/dir
+</code></pre>
+</li>
+<li><p>上传到指定路径</p>
+<pre><code>  ncftpput -u user -p pass host /host/dir /local/path
+</code></pre>
+</li>
+<li><p>隐藏密码</p>
+<ul>
+<li><p>提示输入密码</p>
+<pre><code>ncftpput -u user host /host/dir /local/path
+</code></pre>
+</li>
+<li><p>放入配置文件</p>
+<pre><code>ncftpput -f login.cfg host /host/dir /local/path
+</code></pre>
+<p>  login.cfg 文件是这个格式</p>
+<pre><code>host example.com
+user USERNAME
+pass PASSWORD
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="lftp"><a href="#lftp" class="headerlink" title="lftp"></a><code>lftp</code></h2><p><code>lftp</code> 满足了我的所有需求</p>
+<ul>
+<li><p>镜像整个目录，包括子目录</p>
+<pre><code>  lftp -e &#39;mirror -R /local/dir /host/dir&#39; host
+</code></pre>
+</li>
+<li><p>上传到指定路径</p>
+<pre><code>  lftp -e &#39;put -O /host/dir/ /local/path; bye&#39; host
+</code></pre>
+</li>
+<li><p>密码方式与 <code>ftp</code> 相同</p>
+</li>
+</ul>
+<h2 id="其他比较"><a href="#其他比较" class="headerlink" title="其他比较"></a>其他比较</h2><p>使用 <code>ncftp</code> 或者 <code>lftp</code> 登录后，都可以使用上下键历史命令回显，<code>Tab</code> 键显示候选文件，文件补全等功能。他们的功能比较相近，由于满足了我要的需求，没有再深入比较了。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ftp/" rel="tag"># ftp</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/02/24/elk-%E5%A5%97%E4%BB%B6%E5%88%86%E6%9E%90rails%E6%97%A5%E5%BF%97/" rel="prev" title="ELK 套件分析Rails日志">
+                  <i class="fa fa-angle-left"></i> ELK 套件分析Rails日志
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/06/09/%E4%BD%BF%E7%94%A8-imagemagick-%E5%A4%84%E7%90%86%E5%9B%BE%E7%89%87%E5%B0%8F%E8%AE%B0/" rel="next" title="使用 ImageMagick 处理图片小记">
+                  使用 ImageMagick 处理图片小记 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ryan Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wongyouth","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

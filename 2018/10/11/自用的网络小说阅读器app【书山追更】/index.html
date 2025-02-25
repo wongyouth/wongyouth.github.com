@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wongyouth.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这是去年做的阅读网络小说的App【书山追更】，使用了 Cordova, Vue 开发，也迭代了不少版本。 主要是为了满足自用，爱看书的朋友可以下载来试试，无广告哦~~ 仿的是【追书神器】App，使用的也是他们的免费接口。 Update(2020-09-26): 追书神器的免费接口已经不能返回小说内容，现在已经基本不能使用这个APP了。留存以后找其他书源。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自用的网络小说阅读器App【书山追更】">
+<meta property="og:url" content="https://wongyouth.github.io/2018/10/11/%E8%87%AA%E7%94%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8app%E3%80%90%E4%B9%A6%E5%B1%B1%E8%BF%BD%E6%9B%B4%E3%80%91/index.html">
+<meta property="og:site_name" content="向往自由的鱼">
+<meta property="og:description" content="这是去年做的阅读网络小说的App【书山追更】，使用了 Cordova, Vue 开发，也迭代了不少版本。 主要是为了满足自用，爱看书的朋友可以下载来试试，无广告哦~~ 仿的是【追书神器】App，使用的也是他们的免费接口。 Update(2020-09-26): 追书神器的免费接口已经不能返回小说内容，现在已经基本不能使用这个APP了。留存以后找其他书源。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wongyouth.github.io/images/sszg/hp.png">
+<meta property="og:image" content="https://wongyouth.github.io/images/sszg/rank.png">
+<meta property="og:image" content="https://wongyouth.github.io/images/sszg/rank-week.png">
+<meta property="og:image" content="https://wongyouth.github.io/images/sszg/search.png">
+<meta property="og:image" content="https://wongyouth.github.io/images/sszg/about.png">
+<meta property="og:image" content="https://wongyouth.github.io/images/sszg/guides.png">
+<meta property="og:image" content="https://wongyouth.github.io/images/sszg/read.png">
+<meta property="og:image" content="https://wongyouth.github.io/images/sszg/night-mode.png">
+<meta property="og:image" content="https://wongyouth.github.io/images/sszg/read-menu.png">
+<meta property="og:image" content="https://wongyouth.github.io/images/sszg/sources.png">
+<meta property="og:image" content="https://wongyouth.github.io/images/sszg/setting.png">
+<meta property="og:image" content="https://wongyouth.github.io/images/sszg/catalog.png">
+<meta property="article:published_time" content="2018-10-10T17:03:59.000Z">
+<meta property="article:modified_time" content="2025-02-25T02:53:09.086Z">
+<meta property="article:author" content="Ryan Wang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wongyouth.github.io/images/sszg/hp.png">
+
+
+<link rel="canonical" href="https://wongyouth.github.io/2018/10/11/%E8%87%AA%E7%94%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8app%E3%80%90%E4%B9%A6%E5%B1%B1%E8%BF%BD%E6%9B%B4%E3%80%91/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wongyouth.github.io/2018/10/11/%E8%87%AA%E7%94%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8app%E3%80%90%E4%B9%A6%E5%B1%B1%E8%BF%BD%E6%9B%B4%E3%80%91/","path":"2018/10/11/自用的网络小说阅读器app【书山追更】/","title":"自用的网络小说阅读器App【书山追更】"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>自用的网络小说阅读器App【书山追更】 | 向往自由的鱼</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">向往自由的鱼</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E9%A1%B5"><span class="nav-number">1.</span> <span class="nav-text">首页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%92%E8%A1%8C%E6%A6%9C%E5%88%97%E8%A1%A8"><span class="nav-number">2.</span> <span class="nav-text">排行榜列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%92%E8%A1%8C%E6%A6%9C%E8%AF%A6%E6%83%85"><span class="nav-number">3.</span> <span class="nav-text">排行榜详情</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2"><span class="nav-number">4.</span> <span class="nav-text">搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E"><span class="nav-number">5.</span> <span class="nav-text">关于</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E6%AC%A1%E6%89%93%E5%BC%80%E6%97%B6%E5%90%91%E5%AF%BC"><span class="nav-number">6.</span> <span class="nav-text">首次打开时向导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%85%E8%AF%BB%E6%95%88%E6%9E%9C"><span class="nav-number">7.</span> <span class="nav-text">阅读效果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9C%E6%99%9A%E6%A8%A1%E5%BC%8F"><span class="nav-number">8.</span> <span class="nav-text">夜晚模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%95%E9%83%A8%E8%8F%9C%E5%8D%95"><span class="nav-number">9.</span> <span class="nav-text">底部菜单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E6%8D%A2%E4%B9%A6%E6%BA%90"><span class="nav-number">10.</span> <span class="nav-text">可换书源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E8%89%B2%EF%BC%8C%E5%AD%97%E5%8F%B7%E5%A4%A7%E5%B0%8F%E8%AE%BE%E7%BD%AE"><span class="nav-number">11.</span> <span class="nav-text">背景色，字号大小设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E5%B1%8F%E6%98%BE%E7%A4%BA%E7%9B%AE%E5%BD%95%EF%BC%8C%E6%96%B9%E4%BE%BF%E8%B7%B3%E8%BD%AC"><span class="nav-number">12.</span> <span class="nav-text">单屏显示目录，方便跳转</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan Wang"
+      src="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+  <p class="site-author-name" itemprop="name">Ryan Wang</p>
+  <div class="site-description" itemprop="description">随想随写</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wongyouth" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wongyouth" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wongyouth.github.io/2018/10/11/%E8%87%AA%E7%94%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8app%E3%80%90%E4%B9%A6%E5%B1%B1%E8%BF%BD%E6%9B%B4%E3%80%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+      <meta itemprop="name" content="Ryan Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向往自由的鱼">
+      <meta itemprop="description" content="随想随写">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="自用的网络小说阅读器App【书山追更】 | 向往自由的鱼">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          自用的网络小说阅读器App【书山追更】
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-10-11 01:03:59" itemprop="dateCreated datePublished" datetime="2018-10-11T01:03:59+08:00">2018-10-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-02-25 10:53:09" itemprop="dateModified" datetime="2025-02-25T10:53:09+08:00">2025-02-25</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2018/10/11/%E8%87%AA%E7%94%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8app%E3%80%90%E4%B9%A6%E5%B1%B1%E8%BF%BD%E6%9B%B4%E3%80%91/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/10/11/自用的网络小说阅读器app【书山追更】/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>这是去年做的阅读网络小说的App<a href="/downloads/sszg.apk">【书山追更】</a>，使用了 Cordova, Vue 开发，也迭代了不少版本。</p>
+<p>主要是为了满足自用，爱看书的朋友可以下载来试试，无广告哦~~</p>
+<p>仿的是【追书神器】App，使用的也是他们的免费接口。</p>
+<p>Update(2020-09-26): 追书神器的免费接口已经不能返回小说内容，现在已经基本不能使用这个APP了。<br>留存以后找其他书源。</p>
+<span id="more"></span>
+
+<p>最大的不同是【书山追更】使用了网页形式的直上直下的翻页形式，不像现在流行的仿实体书的翻页效果。</p>
+<h3 id="首页"><a href="#首页" class="headerlink" title="首页"></a>首页</h3><p><img src="/images/sszg/hp.png" alt="首页"></p>
+<h3 id="排行榜列表"><a href="#排行榜列表" class="headerlink" title="排行榜列表"></a>排行榜列表</h3><p><img src="/images/sszg/rank.png" alt="排行榜首页"></p>
+<h3 id="排行榜详情"><a href="#排行榜详情" class="headerlink" title="排行榜详情"></a>排行榜详情</h3><p><img src="/images/sszg/rank-week.png" alt="排行榜周榜"></p>
+<h3 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h3><p><img src="/images/sszg/search.png" alt="搜索"></p>
+<h3 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h3><p><img src="/images/sszg/about.png" alt="关于"></p>
+<h3 id="首次打开时向导"><a href="#首次打开时向导" class="headerlink" title="首次打开时向导"></a>首次打开时向导</h3><p><img src="/images/sszg/guides.png" alt="首次打开时向导"></p>
+<h3 id="阅读效果"><a href="#阅读效果" class="headerlink" title="阅读效果"></a>阅读效果</h3><p><img src="/images/sszg/read.png" alt="阅读效果"></p>
+<h3 id="夜晚模式"><a href="#夜晚模式" class="headerlink" title="夜晚模式"></a>夜晚模式</h3><p><img src="/images/sszg/night-mode.png" alt="夜晚模式"></p>
+<h3 id="底部菜单"><a href="#底部菜单" class="headerlink" title="底部菜单"></a>底部菜单</h3><p><img src="/images/sszg/read-menu.png" alt="底部菜单"></p>
+<h3 id="可换书源"><a href="#可换书源" class="headerlink" title="可换书源"></a>可换书源</h3><p><img src="/images/sszg/sources.png" alt="换源"></p>
+<h3 id="背景色，字号大小设置"><a href="#背景色，字号大小设置" class="headerlink" title="背景色，字号大小设置"></a>背景色，字号大小设置</h3><p><img src="/images/sszg/setting.png" alt="设置"></p>
+<h3 id="单屏显示目录，方便跳转"><a href="#单屏显示目录，方便跳转" class="headerlink" title="单屏显示目录，方便跳转"></a>单屏显示目录，方便跳转</h3><p><img src="/images/sszg/catalog.png" alt="目录"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/09/07/%E8%AF%B4%E8%AF%B4%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BE%8E%E5%9B%A2%E6%A1%86%E6%9E%B6mpvue/" rel="prev" title="说说小程序美团框架mpvue">
+                  <i class="fa fa-angle-left"></i> 说说小程序美团框架mpvue
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/04/28/%E5%BB%BA%E7%AB%8B%E8%87%AA%E5%B7%B1%E7%9A%84-docker-%E7%A7%81%E6%9C%89%E5%BA%93/" rel="next" title="建立自己的 Docker 私有库">
+                  建立自己的 Docker 私有库 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ryan Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wongyouth","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wongyouth.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在使用 Octopress 写博客 2年之后，有很多的新技术涌现，我决定更新一下博客引擎，并重新设计界面。 需要的功能 因为是个人博客，所以静态博客就可以了，不用买主机买空间，绿色环保 支持独立域名，能自动分类，打标签 以为有技术博客可能会贴些代码需要支持markdown，语法高亮 支持Sass, CoffeScript，方便写样式，排版布局 支持开发，商业代码分离（技术洁癖） 方便发布，一个命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="新版博客发布，使用Middleman做为博客引擎">
+<meta property="og:url" content="https://wongyouth.github.io/2014/04/23/%E6%96%B0%E7%89%88%E5%8D%9A%E5%AE%A2%E5%8F%91%E5%B8%83%EF%BC%8C%E4%BD%BF%E7%94%A8middleman%E5%81%9A%E4%B8%BA%E5%8D%9A%E5%AE%A2%E5%BC%95%E6%93%8E/index.html">
+<meta property="og:site_name" content="向往自由的鱼">
+<meta property="og:description" content="在使用 Octopress 写博客 2年之后，有很多的新技术涌现，我决定更新一下博客引擎，并重新设计界面。 需要的功能 因为是个人博客，所以静态博客就可以了，不用买主机买空间，绿色环保 支持独立域名，能自动分类，打标签 以为有技术博客可能会贴些代码需要支持markdown，语法高亮 支持Sass, CoffeScript，方便写样式，排版布局 支持开发，商业代码分离（技术洁癖） 方便发布，一个命令">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wongyouth.github.io/images/blog/middleman.png">
+<meta property="article:published_time" content="2014-04-23T04:46:00.000Z">
+<meta property="article:modified_time" content="2025-02-25T02:53:09.084Z">
+<meta property="article:author" content="Ryan Wang">
+<meta property="article:tag" content="博客">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wongyouth.github.io/images/blog/middleman.png">
+
+
+<link rel="canonical" href="https://wongyouth.github.io/2014/04/23/%E6%96%B0%E7%89%88%E5%8D%9A%E5%AE%A2%E5%8F%91%E5%B8%83%EF%BC%8C%E4%BD%BF%E7%94%A8middleman%E5%81%9A%E4%B8%BA%E5%8D%9A%E5%AE%A2%E5%BC%95%E6%93%8E/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wongyouth.github.io/2014/04/23/%E6%96%B0%E7%89%88%E5%8D%9A%E5%AE%A2%E5%8F%91%E5%B8%83%EF%BC%8C%E4%BD%BF%E7%94%A8middleman%E5%81%9A%E4%B8%BA%E5%8D%9A%E5%AE%A2%E5%BC%95%E6%93%8E/","path":"2014/04/23/新版博客发布，使用middleman做为博客引擎/","title":"新版博客发布，使用Middleman做为博客引擎"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>新版博客发布，使用Middleman做为博客引擎 | 向往自由的鱼</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">向往自由的鱼</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9C%80%E8%A6%81%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">1.</span> <span class="nav-text">需要的功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%94%E8%BE%83%E5%90%84%E4%B8%AA%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">比较各个工具的优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Jekyll"><span class="nav-number">2.1.</span> <span class="nav-text">Jekyll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Octopress"><span class="nav-number">2.2.</span> <span class="nav-text">Octopress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Yeoman"><span class="nav-number">2.3.</span> <span class="nav-text">Yeoman</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Middleman"><span class="nav-number">2.4.</span> <span class="nav-text">Middleman</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E6%96%B9%E6%A1%88"><span class="nav-number">3.</span> <span class="nav-text">最终方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TODO"><span class="nav-number">4.</span> <span class="nav-text">TODO</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan Wang"
+      src="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+  <p class="site-author-name" itemprop="name">Ryan Wang</p>
+  <div class="site-description" itemprop="description">随想随写</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wongyouth" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wongyouth" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wongyouth.github.io/2014/04/23/%E6%96%B0%E7%89%88%E5%8D%9A%E5%AE%A2%E5%8F%91%E5%B8%83%EF%BC%8C%E4%BD%BF%E7%94%A8middleman%E5%81%9A%E4%B8%BA%E5%8D%9A%E5%AE%A2%E5%BC%95%E6%93%8E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+      <meta itemprop="name" content="Ryan Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向往自由的鱼">
+      <meta itemprop="description" content="随想随写">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="新版博客发布，使用Middleman做为博客引擎 | 向往自由的鱼">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          新版博客发布，使用Middleman做为博客引擎
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2014-04-23 12:46:00" itemprop="dateCreated datePublished" datetime="2014-04-23T12:46:00+08:00">2014-04-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-02-25 10:53:09" itemprop="dateModified" datetime="2025-02-25T10:53:09+08:00">2025-02-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Blog/" itemprop="url" rel="index"><span itemprop="name">Blog</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2014/04/23/%E6%96%B0%E7%89%88%E5%8D%9A%E5%AE%A2%E5%8F%91%E5%B8%83%EF%BC%8C%E4%BD%BF%E7%94%A8middleman%E5%81%9A%E4%B8%BA%E5%8D%9A%E5%AE%A2%E5%BC%95%E6%93%8E/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/04/23/新版博客发布，使用middleman做为博客引擎/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>在使用 <a href="/blog/2012/04/21/install-octopress-to-write-blogs-and-deploy-on-github-dot-com/"><code>Octopress</code> 写博客</a> 2年之后，有很多的新技术涌现，我决定更新一下博客引擎，并重新设计界面。</p>
+<h2 id="需要的功能"><a href="#需要的功能" class="headerlink" title="需要的功能"></a>需要的功能</h2><ul>
+<li>因为是个人博客，所以静态博客就可以了，不用买主机买空间，绿色环保</li>
+<li>支持独立域名，能自动分类，打标签</li>
+<li>以为有技术博客可能会贴些代码需要支持markdown，语法高亮</li>
+<li>支持Sass, CoffeScript，方便写样式，排版布局</li>
+<li>支持开发，商业代码分离（技术洁癖）</li>
+<li>方便发布，一个命令行搞定</li>
+<li>容易功能扩展，比方增加个热帖排行榜之类</li>
+<li>容易升级依赖包，使用最新技术</li>
+<li>开发友好，支持开发状态代码有改动时浏览器自动刷新（LiveReload）</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="比较各个工具的优缺点"><a href="#比较各个工具的优缺点" class="headerlink" title="比较各个工具的优缺点"></a>比较各个工具的优缺点</h2><p>这里调查了一下几个可以使用写静态博客的工具</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://jekyllrb.com/">Jekyll</a></li>
+<li><a target="_blank" rel="noopener" href="http://octopress.org/">Octopress</a></li>
+<li><a target="_blank" rel="noopener" href="http://yeoman.io/">Yeoman</a></li>
+<li><a target="_blank" rel="noopener" href="http://middlemanapp.com/">Middleman</a></li>
+</ul>
+<h3 id="Jekyll"><a href="#Jekyll" class="headerlink" title="Jekyll"></a>Jekyll</h3><ul>
+<li><p>优点</p>
+<p>集成了博客系统</p>
+</li>
+<li><p>缺点</p>
+<p>Octopress 对Sass不支持，而且对livereload不友好，需要单独启动一个guard来运行，并且我尝试过仍然有问题。适合中级用户可配置度高。</p>
+</li>
+</ul>
+<h3 id="Octopress"><a href="#Octopress" class="headerlink" title="Octopress"></a>Octopress</h3><p>Octopress是基于Jekyll开发的，增加了很多新功能，后来jekyll版本升级后自己支持了很多功能，现在两个工具渐渐脱离，<br>Octopress也没有使用最新的Jekyll版本。但是Octopress最好的就是你不用管内部如何运作，你只要写你的博文就行了。<br>他是一个成熟的博文系统，你只要用她来运营就行了。</p>
+<ul>
+<li><p>优点</p>
+<p>所有的功能都已经集成，不需要特殊的技术适合小白，按照安装步骤走就可以生成一个很方便好用的博客，我也是从这里开始的。</p>
+</li>
+<li><p>缺点</p>
+<p>没有使用最新的Jekll，还在使用很早的版本；<br>目录结构独立设计难以转换成Rails代码。</p>
+</li>
+</ul>
+<h3 id="Yeoman"><a href="#Yeoman" class="headerlink" title="Yeoman"></a>Yeoman</h3><p>比较有名的是 <a target="_blank" rel="noopener" href="http://assemble.io/">Assemble</a>，她集成了 Yeoman, Grunt, Nodejs 等后端JS技术，可以生成静态网站。<br>她有一些增强插件如果整合less，bootstrap等能快速开发一个站点。</p>
+<ul>
+<li><p>优点</p>
+<p>轻量，方便，可配置度高。</p>
+</li>
+<li><p>缺点</p>
+<p>没有集成可以马上使用的blog系统，不适合初级用户。</p>
+</li>
+</ul>
+<h3 id="Middleman"><a href="#Middleman" class="headerlink" title="Middleman"></a>Middleman</h3><ul>
+<li><p>优点</p>
+<p>与 Rails 目录架构相似，很多方法名字用法都相同，很容易以后改成 Rails 框架的动态页面。<br>可以方便的使用别的Gem，内置了haml, slim, liquid等多种模板语言的支持。</p>
+</li>
+<li><p>缺点</p>
+<p>没有提供Octopress内所有的功能，需要自己完善，但是难度不是很大。</p>
+</li>
+</ul>
+<h2 id="最终方案"><a href="#最终方案" class="headerlink" title="最终方案"></a>最终方案</h2><p>在尝试使用 <code>Jekyll</code> 之后，最终决定使用 <code>Middleman</code> 因为我熟悉Rails这套机制，所以基本没有什么入门难度。<br>如果你熟悉Nodejs或者你懂Javascript，那么Assemble应该更加适合，不用找最好的，找到适合自己的。</p>
+<p><img src="/images/blog/middleman.png" alt="Middleman"></p>
+<ul>
+<li>使用 <code>middleman-blog</code> 作为博客引擎;</li>
+<li>使用 <code>middleman-syntax</code> 高亮语法;</li>
+<li>使用 <code>middleman-deploy</code> 快速部署，增强国内用户体验部署移到 <a target="_blank" rel="noopener" href="http://gitcafe.com/">Gitcafe</a>;</li>
+<li>原有<code>Octopress</code>使用了分类列表，<code>middleman-blog</code> 不支持分类，所有使用了标签云;</li>
+<li>使用 <a target="_blank" rel="noopener" href="http://getbootstrap.com/">Bootstrap</a> 作为CSS框架，重新设计了UI，支持手机用户访问;</li>
+<li>每个页面支持 QRcode，支持微信扫一扫分享;</li>
+<li>博文页面支持 <a target="_blank" rel="noopener" href="http://share.baidu.com/">百度分享</a>;</li>
+<li>移植了 <code>include_code</code> 功能。<code>Octopress</code>中是使用 <code>liquid</code> 来实现的，移植后的代码是直接使用ruby代码来实现的，所以需要把文件名加上 <code>.erb</code> 作为后缀。</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="string">&#x27;pathname&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">IncludeCode</span> &lt; <span class="title class_ inherited__">Middleman::Extension</span></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">initialize</span>(<span class="params">app, options_hash=&#123;&#125;, &amp;block</span>)</span><br><span class="line">    <span class="variable language_">super</span></span><br><span class="line"></span><br><span class="line">    app.set <span class="symbol">:code_dir</span>, <span class="string">&#x27;downloads/code&#x27;</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  helpers <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">include_code</span>(<span class="params">filename, <span class="symbol">title:</span> <span class="literal">nil</span>, <span class="symbol">lang:</span> <span class="literal">nil</span></span>)</span><br><span class="line">      code_path = <span class="title class_">Pathname</span>.new( <span class="variable constant_">__FILE__</span> + <span class="string">&quot;../../../source/<span class="subst">#&#123;code_dir&#125;</span>/&quot;</span>).expand_path</span><br><span class="line">      file = code_path + filename</span><br><span class="line">      filetype = lang</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> <span class="title class_">File</span>.symlink?(code_path)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Code directory &#x27;<span class="subst">#&#123;code_path&#125;</span>&#x27; cannot be a symlink&quot;</span></span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">      <span class="keyword">unless</span> file.file?</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;File <span class="subst">#&#123;file&#125;</span> could not be found&quot;</span></span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">      <span class="title class_">Dir</span>.chdir(code_path) <span class="keyword">do</span></span><br><span class="line">        code = file.read</span><br><span class="line">        filetype = file.extname.sub(<span class="string">&#x27;.&#x27;</span>,<span class="string">&#x27;&#x27;</span>) <span class="keyword">if</span> filetype.<span class="literal">nil</span>?</span><br><span class="line">        title = title ? <span class="string">&quot;<span class="subst">#&#123;title&#125;</span> (<span class="subst">#&#123;file.basename&#125;</span>)&quot;</span> : file.basename</span><br><span class="line">        url = <span class="string">&quot;/<span class="subst">#&#123;code_dir&#125;</span>/<span class="subst">#&#123;filename&#125;</span>&quot;</span></span><br><span class="line">        source = <span class="string">&quot;&lt;figure class=&#x27;code&#x27;&gt;&lt;figcaption&gt;&lt;span&gt;<span class="subst">#&#123;title&#125;</span>&lt;/span&gt; &lt;a href=&#x27;<span class="subst">#&#123;url&#125;</span>&#x27;&gt;源码&lt;/a&gt;&lt;/figcaption&gt;&quot;</span></span><br><span class="line">        source += <span class="string">&quot;\n\n``` <span class="subst">#&#123;filetype&#125;</span>\n&quot;</span></span><br><span class="line">        source += code</span><br><span class="line">        source += <span class="string">&quot;\n```\n&quot;</span></span><br><span class="line">        source += <span class="string">&quot;&lt;/firgure&gt;&quot;</span></span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">:</span><span class="symbol">:Middleman</span><span class="symbol">:</span><span class="symbol">:Extensions</span>.register(<span class="symbol">:include_code</span>, <span class="title class_">IncludeCode</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h2><ul>
+<li>移植其他代码，比如显示gist</li>
+<li>首页单独设计</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8D%9A%E5%AE%A2/" rel="tag"># 博客</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2014/04/10/mac%E9%87%8C%E5%BF%AB%E9%80%9F%E8%BE%93%E5%85%A5%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6/" rel="prev" title="Mac里快速输入特殊字符">
+                  <i class="fa fa-angle-left"></i> Mac里快速输入特殊字符
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2014/04/28/%E7%8B%AC%E7%AB%8B%E5%8D%9A%E5%AE%A2%EF%BC%8C%E8%87%AA%E5%AA%92%E4%BD%93%E7%AC%AC%E4%B8%80%E6%AD%A5/" rel="next" title="独立博客，自媒体第一步">
+                  独立博客，自媒体第一步 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ryan Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wongyouth","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

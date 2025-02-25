@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wongyouth.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="要使用rails开发Web应用服务时，在Windows环境下会遇到各种各样的问题，有些Gem也会工作不正常。有些人会用MacOS作为开发环境，这当然好，但是我们在也可用免费的Ubuntu来开发，这里就介绍下安装步骤。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu下安装Ruby开发环境">
+<meta property="og:url" content="https://wongyouth.github.io/2012/04/21/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85ruby%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:site_name" content="向往自由的鱼">
+<meta property="og:description" content="要使用rails开发Web应用服务时，在Windows环境下会遇到各种各样的问题，有些Gem也会工作不正常。有些人会用MacOS作为开发环境，这当然好，但是我们在也可用免费的Ubuntu来开发，这里就介绍下安装步骤。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2012-04-21T06:41:00.000Z">
+<meta property="article:modified_time" content="2025-02-25T02:53:09.082Z">
+<meta property="article:author" content="Ryan Wang">
+<meta property="article:tag" content="Ruby">
+<meta property="article:tag" content="Rails">
+<meta property="article:tag" content="Server">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wongyouth.github.io/2012/04/21/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85ruby%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wongyouth.github.io/2012/04/21/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85ruby%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/","path":"2012/04/21/ubuntu下安装ruby开发环境/","title":"Ubuntu下安装Ruby开发环境"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Ubuntu下安装Ruby开发环境 | 向往自由的鱼</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">向往自由的鱼</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%84%E5%AE%89%E8%A3%85%E5%BA%93%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">预安装库文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%84%E5%AE%89%E8%A3%85%E4%B8%80%E4%BA%9B%E7%BC%96%E8%AF%91%E6%97%B6%E7%94%A8%E5%88%B0%E7%9A%84%E5%BA%93%E6%96%87%E4%BB%B6%E5%92%8C%E5%B7%A5%E5%85%B7"><span class="nav-number">1.0.1.</span> <span class="nav-text">预安装一些编译时用到的库文件和工具</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85rbenv"><span class="nav-number">2.</span> <span class="nav-text">安装rbenv</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85ruby"><span class="nav-number">3.</span> <span class="nav-text">安装ruby</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AARails%E9%A1%B9%E7%9B%AE"><span class="nav-number">4.</span> <span class="nav-text">创建第一个Rails项目</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan Wang"
+      src="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+  <p class="site-author-name" itemprop="name">Ryan Wang</p>
+  <div class="site-description" itemprop="description">随想随写</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wongyouth" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wongyouth" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wongyouth.github.io/2012/04/21/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85ruby%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+      <meta itemprop="name" content="Ryan Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向往自由的鱼">
+      <meta itemprop="description" content="随想随写">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Ubuntu下安装Ruby开发环境 | 向往自由的鱼">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ubuntu下安装Ruby开发环境
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2012-04-21 14:41:00" itemprop="dateCreated datePublished" datetime="2012-04-21T14:41:00+08:00">2012-04-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-02-25 10:53:09" itemprop="dateModified" datetime="2025-02-25T10:53:09+08:00">2025-02-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Ruby/" itemprop="url" rel="index"><span itemprop="name">Ruby</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2012/04/21/ubuntu%E4%B8%8B%E5%AE%89%E8%A3%85ruby%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2012/04/21/ubuntu下安装ruby开发环境/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>要使用rails开发Web应用服务时，在Windows环境下会遇到各种各样的问题，有些Gem也会工作不正常。<br>有些人会用MacOS作为开发环境，这当然好，但是我们在也可用免费的Ubuntu来开发，这里就介绍下安装步骤。</p>
+<span id="more"></span>
+
+<p>开始的时候我也是用Windows作为Rails项目开发的。<br>但是在Windows下会碰到各种各样的问题，最常见的就是Gem包可能只工作在类Unix的环境下。<br>有的时候按照官方说明一步一步做仍然有各种各样的不成功。痛定思痛用Ubuntu做为开发环境。</p>
+<p>使用Ubuntu有个好处，每天跟Ubuntu打交道会提高整体的服务器排错水平，因为每天用的就是服务器一样的环境，遇到问题每天都要去解决，久而久之水平也就上去了。</p>
+<p>闲话休提。让我们看看如何设置ruby环境吧。</p>
+<ol>
+<li>预安装库文件</li>
+<li>安装<code>rbenv</code></li>
+<li>安装<code>ruby</code></li>
+<li>创建第一个<code>Rails</code>项目</li>
+</ol>
+<h2 id="预安装库文件"><a href="#预安装库文件" class="headerlink" title="预安装库文件"></a>预安装库文件</h2><h4 id="预安装一些编译时用到的库文件和工具"><a href="#预安装一些编译时用到的库文件和工具" class="headerlink" title="预安装一些编译时用到的库文件和工具"></a>预安装一些编译时用到的库文件和工具</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get -y install git-core curl \</span><br><span class="line">build-essential openssl libreadline6 libreadline6-dev \</span><br><span class="line">libmysqlclient-dev zlib1g zlib1g-dev libssl-dev libyaml-dev \</span><br><span class="line">libsqlite3-0 libsqlite3-dev sqlite3 \</span><br><span class="line">libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake \</span><br><span class="line">libtool bison subversion libxslt1-dev</span><br></pre></td></tr></table></figure>
+
+<p>如果使用jruby的话，安装一个jdk环境<br>    sudo apt-get install default-jdk</p>
+<h2 id="安装rbenv"><a href="#安装rbenv" class="headerlink" title="安装rbenv"></a>安装<code>rbenv</code></h2><p>我使用<a target="_blank" rel="noopener" href="https://github.com/sstephenson/rbenv">rbenv</a>而不是rvm来作为ruby的版本管理软件。理由在rbenv的项目页面说明的很清楚了，更安全也更简单</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -L https://raw.github.com/fesplugas/rbenv-installer/master/bin/rbenv-installer | bash</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装ruby"><a href="#安装ruby" class="headerlink" title="安装ruby"></a>安装<code>ruby</code></h2><p>假设你使用ruby-1.9.3</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rbenv install 1.9.3-p125</span><br><span class="line">rbenv global 1.9.3-p125</span><br></pre></td></tr></table></figure>
+
+<p>常用rbenv命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rbenv versions <span class="comment"># 查看可以安装的ruby版本列表</span></span><br><span class="line">rbenv version  <span class="comment"># 查看当前的ruby版本</span></span><br><span class="line">rbenv <span class="built_in">rehash</span>   <span class="comment"># 更新rbenv里的链接指向gems的可执行文件的映射,安装了新gem包时使用</span></span><br><span class="line"></span><br><span class="line">rbenv global jruby-1.6.5         <span class="comment"># 切换到jruby-1.6.5，下次登录系统后仍有效</span></span><br><span class="line"><span class="built_in">export</span> RBENV_VERSION=jruby-1.6.5 <span class="comment"># 切换到jruby-1.6.5环境，只适用于这一次使用</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="创建第一个Rails项目"><a href="#创建第一个Rails项目" class="headerlink" title="创建第一个Rails项目"></a>创建第一个<code>Rails</code>项目</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gem update --system       <span class="comment"># 更新gem到最新版本</span></span><br><span class="line">gem install bundler rails <span class="comment"># 安装bundler和rails</span></span><br><span class="line">rbenv <span class="built_in">rehash</span>              <span class="comment"># 刷新rbenv记录的可执行文件，这样rails命令就可以直接使用了</span></span><br><span class="line">rails new blog</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Ruby/" rel="tag"># Ruby</a>
+              <a href="/tags/Rails/" rel="tag"># Rails</a>
+              <a href="/tags/Server/" rel="tag"># Server</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2012/04/21/%E7%94%A8octopress%E6%9D%A5%E5%86%99%E5%8D%9A%E5%AE%A2%E5%B9%B6%E5%8F%91%E5%B8%83%E5%88%B0github%E4%B8%8A/" rel="next" title="用Octopress来写博客并发布到Github上">
+                  用Octopress来写博客并发布到Github上 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ryan Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wongyouth","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

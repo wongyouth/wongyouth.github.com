@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wongyouth.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="自从去年2017年微信开放了小游戏之后，极大的促进H5游戏的发展。可以想象今年微信游戏必定非常火。乘着这股春风，结合近期研究的 rxjs，想尝试下用 rxjs 改写微信官方小游戏。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用 rxjs 改写微信官方小游戏">
+<meta property="og:url" content="https://wongyouth.github.io/2018/06/11/%E7%94%A8-rxjs-%E6%94%B9%E5%86%99%E5%BE%AE%E4%BF%A1%E5%AE%98%E6%96%B9%E5%B0%8F%E6%B8%B8%E6%88%8F/index.html">
+<meta property="og:site_name" content="向往自由的鱼">
+<meta property="og:description" content="自从去年2017年微信开放了小游戏之后，极大的促进H5游戏的发展。可以想象今年微信游戏必定非常火。乘着这股春风，结合近期研究的 rxjs，想尝试下用 rxjs 改写微信官方小游戏。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wongyouth.github.io/images/blog/wxgame.gif">
+<meta property="article:published_time" content="2018-06-11T07:58:11.000Z">
+<meta property="article:modified_time" content="2025-02-25T02:53:09.086Z">
+<meta property="article:author" content="Ryan Wang">
+<meta property="article:tag" content="微信">
+<meta property="article:tag" content="rxjs">
+<meta property="article:tag" content="游戏">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wongyouth.github.io/images/blog/wxgame.gif">
+
+
+<link rel="canonical" href="https://wongyouth.github.io/2018/06/11/%E7%94%A8-rxjs-%E6%94%B9%E5%86%99%E5%BE%AE%E4%BF%A1%E5%AE%98%E6%96%B9%E5%B0%8F%E6%B8%B8%E6%88%8F/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wongyouth.github.io/2018/06/11/%E7%94%A8-rxjs-%E6%94%B9%E5%86%99%E5%BE%AE%E4%BF%A1%E5%AE%98%E6%96%B9%E5%B0%8F%E6%B8%B8%E6%88%8F/","path":"2018/06/11/用-rxjs-改写微信官方小游戏/","title":"用 rxjs 改写微信官方小游戏"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>用 rxjs 改写微信官方小游戏 | 向往自由的鱼</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">向往自由的鱼</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%B8%E6%88%8F%E5%8C%85%E6%8B%AC"><span class="nav-number">1.</span> <span class="nav-text">游戏包括</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E7%9A%84%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E4%B8%8E%E7%8A%B6%E6%80%81%E6%B5%81"><span class="nav-number">2.</span> <span class="nav-text">整体的代码结构与状态流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E7%8A%B6%E6%80%81"><span class="nav-number">3.</span> <span class="nav-text">初始状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%92%9F%E6%B5%81"><span class="nav-number">4.</span> <span class="nav-text">时钟流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%B0%E5%9B%BE%E8%83%8C%E6%99%AF%E6%B5%81"><span class="nav-number">5.</span> <span class="nav-text">地图背景流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A3%9E%E6%9C%BA%E6%B5%81"><span class="nav-number">6.</span> <span class="nav-text">飞机流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E5%BC%B9%E6%B5%81"><span class="nav-number">7.</span> <span class="nav-text">子弹流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%88%86%E7%82%B8%E6%B5%81"><span class="nav-number">8.</span> <span class="nav-text">爆炸流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%8C%E6%9C%BA%E6%B5%81"><span class="nav-number">9.</span> <span class="nav-text">敌机流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E%E6%B5%81"><span class="nav-number">10.</span> <span class="nav-text">碰撞流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%90%AF%E6%B5%81"><span class="nav-number">11.</span> <span class="nav-text">重启流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%B5%81"><span class="nav-number">12.</span> <span class="nav-text">状态流</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number"></span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number"></span> <span class="nav-text">参考</span></a></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan Wang"
+      src="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+  <p class="site-author-name" itemprop="name">Ryan Wang</p>
+  <div class="site-description" itemprop="description">随想随写</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wongyouth" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wongyouth" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wongyouth.github.io/2018/06/11/%E7%94%A8-rxjs-%E6%94%B9%E5%86%99%E5%BE%AE%E4%BF%A1%E5%AE%98%E6%96%B9%E5%B0%8F%E6%B8%B8%E6%88%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+      <meta itemprop="name" content="Ryan Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向往自由的鱼">
+      <meta itemprop="description" content="随想随写">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="用 rxjs 改写微信官方小游戏 | 向往自由的鱼">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用 rxjs 改写微信官方小游戏
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-06-11 15:58:11" itemprop="dateCreated datePublished" datetime="2018-06-11T15:58:11+08:00">2018-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-02-25 10:53:09" itemprop="dateModified" datetime="2025-02-25T10:53:09+08:00">2025-02-25</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2018/06/11/%E7%94%A8-rxjs-%E6%94%B9%E5%86%99%E5%BE%AE%E4%BF%A1%E5%AE%98%E6%96%B9%E5%B0%8F%E6%B8%B8%E6%88%8F/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/11/用-rxjs-改写微信官方小游戏/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>自从去年2017年微信开放了小游戏之后，极大的促进H5游戏的发展。可以想象今年微信游戏必定非常火。<br>乘着这股春风，结合近期研究的 <code>rxjs</code>，想尝试下用 <code>rxjs</code> 改写微信官方小游戏。</p>
+<p><img src="/images/blog/wxgame.gif" alt="weixin-game"></p>
+<span id="more"></span>
+
+<p><code>rxjs</code> 是响应式编程的 Javascript 库。</p>
+<p>响应式的概念就是声明式编程的方法，代表的有 React， Vue。 在我理解他与传统的命令式编程方法最大的区别在于： 不是根据事件来处理每个逻辑，而是先设置好每个事件的 flow，只要有一个事件触发了，那么这些事件会带动触发其他事件，再接着触发其他事件，最后汇集到一个状态量中。而 View 上的更新是只更根据状态做显示。</p>
+<p>除了现在流行的使用类来组织代码，还有一种完全不同的代码组织方式，那就是函数式编程。<br>这可能是另外一个话题，但是有趣的是使用 <code>rxjs</code> 你可以完全只使用函数来写代码。</p>
+<p>不再啰嗦，看代码。</p>
+<h3 id="游戏包括"><a href="#游戏包括" class="headerlink" title="游戏包括"></a>游戏包括</h3><ul>
+<li>地图的滚动更新</li>
+<li>飞机的位置</li>
+<li>敌机群的位置</li>
+<li>子弹的位置</li>
+<li>爆炸动画的位置，与当前播放的图片索引值</li>
+<li>游戏是否结束</li>
+<li>分数</li>
+</ul>
+<h3 id="整体的代码结构与状态流"><a href="#整体的代码结构与状态流" class="headerlink" title="整体的代码结构与状态流"></a>整体的代码结构与状态流</h3><pre><code>const clock$ = interval(1000 / FPS, animationFrameScheduler)
+const playerSubject$ = new BehaviorSubject()
+
+const bg$ = &#123;...&#125;
+const player$ = &#123;...&#125;
+const enemies$ = &#123;...&#125;
+const bullets$ = &#123;...&#125;
+const explosions$ = &#123;...&#125;
+const collision$ = &#123;...&#125;
+const restart$ = &#123;...&#125;
+
+const state$ = merge(bg$, player$, enemies$, bullets$, collision$, explosions$, restart$)
+  .pipe(
+    startWith(getInitState()),
+    scan((state, reducer) =&gt; reducer(state))
+  )
+
+bgmAudio.play()
+state$.subscribe(function(state) &#123;
+  playerSubject$.next(state.player)
+  render(state)
+&#125;)
+</code></pre>
+<p>状态流是由上面提到的背景，敌机，飞机，子弹等流合成，在 <code>subscribe</code> 的回调函数里面，只要根据最新的 <code>state</code> 画图就可以了。</p>
+<h3 id="初始状态"><a href="#初始状态" class="headerlink" title="初始状态"></a>初始状态</h3><pre><code>function getInitState() &#123;
+  return &#123;
+    bg: &#123;
+      img: bgImg,
+      width: BG_WIDTH,
+      height: BG_HEIGHT,
+      top: 0
+    &#125;,
+    player: &#123;
+      img: playerImg,
+      width: PLAYER_WIDTH,
+      height: PLAYER_HEIGHT,
+      x: screenWidth / 2 - PLAYER_WIDTH / 2,
+      y: screenHeight - PLAYER_HEIGHT - 30
+    &#125;,
+    enemies: [],
+    bullets: [],
+    explosions: &#123;
+      images: aniImgs,
+      frames: []
+    &#125;,
+    gameover: false,
+    score: 0
+  &#125;
+&#125;
+</code></pre>
+<p>与传统的类不太一样，现在前端开发中特别是单页应用中越来越用到一个概念就是要有一个全局的状态来管理共享数据，来起到所有组件内同步更新的作用。这里也沿用了这种方式，特别是在调试的时候可以很方便的查看游戏内部的状态。</p>
+<p>下面我们再来细看每个流：</p>
+<h3 id="时钟流"><a href="#时钟流" class="headerlink" title="时钟流"></a>时钟流</h3><p>每秒60帧，每个时钟单位约16.67毫秒，这是大部分游戏的设置值。帧率越大画面越流畅。</p>
+<pre><code>const clock$ = interval(1000 / FPS, animationFrameScheduler)
+  .pipe(share())
+</code></pre>
+<p>这里用到一个 <code>share()</code>，是因为这个时钟流会多次用到，所以做了共享。</p>
+<h3 id="地图背景流"><a href="#地图背景流" class="headerlink" title="地图背景流"></a>地图背景流</h3><p>地图背景的更新，每个时钟单位 top 值增加 2 个像素值</p>
+<pre><code>const bg$ = clock$
+  .pipe(
+    map(() =&gt; state =&gt; &#123;
+      if (state.gameover) return state
+
+      state.bg.top = state.bg.top &gt; screenHeight ? 0 : state.bg.top + 2
+      return state
+    &#125;)
+  )
+</code></pre>
+<h3 id="飞机流"><a href="#飞机流" class="headerlink" title="飞机流"></a>飞机流</h3><p>飞机位置的移动要响应触屏移动，而触屏时需要根据飞机当前值来确定要不要触发移动，所以需要当前的状态，而状态又是由飞机流来生成的，是一个循环。如果碰到这种循环的情况要用到 Subject 来解决， Subject 相当于一个中介的概念。内部是一个 <code>pub</code> <code>sub</code> 模式。</p>
+<pre><code>const playerSubject$ = new BehaviorSubject()
+
+const touchstart$ = fromEvent(canvas, &#39;touchstart&#39;).pipe(share())
+const touchend$ = fromEvent(canvas, &#39;touchend&#39;)
+const touchmove$ = fromEvent(canvas, &#39;touchmove&#39;)
+</code></pre>
+<p>飞机的移动只在触屏时触发，所以由 touchstart$ 作为发起源，当手指在飞机的触屏移动是， playerMove$ 就会发出当前的位置</p>
+<pre><code>const playerMove$ = touchstart$.pipe(
+  withLatestFrom(playerSubject$),
+  filter(([ev, player]) =&gt; &#123;
+    return checkIsFingerOnAir(ev, player)
+  &#125;),
+  mergeMap(() =&gt; &#123;
+    return touchmove$.pipe(takeUntil(touchend$))
+  &#125;),
+  map(ev =&gt; ev.touches[0]),
+  // tap(console.log),
+)
+</code></pre>
+<p>player$ 根据触屏的位置来改变飞机的位置</p>
+<pre><code>const player$ = playerMove$
+  .pipe(
+    map((&#123;clientX, clientY&#125;) =&gt; (state) =&gt; &#123;
+      if (state.gameover) return state
+
+      const &#123;player&#125; = state
+      player.x = range(clientX - player.width / 2, 0, screenWidth - player.width)
+      player.y = range(clientY - player.height / 2, 0, screenHeight - player.height)
+
+      return state
+    &#125;)
+  )
+</code></pre>
+<h3 id="子弹流"><a href="#子弹流" class="headerlink" title="子弹流"></a>子弹流</h3><p>子弹流比较简单，每个 clock 单位改变已有子弹的y值，但超出屏幕时从列表内删除，每 20 个 clock 单位产生新的子弹。</p>
+<pre><code>const bullets$ = clock$.pipe(
+  map(frame =&gt; state =&gt; &#123;
+    if (state.gameover) return state
+
+    const player = state.player
+
+    // 移动子弹
+    state.bullets.forEach(function(bullet, index) &#123;
+      bullet.y -= 6
+      if (bullet.y &lt; -BULLET_HEIGHT) &#123;
+        state.bullets.splice(index, 1)
+      &#125;
+    &#125;)
+
+    // 动态生成
+    if (frame % 20 === 0) &#123;
+      state.bullets.push(&#123;
+        img: bulletImg,
+        x: player.x + player.width / 2 - BULLET_WIDTH / 2,
+        y: player.y - BULLET_HEIGHT,
+        width: BULLET_WIDTH,
+        height: BULLET_HEIGHT
+      &#125;)
+
+      bulletAudio.play()
+    &#125;
+    return state
+  &#125;)
+)
+</code></pre>
+<h3 id="爆炸流"><a href="#爆炸流" class="headerlink" title="爆炸流"></a>爆炸流</h3><p>爆炸动画的流，由新产生的爆炸流，和改变显示的图片来完成。爆炸由碰撞检测产生，这里用了 explosionSubject$ 来做中转。当所有的爆炸图片显示完时，从列表移除，不再显示。</p>
+<pre><code>const explosionSubject$ = new Subject()
+const newExplo$ = explosionSubject$.pipe(
+  map(enemy =&gt; state =&gt; &#123;
+    const frame = Object.assign(&#123;&#125;, enemy, &#123;index: 0&#125;)
+    state.explosions.frames.push(frame)
+
+    return state
+  &#125;)
+)
+const exploPlay$ = clock$.pipe(
+  map(() =&gt; state =&gt; &#123;
+    for (const frame of state.explosions.frames) &#123;
+      frame.index += 1
+      frame.y += 6
+    &#125;
+
+    state.explosions.frames = state.explosions.frames.filter(frame =&gt; frame.index &lt; state.explosions.images.length)
+
+    return state
+  &#125;)
+)
+
+const explosions$ = merge(exploPlay$, newExplo$)
+</code></pre>
+<h3 id="敌机流"><a href="#敌机流" class="headerlink" title="敌机流"></a>敌机流</h3><p>敌机流也比较简单，每 30 个 clock 单位新产生一个敌机，每个 clock 单位移动</p>
+<pre><code>const enemies$ = merge(clock$)
+  .pipe(
+    map(frame =&gt; state =&gt; &#123;
+      if (state.gameover) return state
+
+      // 移动敌机
+      state.enemies.forEach(function(enemy, index) &#123;
+        enemy.y += 6
+        if ( enemy.y &gt; screenHeight + enemy.height) &#123;
+          state.enemies.splice(index, 1)
+        &#125;
+      &#125;)
+
+      // 生成
+      if (frame % 30 === 0) &#123;
+        state.enemies.push(&#123;
+          img: enemyImg,
+          x: rnd(0, screenWidth - ENEMY_WIDTH),
+          y: -ENEMY_HEIGHT,
+          width: ENEMY_WIDTH,
+          height: ENEMY_HEIGHT,
+          speed: 6
+        &#125;)
+      &#125;
+
+      return state
+    &#125;)
+  )
+</code></pre>
+<h3 id="碰撞流"><a href="#碰撞流" class="headerlink" title="碰撞流"></a>碰撞流</h3><p>碰撞流做了两个检测，一个检测子弹是否击中敌机，如果击中，则 explosionSubject$.next(enemy) 下，让爆炸显示。另一个则是检测敌机与我方飞机的碰撞检测，如果击中，则游戏结束。</p>
+<pre><code>const collision$ = clock$.pipe(
+  map(() =&gt; state =&gt; &#123;
+    if (state.gameover) return state
+
+    state.bulltes = state.bullets.filter(bullet =&gt; &#123;
+      state.enemies.every((enemy, index) =&gt; &#123;
+        if (isCollideWith(enemy, bullet)) &#123;
+          state.enemies.splice(index, 1)
+          boomAudio.play()
+          state.score += 1
+          explosionSubject$.next(enemy)
+          return false
+        &#125;
+
+        return true
+      &#125;)
+    &#125;)
+
+    for (const enemy of state.enemies) &#123;
+      if (isCollideWith(state.player, enemy)) &#123;
+        state.gameover = true
+        break
+      &#125;
+    &#125;
+    return state
+  &#125;)
+)
+</code></pre>
+<h3 id="重启流"><a href="#重启流" class="headerlink" title="重启流"></a>重启流</h3><p>重新游戏流，检测是否在游戏终止时，点击了重新游戏这个按钮，是则重置游戏状态，开始新游戏</p>
+<pre><code>const restart$ = touchstart$.pipe(
+  filter(ev =&gt; &#123;
+    const &#123;clientX, clientY&#125; = ev.touches[0]
+
+    return (
+      clientX &gt; btnArea.startX
+      &amp;&amp; clientX &lt; btnArea.endX
+      &amp;&amp; clientY &gt; btnArea.startY
+      &amp;&amp; clientY &lt; btnArea.endY
+    )
+  &#125;),
+  map(() =&gt; state =&gt; state.gameover ? getInitState() : state)
+)
+</code></pre>
+<h3 id="状态流"><a href="#状态流" class="headerlink" title="状态流"></a>状态流</h3><p>所有以上的流 merge 之后通过 reducer 来完成每次状态的更新。我们这里所有的流发出的不是一般的数据，而是函数，所以当接收到函数时，我们把当前 <code>state</code> 传入这个函数中去，更新状态里相应的数据，返回新的状态。而状态流放出的则是当前的最新状态值。</p>
+<pre><code>const state$ = merge(bg$, player$, enemies$, bullets$, collision$, explosions$, restart$)
+  .pipe(
+    startWith(getInitState()),
+    scan((state, reducer) =&gt; reducer(state))
+  )
+</code></pre>
+<p>订阅这个 state$ 状态流，每时钟单位根据状态值画图。<br>其中</p>
+<pre><code>playerSubject$.next(state.player)
+</code></pre>
+<p>这行代码是通知之前的 playerSubject$ 来中转更新飞机位置</p>
+<pre><code>bgmAudio.play()
+state$.subscribe(function(state) &#123;
+  playerSubject$.next(state.player)
+  render(state)
+&#125;)
+</code></pre>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>游戏在我的小米Note3手机的微信测试了下，帧率一般在56 ~ 60 左右，可以看到，使用 <code>rxjs</code> 是可以写游戏代码的。</p>
+<p>代码通过 <code>webpack</code> 打包后，832k ，有点大，但是离微信的上限4M还是很大空余空间的。</p>
+<p><code>rxjs</code> 可以改变代码的编写方式，甚至思维方式。数据在各个流之间进行流动，最后汇集到一个状态内，我们只要管理状态到视图的更新显示，感觉整体的结构还是很直观的。</p>
+<p>与原来的代码比较，原来的代码游戏在 <code>Game over</code> 时有bug，手指还是可以拖动飞机的移动， <code>rxjs</code> 版不会有这个问题。</p>
+<p>感觉 <code>rxjs</code> 的潜力还没有被挖掘出来，可能在处理多人联机游戏的 <code>rxjs</code> 带来的好处将更大。</p>
+<p>本篇例子中完全舍去了类的使用，只使用到了函数。但是重点不在这里，完全可以使用类结合 <code>rxjs</code> 来使用，毕竟 <code>es6</code> 支持了类，当然要发挥它的长处。</p>
+<p>后奉上<a target="_blank" rel="noopener" href="https://github.com/wongyouth/rxjs-wxgame">源码</a>。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://reactivex.io/">Rxjs</a><br><a target="_blank" rel="noopener" href="https://www.learnrxjs.io/">Learning rxjs</a><br><a target="_blank" rel="noopener" href="https://manu.ninja/game-state-with-rxjs-5-immutable-js">Game State with RxJS 5&#x2F;Immutable.js</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%BE%AE%E4%BF%A1/" rel="tag"># 微信</a>
+              <a href="/tags/rxjs/" rel="tag"># rxjs</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F/" rel="tag"># 游戏</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/02/01/%E6%9B%B4%E6%96%B0docker%E5%AE%B9%E5%99%A8/" rel="prev" title="更新Docker容器">
+                  <i class="fa fa-angle-left"></i> 更新Docker容器
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/09/07/%E8%AF%B4%E8%AF%B4%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BE%8E%E5%9B%A2%E6%A1%86%E6%9E%B6mpvue/" rel="next" title="说说小程序美团框架mpvue">
+                  说说小程序美团框架mpvue <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ryan Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wongyouth","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

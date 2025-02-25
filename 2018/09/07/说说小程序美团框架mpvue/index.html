@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wongyouth.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这段时间开始做小程序的开发，所以稍微研究了下小程序的开发框架。当下比较有名的有以下几个开发框架:  基于模板的类 vue 的原生框架 在原生框架上改良的仿 Vue 框架 wepy 基于 Vue 的 mpvue 基于 React 的 taro。  另外还有几个小众的：  anu tina  因为之前比较熟悉Vue，所以没有太费脑力就选了 mpvue。 看了文档觉得虽然有所限制，比如：  模板里不能写">
+<meta property="og:type" content="article">
+<meta property="og:title" content="说说小程序美团框架mpvue">
+<meta property="og:url" content="https://wongyouth.github.io/2018/09/07/%E8%AF%B4%E8%AF%B4%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BE%8E%E5%9B%A2%E6%A1%86%E6%9E%B6mpvue/index.html">
+<meta property="og:site_name" content="向往自由的鱼">
+<meta property="og:description" content="这段时间开始做小程序的开发，所以稍微研究了下小程序的开发框架。当下比较有名的有以下几个开发框架:  基于模板的类 vue 的原生框架 在原生框架上改良的仿 Vue 框架 wepy 基于 Vue 的 mpvue 基于 React 的 taro。  另外还有几个小众的：  anu tina  因为之前比较熟悉Vue，所以没有太费脑力就选了 mpvue。 看了文档觉得虽然有所限制，比如：  模板里不能写">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-09-07T14:49:48.000Z">
+<meta property="article:modified_time" content="2025-02-25T02:53:09.086Z">
+<meta property="article:author" content="Ryan Wang">
+<meta property="article:tag" content="Vue">
+<meta property="article:tag" content="小程序">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wongyouth.github.io/2018/09/07/%E8%AF%B4%E8%AF%B4%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BE%8E%E5%9B%A2%E6%A1%86%E6%9E%B6mpvue/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wongyouth.github.io/2018/09/07/%E8%AF%B4%E8%AF%B4%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BE%8E%E5%9B%A2%E6%A1%86%E6%9E%B6mpvue/","path":"2018/09/07/说说小程序美团框架mpvue/","title":"说说小程序美团框架mpvue"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>说说小程序美团框架mpvue | 向往自由的鱼</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">向往自由的鱼</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan Wang"
+      src="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+  <p class="site-author-name" itemprop="name">Ryan Wang</p>
+  <div class="site-description" itemprop="description">随想随写</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wongyouth" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wongyouth" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wongyouth.github.io/2018/09/07/%E8%AF%B4%E8%AF%B4%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BE%8E%E5%9B%A2%E6%A1%86%E6%9E%B6mpvue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+      <meta itemprop="name" content="Ryan Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向往自由的鱼">
+      <meta itemprop="description" content="随想随写">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="说说小程序美团框架mpvue | 向往自由的鱼">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          说说小程序美团框架mpvue
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-09-07 22:49:48" itemprop="dateCreated datePublished" datetime="2018-09-07T22:49:48+08:00">2018-09-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-02-25 10:53:09" itemprop="dateModified" datetime="2025-02-25T10:53:09+08:00">2025-02-25</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2018/09/07/%E8%AF%B4%E8%AF%B4%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%BE%8E%E5%9B%A2%E6%A1%86%E6%9E%B6mpvue/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/09/07/说说小程序美团框架mpvue/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>这段时间开始做小程序的开发，所以稍微研究了下小程序的开发框架。<br>当下比较有名的有以下几个开发框架:</p>
+<ul>
+<li>基于模板的类 vue 的原生框架</li>
+<li>在原生框架上改良的仿 <code>Vue</code> 框架 <code>wepy</code></li>
+<li>基于 <code>Vue</code> 的 <code>mpvue</code></li>
+<li>基于 <code>React</code> 的 <code>taro</code>。</li>
+</ul>
+<p>另外还有几个小众的：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/RubyLouvre/anu">anu</a></li>
+<li><a target="_blank" rel="noopener" href="https://tina.js.org/">tina</a></li>
+</ul>
+<p>因为之前比较熟悉<code>Vue</code>，所以没有太费脑力就选了 <code>mpvue</code>。</p>
+<p>看了文档觉得虽然有所限制，比如：</p>
+<ul>
+<li>模板里不能写复制的表达式</li>
+<li>模板里不能用函数</li>
+<li>不能用 filter</li>
+<li>不能用 slot</li>
+</ul>
+<p>感觉虽然有限制，但是好像没有特别大的关系。多费点代码还是能克服的。</p>
+<p>谁知道，刚码了两个页面就遇到了坑。</p>
+<ul>
+<li>beforeDestroy 回调基本没用</li>
+<li>mounted 可能永远不会调用第二次</li>
+<li>再次进入页面时有上次状态的残影</li>
+<li>再次进入页面时取不到变化的页面路径参数</li>
+<li>使用 HTML 原有的标签名作为组件名时，自定义组件内模板不起作用</li>
+<li>错误如果不捕捉会被吞没，不报错</li>
+</ul>
+<p>倒不是某个框架的问题，搜了一下其他的框架基本也都有这些问题。</p>
+<p>还没有具体看过 <code>mpvue</code> 源码，但是看了前人介绍，有些是因为小程序的特色所导致的。<br>比如为什么页面再次打开会有之前的状态值存留。</p>
+<p>个人感觉以下内部世界被割裂成了3个世界：</p>
+<p>mpvue 对象 -&gt; 小程序Page对象 -&gt; View render</p>
+<p>原生的 Page 里 通过 <code>setData</code> 把数据传输给视图进行显示，<br>当页面关闭后，页面对象消失，但是 <code>mpvue</code> 对象会重复使用，<br>每次页面重开时会使用之前的 mpvue 对象，造成了数据的残留。<br>理想状态是 Page 关闭时，销毁 mpvue 对象，打开时再重新生成。这样整个生命周期就与预期一致了。</p>
+<p>正因为以上的原因，造成了很多意想不到的问题(keng)。</p>
+<p>也探索了一些解决方法：</p>
+<p>问题1：数据残留</p>
+<pre><code>export default &#123;
+  data () &#123;
+    return &#123;
+      a: 23
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>对策：onUnload里重置初始值</p>
+<pre><code>export default &#123;
+  data () &#123;
+    return &#123;
+      a: 23
+    &#125;
+  &#125;,
+
+  onUnload () &#123;
+    Object.assign(this.$data, this.$options.data())
+  &#125;
+&#125;
+</code></pre>
+<p>这里的 <code>this.$options</code> 是<code>Vue</code>内部使用的属性，保留着初始的对象值。<br>可以把他写成一个Vue plugin，这样就可以省却每个页面都要写的尴尬。</p>
+<p>问题2：computed 内获取的参数不会变化</p>
+<pre><code>export default &#123;
+  computed: &#123;
+    id () &#123;
+      return this.$root.$mp.query.id
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>对策：写入 mounted 里，赋值到 <code>data</code> 对象内</p>
+<pre><code>export default &#123;
+  data () &#123;
+    return &#123;
+      id: null
+    &#125;
+  &#125;,
+
+  mounted () &#123;
+    this.id = this.$root.$mp.query.id
+  &#125;
+&#125;
+</code></pre>
+<p>问题: 组件文件名不要使用HTML标签名</p>
+<p>组件名用了 article， 引入时不报错，但是组件内部模板不显示，也不报错。<br>即使引入时改了，也还是不显示：</p>
+<pre><code>import Article2 from &#39;./article&#39;
+</code></pre>
+<p>对策: 为了减少麻烦，一定要使用非HTML标签名，引入时也最好名称一致。</p>
+<p>问题4：自定义组件时写的事件处理函数不起作用</p>
+<pre><code>&lt;template lang=&#39;pug&#39;&gt;
+  .container
+    tag1(
+      @click=&#39;handler&#39;
+      v-for=&#39;item in items&#39;
+      :key=&#39;item.id&#39;
+    )
+&lt;/template&gt;
+</code></pre>
+<p>对策：如果想再调用时处理事件的话，需要在自定义内部通过<code>$emit</code> 发出来，<br>自定义组件所有的事件都需要自己发射到父组件。</p>
+<p>暂时就先记这么多，后续有再跟进。<br>多说一句： <code>mpvue</code> 是基于 <code>Vue</code> 2.4.1 基础上开发的，所有 2.4.1 以上的功能就不要去用了。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Vue/" rel="tag"># Vue</a>
+              <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag"># 小程序</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/06/11/%E7%94%A8-rxjs-%E6%94%B9%E5%86%99%E5%BE%AE%E4%BF%A1%E5%AE%98%E6%96%B9%E5%B0%8F%E6%B8%B8%E6%88%8F/" rel="prev" title="用 rxjs 改写微信官方小游戏">
+                  <i class="fa fa-angle-left"></i> 用 rxjs 改写微信官方小游戏
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/10/11/%E8%87%AA%E7%94%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8app%E3%80%90%E4%B9%A6%E5%B1%B1%E8%BF%BD%E6%9B%B4%E3%80%91/" rel="next" title="自用的网络小说阅读器App【书山追更】">
+                  自用的网络小说阅读器App【书山追更】 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ryan Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wongyouth","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

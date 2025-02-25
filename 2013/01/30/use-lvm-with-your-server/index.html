@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wongyouth.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="我们在使用服务器的时候会遇到各种各样的问题，比如今天要说的硬盘管理。 在服务器刚开始使用的时候一般只装配了现阶段要使用的容量，究其原因  资金有限，不能一步到位 前期无法得知需要多大容量，需要使用一段时间才能评估 类似需要时增加配额的策略  而如果当发现硬盘容量不够需要增加时，如果安装普通mount方法，需要准备一个更大的硬盘，把原始盘的内容复制过来。这个操作会带来一定的风险：  复制需要一定的时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Use LVM with your server">
+<meta property="og:url" content="https://wongyouth.github.io/2013/01/30/use-lvm-with-your-server/index.html">
+<meta property="og:site_name" content="向往自由的鱼">
+<meta property="og:description" content="我们在使用服务器的时候会遇到各种各样的问题，比如今天要说的硬盘管理。 在服务器刚开始使用的时候一般只装配了现阶段要使用的容量，究其原因  资金有限，不能一步到位 前期无法得知需要多大容量，需要使用一段时间才能评估 类似需要时增加配额的策略  而如果当发现硬盘容量不够需要增加时，如果安装普通mount方法，需要准备一个更大的硬盘，把原始盘的内容复制过来。这个操作会带来一定的风险：  复制需要一定的时">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2013-01-30T03:22:00.000Z">
+<meta property="article:modified_time" content="2025-02-25T02:53:09.083Z">
+<meta property="article:author" content="Ryan Wang">
+<meta property="article:tag" content="Server">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="LVM">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wongyouth.github.io/2013/01/30/use-lvm-with-your-server/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wongyouth.github.io/2013/01/30/use-lvm-with-your-server/","path":"2013/01/30/use-lvm-with-your-server/","title":"Use LVM with your server"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Use LVM with your server | 向往自由的鱼</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">向往自由的鱼</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#install-lvm2"><span class="nav-number">1.</span> <span class="nav-text">install lvm2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#create-a-pysical-volume"><span class="nav-number">2.</span> <span class="nav-text">create a pysical volume</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#create-a-volume-group-with-name-yun"><span class="nav-number">3.</span> <span class="nav-text">create a volume group with name yun</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#create-a-logical-volume-named-gp-from-vg-yun-with-50-giga-bytes"><span class="nav-number">4.</span> <span class="nav-text">create a logical volume named gp from vg yun with 50 giga bytes</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#use-max-size-of-vg-to-create-a-lv"><span class="nav-number">5.</span> <span class="nav-text">use max size of vg to create a lv</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#format-the-logical-volume"><span class="nav-number">6.</span> <span class="nav-text">format the logical volume</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mount-the-lv"><span class="nav-number">7.</span> <span class="nav-text">mount the lv</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#add-new-device"><span class="nav-number">8.</span> <span class="nav-text">add new device</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#extend-vg"><span class="nav-number">9.</span> <span class="nav-text">extend vg</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#extend-lv-to-8G"><span class="nav-number">10.</span> <span class="nav-text">extend lv to 8G</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#extend-lv-with-extra-8G"><span class="nav-number">11.</span> <span class="nav-text">extend lv with extra 8G</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">11.1.</span> <span class="nav-text">References</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan Wang"
+      src="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+  <p class="site-author-name" itemprop="name">Ryan Wang</p>
+  <div class="site-description" itemprop="description">随想随写</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wongyouth" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wongyouth" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wongyouth.github.io/2013/01/30/use-lvm-with-your-server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+      <meta itemprop="name" content="Ryan Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向往自由的鱼">
+      <meta itemprop="description" content="随想随写">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Use LVM with your server | 向往自由的鱼">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Use LVM with your server
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2013-01-30 11:22:00" itemprop="dateCreated datePublished" datetime="2013-01-30T11:22:00+08:00">2013-01-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-02-25 10:53:09" itemprop="dateModified" datetime="2025-02-25T10:53:09+08:00">2025-02-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Server/" itemprop="url" rel="index"><span itemprop="name">Server</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2013/01/30/use-lvm-with-your-server/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/01/30/use-lvm-with-your-server/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>我们在使用服务器的时候会遇到各种各样的问题，比如今天要说的硬盘管理。</p>
+<p>在服务器刚开始使用的时候一般只装配了现阶段要使用的容量，究其原因</p>
+<ol>
+<li>资金有限，不能一步到位</li>
+<li>前期无法得知需要多大容量，需要使用一段时间才能评估</li>
+<li>类似需要时增加配额的策略</li>
+</ol>
+<p>而如果当发现硬盘容量不够需要增加时，如果安装普通mount方法，需要准备一个更大的硬盘，把原始盘的内容复制过来。<br>这个操作会带来一定的风险：</p>
+<ol>
+<li>复制需要一定的时间，在复制过程中原始盘内容可能又会增加</li>
+<li>使用新盘后，原始盘多了出来，不能重复使用。</li>
+<li>无法使用多盘来有效分散IO读写压力</li>
+</ol>
+<p>使用LVM就可以克服以上的问题。</p>
+<span id="more"></span>
+
+<p>LVM(Logical Volume Manager) 是逻辑卷管理的简写。LVM是建立在硬盘和分区之上的一个逻辑层，来提高磁盘分区管理的灵活性。<br>这里涉及到几个概念</p>
+<ul>
+<li>物理介质</li>
+<li>物理卷</li>
+<li>卷组</li>
+<li>逻辑卷</li>
+</ul>
+<p>朴素的原理是：物理卷建立在物理介质上，一个或者几个物理卷组成一个卷组，从卷组里分割出一个或者几个逻辑卷。<br>通过这种方式，可以动态增加物理介质从而增加逻辑卷的大小。</p>
+<p>based on:</p>
+<ul>
+<li><p>a disk &#x2F;dev&#x2F;xvdd more than 50G</p>
+</li>
+<li><p>ubuntu 12.04 LTS</p>
+<h1 id="install-lvm2"><a href="#install-lvm2" class="headerlink" title="install lvm2"></a>install lvm2</h1><p>sudo apt-get install lvm2</p>
+<h1 id="create-a-pysical-volume"><a href="#create-a-pysical-volume" class="headerlink" title="create a pysical volume"></a>create a pysical volume</h1><p>sudo pvcreate &#x2F;dev&#x2F;xvdd</p>
+<h1 id="create-a-volume-group-with-name-yun"><a href="#create-a-volume-group-with-name-yun" class="headerlink" title="create a volume group with name yun"></a>create a volume group with name <code>yun</code></h1><p>sudo vgcreate yun &#x2F;dev&#x2F;xvdd</p>
+<h1 id="create-a-logical-volume-named-gp-from-vg-yun-with-50-giga-bytes"><a href="#create-a-logical-volume-named-gp-from-vg-yun-with-50-giga-bytes" class="headerlink" title="create a logical volume named gp from vg yun with 50 giga bytes"></a>create a logical volume named <code>gp</code> from vg yun with 50 giga bytes</h1><p>sudo lvcreate -L 50G -n pg yun</p>
+<h1 id="use-max-size-of-vg-to-create-a-lv"><a href="#use-max-size-of-vg-to-create-a-lv" class="headerlink" title="use max size of vg to create a lv"></a>use max size of vg to create a lv</h1><p>sudo lvcreate -l 100%FREE -n pg yun #</p>
+<h1 id="format-the-logical-volume"><a href="#format-the-logical-volume" class="headerlink" title="format the logical volume"></a>format the logical volume</h1><p>sudo mkfs.ext4 &#x2F;dev&#x2F;mapper&#x2F;yun-pg</p>
+<h1 id="mount-the-lv"><a href="#mount-the-lv" class="headerlink" title="mount the lv"></a>mount the lv</h1><p>sudo mount &#x2F;dev&#x2F;mapper&#x2F;yun-pg &#x2F;mnt</p>
+<h1 id="add-new-device"><a href="#add-new-device" class="headerlink" title="add new device"></a>add new device</h1><p>sudo pvcreate &#x2F;dev&#x2F;xvde</p>
+<h1 id="extend-vg"><a href="#extend-vg" class="headerlink" title="extend vg"></a>extend vg</h1><p>sudo vgextend yun &#x2F;dev&#x2F;mapper&#x2F;yun-pg</p>
+<h1 id="extend-lv-to-8G"><a href="#extend-lv-to-8G" class="headerlink" title="extend lv to 8G"></a>extend lv to 8G</h1><p>sudo lvextend -L8G yun-pg</p>
+<h1 id="extend-lv-with-extra-8G"><a href="#extend-lv-with-extra-8G" class="headerlink" title="extend lv with extra 8G"></a>extend lv with extra 8G</h1><p>sudo lvextend -L+8G &#x2F;dev&#x2F;mapper&#x2F;yun-pg</p>
+</li>
+</ul>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://www.howtogeek.com/howto/40702/how-to-manage-and-use-lvm-logical-volume-management-in-ubuntu/">http://www.howtogeek.com/howto/40702/how-to-manage-and-use-lvm-logical-volume-management-in-ubuntu/</a></li>
+<li><a target="_blank" rel="noopener" href="http://docstore.mik.ua/manuals/hp-ux/en/5992-4589/ch03s03.html">http://docstore.mik.ua/manuals/hp-ux/en/5992-4589/ch03s03.html</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.cclove.me/Create_Extend_and_Reduce_LVM_on_Ubuntu1204.html">http://www.cclove.me/Create_Extend_and_Reduce_LVM_on_Ubuntu1204.html</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Server/" rel="tag"># Server</a>
+              <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"># 运维</a>
+              <a href="/tags/LVM/" rel="tag"># LVM</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2013/01/05/%E8%AE%A9%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99%E6%94%AF%E6%8C%81ssl/" rel="prev" title="让你的网站支持SSL">
+                  <i class="fa fa-angle-left"></i> 让你的网站支持SSL
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2013/04/22/config-dns-server-for-development/" rel="next" title="Config DNS server for development">
+                  Config DNS server for development <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ryan Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wongyouth","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

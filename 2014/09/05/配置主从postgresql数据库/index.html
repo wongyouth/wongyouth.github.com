@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wongyouth.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="背景数据库的数据量开始增多，负载开始变高，需要做一个数据库主从配置。 数据量，单表超过了100万条数据，应用程序做读写分离，写到主数据库，读从从数据库。 步骤 生成操作用的用户 配置主数据库，激活备份模式 关停从数据库，复制数据 配置从数据库，从主数据库同步数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置主从PostgreSQL数据库">
+<meta property="og:url" content="https://wongyouth.github.io/2014/09/05/%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8Epostgresql%E6%95%B0%E6%8D%AE%E5%BA%93/index.html">
+<meta property="og:site_name" content="向往自由的鱼">
+<meta property="og:description" content="背景数据库的数据量开始增多，负载开始变高，需要做一个数据库主从配置。 数据量，单表超过了100万条数据，应用程序做读写分离，写到主数据库，读从从数据库。 步骤 生成操作用的用户 配置主数据库，激活备份模式 关停从数据库，复制数据 配置从数据库，从主数据库同步数据">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2014-09-05T08:47:00.000Z">
+<meta property="article:modified_time" content="2025-02-25T02:53:09.085Z">
+<meta property="article:author" content="Ryan Wang">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="DB">
+<meta property="article:tag" content="Postgresql">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://wongyouth.github.io/2014/09/05/%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8Epostgresql%E6%95%B0%E6%8D%AE%E5%BA%93/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wongyouth.github.io/2014/09/05/%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8Epostgresql%E6%95%B0%E6%8D%AE%E5%BA%93/","path":"2014/09/05/配置主从postgresql数据库/","title":"配置主从PostgreSQL数据库"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>配置主从PostgreSQL数据库 | 向往自由的鱼</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">向往自由的鱼</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E6%93%8D%E4%BD%9C%E7%94%A8%E7%9A%84%E7%94%A8%E6%88%B7"><span class="nav-number">2.1.</span> <span class="nav-text">生成操作用的用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8C%E6%BF%80%E6%B4%BB%E5%A4%87%E4%BB%BD%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.2.</span> <span class="nav-text">配置主数据库，激活备份模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8C%E4%BB%8E%E4%B8%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE"><span class="nav-number">2.3.</span> <span class="nav-text">配置从数据库，从主数据库同步数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E6%95%B0%E6%8D%AE"><span class="nav-number">2.4.</span> <span class="nav-text">复制数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.5.</span> <span class="nav-text">启动从数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">2.6.</span> <span class="nav-text">测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E4%BB%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%8F%AA%E8%AF%BB%E5%B1%9E%E6%80%A7"><span class="nav-number">2.6.1.</span> <span class="nav-text">验证从数据库的只读属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%90%8C%E6%AD%A5%E7%8A%B6%E6%80%81"><span class="nav-number">2.7.</span> <span class="nav-text">查看同步状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%B6%E4%BC%B8%E9%98%85%E8%AF%BB"><span class="nav-number">2.8.</span> <span class="nav-text">延伸阅读</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan Wang"
+      src="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+  <p class="site-author-name" itemprop="name">Ryan Wang</p>
+  <div class="site-description" itemprop="description">随想随写</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">50</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wongyouth" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wongyouth" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wongyouth.github.io/2014/09/05/%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8Epostgresql%E6%95%B0%E6%8D%AE%E5%BA%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/944583?v=4&s=460">
+      <meta itemprop="name" content="Ryan Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向往自由的鱼">
+      <meta itemprop="description" content="随想随写">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="配置主从PostgreSQL数据库 | 向往自由的鱼">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          配置主从PostgreSQL数据库
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2014-09-05 16:47:00" itemprop="dateCreated datePublished" datetime="2014-09-05T16:47:00+08:00">2014-09-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-02-25 10:53:09" itemprop="dateModified" datetime="2025-02-25T10:53:09+08:00">2025-02-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Server/" itemprop="url" rel="index"><span itemprop="name">Server</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2014/09/05/%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8Epostgresql%E6%95%B0%E6%8D%AE%E5%BA%93/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2014/09/05/配置主从postgresql数据库/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>数据库的数据量开始增多，负载开始变高，需要做一个数据库主从配置。</p>
+<p>数据量，单表超过了100万条数据，应用程序做读写分离，写到主数据库，读从从数据库。</p>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><ul>
+<li>生成操作用的用户</li>
+<li>配置主数据库，激活备份模式</li>
+<li>关停从数据库，复制数据</li>
+<li>配置从数据库，从主数据库同步数据</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="生成操作用的用户"><a href="#生成操作用的用户" class="headerlink" title="生成操作用的用户"></a>生成操作用的用户</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install postgresql</span><br><span class="line">sudo -s postgres</span><br><span class="line">psql -c &quot;CREATE USER rep REPLICATION LOGIN CONNECTION LIMIT 1 ENCRYPTED PASSWORD &#x27;yourpassword&#x27;;&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置主数据库，激活备份模式"><a href="#配置主数据库，激活备份模式" class="headerlink" title="配置主数据库，激活备份模式"></a>配置主数据库，激活备份模式</h2><p>切换到配置目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/postgresql/9.1/main</span><br></pre></td></tr></table></figure>
+
+<p>主从模式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; postgresql.conf &lt;&lt;EOF</span><br><span class="line">listen_addresses = &#x27;localhost,IP_address_of_THIS_host&#x27;</span><br><span class="line">wal_level = &#x27;hot_standby&#x27;</span><br><span class="line">archive_mode = on</span><br><span class="line">archive_command = &#x27;cd .&#x27;</span><br><span class="line">max_wal_senders = 1</span><br><span class="line">hot_standby = on</span><br><span class="line">wal_keep_segments = 32</span><br><span class="line">checkpoint_segments = 8</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>wal_keep_segments 1个16MB 32 就是512M，这个参数用来配置保存wal日志的大小。如果备份期间有很多数据库操作导致旧日志失效时，就需要配置更大的数字才能保证同步数据文件。</p>
+<p>允许从数据库连接到主数据库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; pg_hba.conf &lt;&lt;EOF</span><br><span class="line">host    replication     rep     IP_address_of_slave/32   md5</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>重启数据库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service postgresql restart</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置从数据库，从主数据库同步数据"><a href="#配置从数据库，从主数据库同步数据" class="headerlink" title="配置从数据库，从主数据库同步数据"></a>配置从数据库，从主数据库同步数据</h2><p>在从数据库机器执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service postgresql stop</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd /var/lib/postgresql/9.1/main</span><br><span class="line">echo &gt; recovery.conf &lt;&lt;EOF</span><br><span class="line">standby_mode = &#x27;on&#x27;</span><br><span class="line">primary_conninfo = &#x27;host=master_IP_address port=5432 user=rep password=yourpassword&#x27;</span><br><span class="line">trigger_file = &#x27;/tmp/postgresql.trigger.5432&#x27;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h2 id="复制数据"><a href="#复制数据" class="headerlink" title="复制数据"></a>复制数据</h2><p>在主数据库机器执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">psql -c &quot;select pg_start_backup(&#x27;initial_backup&#x27;);&quot;</span><br><span class="line">rsync -cva -P --inplace --exclude=*pg_xlog* /var/lib/postgresql/9.1/main/ slave_IP_address:/var/lib/postgresql/9.1/main/</span><br><span class="line">psql -c &quot;select pg_stop_backup();&quot;</span><br></pre></td></tr></table></figure>
+
+<p>20G 的数据文件大概复制了3个多小时，要看网络状况好不好。</p>
+<h2 id="启动从数据库"><a href="#启动从数据库" class="headerlink" title="启动从数据库"></a>启动从数据库</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service postgresql start</span><br></pre></td></tr></table></figure>
+
+<p>参看log文件，看是否有报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -f /var/log/postgresql/postgresql-9.1-main.log</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>在主数据库执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE rep_test (test varchar(40));</span><br><span class="line">INSERT INTO rep_test VALUES (&#x27;data one&#x27;);</span><br><span class="line">INSERT INTO rep_test VALUES (&#x27;some more words&#x27;);</span><br><span class="line">INSERT INTO rep_test VALUES (&#x27;lalala&#x27;);</span><br><span class="line">INSERT INTO rep_test VALUES (&#x27;hello there&#x27;);</span><br><span class="line">INSERT INTO rep_test VALUES (&#x27;blahblah&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p>在从数据库执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM rep_test;</span><br></pre></td></tr></table></figure>
+
+<p>查看数据有无同步</p>
+<h3 id="验证从数据库的只读属性"><a href="#验证从数据库的只读属性" class="headerlink" title="验证从数据库的只读属性"></a>验证从数据库的只读属性</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO rep_test VALUES (&#x27;oops&#x27;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR:  cannot execute INSERT in a read-only transaction</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看同步状态"><a href="#查看同步状态" class="headerlink" title="查看同步状态"></a>查看同步状态</h2><p>在主数据库中执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from pg_stat_replication;</span><br></pre></td></tr></table></figure>
+
+<h2 id="延伸阅读"><a href="#延伸阅读" class="headerlink" title="延伸阅读"></a>延伸阅读</h2><p><a target="_blank" rel="noopener" href="http://www.postgresql.org/docs/9.1/interactive/continuous-archiving.html#BACKUP-BASE-BACKUP">官网文档</a>, <a target="_blank" rel="noopener" href="https://www.digitalocean.com/community/tutorials/how-to-set-up-master-slave-replication-on-postgresql-on-an-ubuntu-12-04-vps">Ubuntu 12.04</a>, <a target="_blank" rel="noopener" href="http://www.rassoc.com/gregr/weblog/2013/02/16/zero-to-postgresql-streaming-replication-in-10-mins/">从0配置主从</a>, <a target="_blank" rel="noopener" href="http://francs3.blog.163.com/blog/static/405767272011724103133766/" title="主从切换">主从切换</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"># 运维</a>
+              <a href="/tags/DB/" rel="tag"># DB</a>
+              <a href="/tags/Postgresql/" rel="tag"># Postgresql</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"># 数据库</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2014/09/04/using-lvm-striped-logical-volumn/" rel="prev" title="Using LVM striped logical volumn">
+                  <i class="fa fa-angle-left"></i> Using LVM striped logical volumn
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2014/10/15/postgresql-tips/" rel="next" title="PostgreSQL Tips">
+                  PostgreSQL Tips <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ryan Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wongyouth","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
